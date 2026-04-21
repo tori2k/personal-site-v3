@@ -1,0 +1,182 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL;
+const posts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const formatDate = (d: string) => new Date(d).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Layout title="Блог — Кирилл Барыев">
+  <Nav />
+  <main class="blog-page">
+    <section class="blog-hero section-dark">
+      <div class="container-x">
+        <div class="sec-tag">Блог · {posts.length} заметок</div>
+        <h1 class="display-h">
+          Заметки о <em>разработке,</em><br/>
+          продуктах и кейсах
+        </h1>
+        <p class="blog-hero__lead">
+          Рассказываю, как делаю сайты, какие приёмы работают, какие нет.
+          Короткие статьи, без воды, из реальных проектов.
+        </p>
+      </div>
+    </section>
+
+    <section class="blog-list section-dark">
+      <div class="container-x">
+        <div class="blog-grid">
+          {posts.map((post, i) => (
+            <a
+              href={`${base}/blog/${post.id}/`}
+              class:list={['post-card', i === 0 && 'post-card--featured']}
+              style={`--i: ${i}`}
+              data-hover
+            >
+              <div class="post-card__meta">
+                <span class="post-card__date">{formatDate(post.data.date)}</span>
+                {post.data.readTime && <span class="post-card__time">· {post.data.readTime}</span>}
+              </div>
+              <h2 class="post-card__title">{post.data.title}</h2>
+              <p class="post-card__desc">{post.data.description}</p>
+              <div class="post-card__bottom">
+                <div class="post-card__tags">
+                  {post.data.tags.slice(0, 3).map((tag) => <span class="post-tag">{tag}</span>)}
+                </div>
+                <span class="post-card__arrow">
+                  Читать
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .blog-page { padding-top: 0; }
+
+  .blog-hero {
+    padding: 160px 0 80px;
+  }
+  .blog-hero__lead {
+    font-size: 16px;
+    color: var(--color-muted);
+    line-height: 1.65;
+    margin: 24px 0 0;
+    max-width: 560px;
+  }
+
+  .blog-list { padding: 40px 0 140px; }
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: all 0.4s cubic-bezier(.22,1,.36,1);
+    animation: post-in 0.8s cubic-bezier(.22,1,.36,1) backwards;
+    animation-delay: calc(var(--i) * 0.08s);
+  }
+  @keyframes post-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .post-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-4px);
+  }
+  .post-card--featured {
+    grid-column: span 2;
+    background: linear-gradient(135deg, rgba(212,255,60,0.04), rgba(212,255,60,0));
+    border-color: rgba(212,255,60,0.25);
+  }
+
+  .post-card__meta {
+    display: flex;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--color-muted-2);
+    text-transform: uppercase;
+  }
+  .post-card__title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--color-text);
+  }
+  .post-card--featured .post-card__title {
+    font-size: clamp(24px, 2.8vw, 36px);
+    line-height: 1.15;
+  }
+  .post-card__desc {
+    font-size: 14.5px;
+    color: var(--color-muted);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+  .post-card__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+  .post-card__tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .post-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--color-muted);
+    padding: 3px 8px;
+    border: 1px solid var(--color-border-2);
+    border-radius: 999px;
+  }
+  .post-card__arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    transition: gap 0.25s;
+  }
+  .post-card:hover .post-card__arrow { gap: 14px; }
+
+  @media (max-width: 800px) {
+    .blog-hero { padding: 120px 0 40px; }
+    .blog-list { padding: 20px 0 80px; }
+    .blog-grid { grid-template-columns: 1fr; }
+    .post-card--featured { grid-column: span 1; }
+    .post-card { padding: 24px; }
+  }
+</style>

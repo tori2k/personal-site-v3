@@ -1,7 +1,18 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Dark palette (default) */
+  /* Base tokens (overridden by :root depending on theme) */
+  --color-accent: #D4FF3C;
+  --color-accent-soft: rgba(212,255,60,0.15);
+  --color-accent-glow: rgba(212,255,60,0.4);
+
+  --font-display: 'Unbounded', 'Inter', sans-serif;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+/* Dark (default) */
+:root, [data-theme="dark"] {
   --color-bg: #0a0a0a;
   --color-bg-2: #111111;
   --color-surface: #161616;
@@ -10,21 +21,26 @@
   --color-muted-2: #6a6a6a;
   --color-border: rgba(255,255,255,0.08);
   --color-border-2: rgba(255,255,255,0.16);
-
-  /* Accent: electric lime */
-  --color-accent: #D4FF3C;
-  --color-accent-soft: rgba(212,255,60,0.15);
-  --color-accent-glow: rgba(212,255,60,0.4);
-
-  /* Cream (for alternating sections) */
   --color-cream: #f2efe7;
   --color-cream-2: #e8e4d8;
   --color-cream-text: #111111;
+  color-scheme: dark;
+}
 
-  /* Font stacks */
-  --font-display: 'Unbounded', 'Inter', sans-serif;
-  --font-sans: 'Inter', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+/* Light — inverted */
+[data-theme="light"] {
+  --color-bg: #fafaf5;
+  --color-bg-2: #f2efe7;
+  --color-surface: #ffffff;
+  --color-text: #0a0a0a;
+  --color-muted: #555555;
+  --color-muted-2: #8a8a8a;
+  --color-border: rgba(0,0,0,0.1);
+  --color-border-2: rgba(0,0,0,0.18);
+  --color-cream: #111111;
+  --color-cream-2: #1a1a1a;
+  --color-cream-text: #f5f5f3;
+  color-scheme: light;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -32,21 +48,21 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  background: #0a0a0a;
-  color-scheme: dark;
+  background: var(--color-bg);
 }
 
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #0a0a0a;
-  color: #f5f5f3;
+  background: var(--color-bg);
+  color: var(--color-text);
   font-size: 16px;
   line-height: 1.65;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   cursor: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Restore default cursor on touch */
@@ -213,7 +229,7 @@ body {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--color-border-2); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
 
 /* Noise overlay */

@@ -1,0 +1,140 @@
+---
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL;
+const posts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+).slice(0, 3);
+
+const formatDate = (d: string) => new Date(d).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+---
+<section class="blog-teaser section-dark" id="blog">
+  <div class="container-x">
+    <div class="blog-teaser__head reveal">
+      <div class="blog-teaser__head-left">
+        <div class="sec-tag">Блог</div>
+        <h2 class="display-h">
+          Заметки <em>из работы</em>
+        </h2>
+        <p class="blog-teaser__lead">
+          Короткие статьи о реальных кейсах: миграции, интеграции, выбор стека.
+        </p>
+      </div>
+      <a href={`${base}/blog/`} class="btn blog-teaser__all">
+        <span class="btn__plus">(+)</span>
+        Все заметки
+      </a>
+    </div>
+
+    <div class="blog-teaser__grid">
+      {posts.map((p, i) => (
+        <a href={`${base}/blog/${p.id}/`} class="teaser" style={`--i: ${i}`} data-hover>
+          <div class="teaser__meta">
+            <span>{formatDate(p.data.date)}</span>
+            {p.data.readTime && <><span class="teaser__sep">·</span><span>{p.data.readTime}</span></>}
+          </div>
+          <h3 class="teaser__title">{p.data.title}</h3>
+          <p class="teaser__desc">{p.data.description}</p>
+          <span class="teaser__arrow">
+            Читать
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .blog-teaser { padding: 120px 0; border-top: 1px solid var(--color-border); }
+  .blog-teaser__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+  }
+  .blog-teaser__head-left { max-width: 640px; }
+  .blog-teaser__lead {
+    font-size: 15px;
+    color: var(--color-muted);
+    line-height: 1.6;
+    margin: 20px 0 0;
+  }
+  .blog-teaser__all { flex-shrink: 0; }
+
+  .blog-teaser__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .teaser {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: all 0.4s cubic-bezier(.22,1,.36,1);
+    animation: teaser-in 0.8s cubic-bezier(.22,1,.36,1) backwards;
+    animation-delay: calc(var(--i) * 0.1s);
+  }
+  @keyframes teaser-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .teaser:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-4px);
+  }
+  .teaser__meta {
+    display: flex;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--color-muted-2);
+    text-transform: uppercase;
+  }
+  .teaser__sep { color: var(--color-accent); }
+  .teaser__title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--color-text);
+  }
+  .teaser__desc {
+    font-size: 13.5px;
+    color: var(--color-muted);
+    line-height: 1.55;
+    margin: 0;
+    flex: 1;
+  }
+  .teaser__arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    transition: gap 0.25s;
+  }
+  .teaser:hover .teaser__arrow { gap: 14px; }
+
+  @media (max-width: 900px) {
+    .blog-teaser { padding: 80px 0; }
+    .blog-teaser__grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,4 +1,5 @@
 ---
+const base = import.meta.env.BASE_URL;
 ---
 <footer class="footer">
   <div class="container-x footer__inner">
@@ -16,10 +17,10 @@
     <div class="footer__links">
       <div class="footer__col">
         <div class="footer__col-title">Проект</div>
-        <a href="#work">Работы</a>
-        <a href="#pricing">Цены</a>
-        <a href="#process">Процесс</a>
-        <a href="#faq">FAQ</a>
+        <a href="/#work">Работы</a>
+        <a href="/#pricing">Цены</a>
+        <a href={`${base}/blog/`}>Блог</a>
+        <a href="/#faq">FAQ</a>
       </div>
       <div class="footer__col">
         <div class="footer__col-title">Связь</div>

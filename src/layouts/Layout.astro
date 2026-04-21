@@ -33,6 +33,16 @@ const {
   <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <script is:inline>
+    // Apply theme before render to avoid flash
+    (function() {
+      const saved = localStorage.getItem('theme');
+      const prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      const theme = saved || prefers;
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
   <div class="noise-overlay"></div>
@@ -93,6 +103,15 @@ const {
       });
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => io.observe(el));
+
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
 
     // Custom cursor
     const cursor = document.getElementById('cursor');
