@@ -33,7 +33,7 @@ const formatDate = (d: string) => new Date(d).toLocaleDateString('ru-RU', { day:
         <div class="blog-grid">
           {posts.map((post, i) => (
             <a
-              href={`${base}/blog/${post.id}/`}
+              href={`${base}blog/${post.id}/`}
               class:list={['post-card', i === 0 && 'post-card--featured']}
               style={`--i: ${i}`}
               data-hover

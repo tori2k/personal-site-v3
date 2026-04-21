@@ -20,7 +20,7 @@ const formatDate = (d: string) => new Date(d).toLocaleDateString('ru-RU', { day:
           Короткие статьи о реальных кейсах: миграции, интеграции, выбор стека.
         </p>
       </div>
-      <a href={`${base}/blog/`} class="btn blog-teaser__all">
+      <a href={`${base}blog/`} class="btn blog-teaser__all">
         <span class="btn__plus">(+)</span>
         Все заметки
       </a>
@@ -28,7 +28,7 @@ const formatDate = (d: string) => new Date(d).toLocaleDateString('ru-RU', { day:
 
     <div class="blog-teaser__grid">
       {posts.map((p, i) => (
-        <a href={`${base}/blog/${p.id}/`} class="teaser" style={`--i: ${i}`} data-hover>
+        <a href={`${base}blog/${p.id}/`} class="teaser" style={`--i: ${i}`} data-hover>
           <div class="teaser__meta">
             <span>{formatDate(p.data.date)}</span>
             {p.data.readTime && <><span class="teaser__sep">·</span><span>{p.data.readTime}</span></>}
