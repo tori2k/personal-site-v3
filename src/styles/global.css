@@ -11,8 +11,7 @@
   --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
 }
 
-/* Dark (default) */
-:root, [data-theme="dark"] {
+:root {
   --color-bg: #0a0a0a;
   --color-bg-2: #111111;
   --color-surface: #161616;
@@ -25,22 +24,6 @@
   --color-cream-2: #e8e4d8;
   --color-cream-text: #111111;
   color-scheme: dark;
-}
-
-/* Light — inverted */
-[data-theme="light"] {
-  --color-bg: #fafaf5;
-  --color-bg-2: #f2efe7;
-  --color-surface: #ffffff;
-  --color-text: #0a0a0a;
-  --color-muted: #555555;
-  --color-muted-2: #8a8a8a;
-  --color-border: rgba(0,0,0,0.1);
-  --color-border-2: rgba(0,0,0,0.18);
-  --color-cream: #111111;
-  --color-cream-2: #1a1a1a;
-  --color-cream-text: #f5f5f3;
-  color-scheme: light;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
