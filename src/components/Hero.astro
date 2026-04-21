@@ -1,0 +1,308 @@
+---
+---
+<section class="hero section-dark">
+  <div class="hero__cursor-glow" id="heroGlow"></div>
+
+  <div class="container-x hero__inner">
+    <div class="hero__top">
+      <span class="live-badge">
+        <span class="live-badge__dot"></span>
+        Доступен для проектов · декабрь
+      </span>
+      <div class="hero__meta">
+        <span>(01)</span>
+        <span class="hero__meta-sep">/</span>
+        <span>портфолио</span>
+      </div>
+    </div>
+
+    <h1 class="hero__title" id="heroTitle">
+      <span class="hero__line hero__line--1">Сайты,</span>
+      <span class="hero__line hero__line--2"><em>которые</em></span>
+      <span class="hero__line hero__line--3">продают.</span>
+    </h1>
+
+    <div class="hero__bottom">
+      <div class="hero__sub">
+        <p>
+          Продающие сайты для экспертов и малого бизнеса на Astro +&nbsp;Tailwind.
+          Быстро, красиво, без конструкторов.
+        </p>
+      </div>
+
+      <div class="hero__actions">
+        <a href="#work" class="btn btn--filled">
+          <span class="btn__plus">(+)</span>
+          Посмотреть работы
+        </a>
+        <a href="#pricing" class="btn">
+          Собрать свой
+        </a>
+      </div>
+
+      <div class="hero__metrics">
+        <div class="metric">
+          <div class="metric__n"><span id="m-projects">0</span><small>+</small></div>
+          <div class="metric__l">проектов в продакшене</div>
+        </div>
+        <div class="metric">
+          <div class="metric__n"><span id="m-speed">0</span><small>d</small></div>
+          <div class="metric__l">средний срок сдачи</div>
+        </div>
+        <div class="metric">
+          <div class="metric__n"><span id="m-lh">0</span></div>
+          <div class="metric__l">средний Lighthouse</div>
+        </div>
+        <div class="metric">
+          <div class="metric__n">∞</div>
+          <div class="metric__l">правок неделю</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marquee -->
+  <div class="hero__marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>ASTRO</span><span>·</span>
+      <span>TAILWIND</span><span>·</span>
+      <span>TYPESCRIPT</span><span>·</span>
+      <span>VIEW TRANSITIONS</span><span>·</span>
+      <span>GITHUB PAGES</span><span>·</span>
+      <span>CLOUDFLARE</span><span>·</span>
+      <span>Т-КАССА</span><span>·</span>
+      <span>TIMEPAD</span><span>·</span>
+      <span>GOOGLE SHEETS API</span><span>·</span>
+      <!-- дубль для seamless scroll -->
+      <span>ASTRO</span><span>·</span>
+      <span>TAILWIND</span><span>·</span>
+      <span>TYPESCRIPT</span><span>·</span>
+      <span>VIEW TRANSITIONS</span><span>·</span>
+      <span>GITHUB PAGES</span><span>·</span>
+      <span>CLOUDFLARE</span><span>·</span>
+      <span>Т-КАССА</span><span>·</span>
+      <span>TIMEPAD</span><span>·</span>
+      <span>GOOGLE SHEETS API</span><span>·</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    padding: 140px 0 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Cursor-reactive glow */
+  .hero__cursor-glow {
+    position: absolute;
+    top: 0; left: 0;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,255,60,0.18) 0%, transparent 65%);
+    filter: blur(40px);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.4s cubic-bezier(.22,1,.36,1);
+    z-index: 0;
+    will-change: transform;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    flex: 1;
+  }
+
+  .hero__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .hero__meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--color-muted);
+    text-transform: uppercase;
+  }
+  .hero__meta-sep { margin: 0 8px; color: var(--color-accent); }
+
+  /* Title — kinetic */
+  .hero__title {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500;
+    font-size: clamp(64px, 14vw, 220px);
+    line-height: 0.88;
+    letter-spacing: -0.03em;
+    margin: 40px 0;
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+  }
+  .hero__line {
+    display: block;
+    will-change: transform;
+  }
+  .hero__line--2 {
+    text-align: center;
+  }
+  .hero__line--2 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--color-accent);
+  }
+  .hero__line--3 {
+    text-align: right;
+  }
+
+  /* Bottom row */
+  .hero__bottom {
+    display: grid;
+    grid-template-columns: 1.1fr auto;
+    gap: 60px;
+    align-items: end;
+    padding-bottom: 60px;
+  }
+  .hero__sub p {
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1.55;
+    color: var(--color-muted);
+    max-width: 540px;
+    margin: 0;
+  }
+  .hero__actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-self: end;
+  }
+
+  .hero__metrics {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding-top: 40px;
+    border-top: 1px solid var(--color-border);
+  }
+  .metric { display: flex; flex-direction: column; gap: 6px; }
+  .metric__n {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500;
+    font-size: clamp(32px, 3.6vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .metric__n small {
+    font-size: 0.5em;
+    color: var(--color-accent);
+  }
+  .metric__l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-muted-2);
+    line-height: 1.4;
+  }
+
+  /* Marquee */
+  .hero__marquee {
+    overflow: hidden;
+    padding: 20px 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    position: relative;
+    z-index: 2;
+  }
+  .marquee-track {
+    display: inline-flex;
+    gap: 32px;
+    white-space: nowrap;
+    animation: marquee 38s linear infinite;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--color-muted);
+  }
+  .marquee-track span:nth-child(even) {
+    color: var(--color-accent);
+    font-weight: 300;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 900px) {
+    .hero { padding: 110px 0 0; }
+    .hero__bottom { grid-template-columns: 1fr; gap: 28px; }
+    .hero__actions { justify-self: start; }
+    .hero__metrics { grid-template-columns: repeat(2, 1fr); }
+    .marquee-track { font-size: 16px; gap: 20px; }
+  }
+</style>
+
+<script>
+  // Cursor glow follow
+  const glow = document.getElementById('heroGlow');
+  const hero = document.querySelector<HTMLElement>('.hero');
+  if (glow && hero) {
+    hero.addEventListener('mousemove', (e) => {
+      const rect = hero.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      glow.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    });
+  }
+
+  // Counter animation on load
+  const counters: Array<{ id: string; to: number; duration: number }> = [
+    { id: 'm-projects', to: 7, duration: 1200 },
+    { id: 'm-speed',    to: 3, duration: 1200 },
+    { id: 'm-lh',       to: 98, duration: 1600 },
+  ];
+  counters.forEach(({ id, to, duration }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const start = performance.now();
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - start) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(to * eased).toString();
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+
+  // Scroll-driven scale of hero title
+  const title = document.getElementById('heroTitle');
+  if (title) {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const scale = Math.max(0.85, 1 - y / 1800);
+      const opacity = Math.max(0, 1 - y / 600);
+      title.style.transform = `scale(${scale})`;
+      title.style.opacity = String(opacity);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+</script>

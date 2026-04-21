@@ -1,0 +1,133 @@
+---
+const steps = [
+  {
+    n: '01',
+    title: 'Заявка и брифинг',
+    time: '15–30 мин',
+    desc: 'Обсуждаем задачу, референсы, сроки. Скидываете примеры того, что нравится — собираю концепцию.',
+  },
+  {
+    n: '02',
+    title: 'Прототип и согласование',
+    time: '1–2 дня',
+    desc: 'Делаю черновой сайт на тестовом домене. Смотрите живьём, вносим правки. Ничего не платите.',
+  },
+  {
+    n: '03',
+    title: 'Разработка',
+    time: '2–7 дней',
+    desc: 'Пишу чистый код на Astro + Tailwind. Интеграции: оплаты, формы, админка, аналитика — по задаче.',
+  },
+  {
+    n: '04',
+    title: 'Сдача и передача',
+    time: '30 мин',
+    desc: 'Переношу на ваш домен, подключаю хостинг, показываю как вести. Исходники — в ваш репозиторий.',
+  },
+];
+---
+<section class="process section-cream" id="process">
+  <div class="container-x">
+    <div class="process__head reveal">
+      <div class="sec-tag">Как работаю</div>
+      <h2 class="display-h">
+        Четыре шага — <em>и готово</em>
+      </h2>
+    </div>
+
+    <div class="process__steps">
+      {steps.map((s, i) => (
+        <article class="pstep reveal" style={`transition-delay: ${i * 0.12}s`}>
+          <div class="pstep__num">{s.n}</div>
+          <div class="pstep__body">
+            <div class="pstep__meta">
+              <h3>{s.title}</h3>
+              <span class="pstep__time">{s.time}</span>
+            </div>
+            <p>{s.desc}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .process { padding: 140px 0; }
+  .process__head {
+    max-width: 720px;
+    margin-bottom: 60px;
+  }
+  .process__steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .pstep {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 40px;
+    padding: 36px 0;
+    border-top: 1px solid rgba(0,0,0,0.15);
+    align-items: center;
+  }
+  .pstep:last-child {
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+  }
+  .pstep__num {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 400;
+    color: #0a0a0a;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .pstep:hover .pstep__num { color: #5a5a5a; }
+  .pstep__body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pstep__meta {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .pstep__meta h3 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 500;
+    margin: 0;
+    color: #0a0a0a;
+    letter-spacing: -0.01em;
+  }
+  .pstep__time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #5a5a5a;
+    padding: 4px 10px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 999px;
+  }
+  .pstep__body p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #3a3a3a;
+    margin: 4px 0 0;
+    max-width: 560px;
+  }
+
+  @media (max-width: 700px) {
+    .process { padding: 80px 0; }
+    .pstep {
+      grid-template-columns: auto 1fr;
+      gap: 20px;
+      padding: 26px 0;
+    }
+    .pstep__num { font-size: 34px; }
+    .pstep__meta { gap: 12px; }
+  }
+</style>

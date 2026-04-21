@@ -1,0 +1,119 @@
+---
+---
+<footer class="footer">
+  <div class="container-x footer__inner">
+    <div class="footer__left">
+      <div class="footer__brand">
+        <span class="footer__symbol">◐</span>
+        Кирилл.
+      </div>
+      <p class="footer__text">
+        Сайты на Astro + Tailwind.<br/>
+        Москва · удалённо · в любом часовом поясе.
+      </p>
+    </div>
+
+    <div class="footer__links">
+      <div class="footer__col">
+        <div class="footer__col-title">Проект</div>
+        <a href="#work">Работы</a>
+        <a href="#pricing">Цены</a>
+        <a href="#process">Процесс</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Связь</div>
+        <a href="https://t.me/tori2k" target="_blank" rel="noopener">Telegram</a>
+        <a href="mailto:hello@kirillbaryev.ru">Email</a>
+        <a href="https://github.com/tori2k" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <div class="container-x footer__bottom-inner">
+      <span>© 2026 Кирилл Барыев</span>
+      <span class="footer__meta">
+        Made with Astro ·
+        <a href="https://github.com/tori2k" target="_blank" rel="noopener">open source</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #050505;
+    border-top: 1px solid var(--color-border);
+    padding: 60px 0 0;
+    color: var(--color-muted);
+  }
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr;
+    gap: 60px;
+    padding-bottom: 40px;
+  }
+  .footer__brand {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer__symbol { color: var(--color-accent); }
+  .footer__text {
+    font-size: 13px;
+    line-height: 1.7;
+    max-width: 320px;
+  }
+
+  .footer__links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+  }
+  .footer__col { display: flex; flex-direction: column; gap: 10px; }
+  .footer__col-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .footer__col a {
+    font-size: 13px;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer__col a:hover { color: var(--color-text); }
+
+  .footer__bottom {
+    padding: 20px 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .footer__bottom-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--color-muted-2);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer__meta a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  @media (max-width: 700px) {
+    .footer__inner { grid-template-columns: 1fr; gap: 32px; }
+  }
+</style>
