@@ -15,26 +15,51 @@ const tech = [
   <div class="container-x">
     <div class="stack__grid">
       <div class="stack__left reveal-left">
-        <div class="sec-tag">Что умею</div>
+        <div class="sec-tag">Как это устроено</div>
         <h2 class="display-h stack__title">
-          Стек — <em>простой</em><br/>
-          и надёжный
+          Просто — <em>и</em><br/>
+          надёжно
         </h2>
         <p class="stack__lead">
-          Только проверенное. Никаких «революционных» технологий, которые
-          сломаются через год. Astro + Tailwind живут десятилетиями
-          и работают быстро без магии.
+          Объясняю своими словами, почему такой сайт служит годами и&nbsp;не&nbsp;требует от&nbsp;вас ежемесячных платежей.
         </p>
 
-        <div class="stack__tech">
-          {tech.map((t) => (
-            <div class="tchip" style={`--tc: ${t.color}`}>
-              <span class="tchip__dot"></span>
-              <span class="tchip__name">{t.name}</span>
-              <span class="tchip__role">{t.role}</span>
+        <ul class="stack__benefits">
+          <li>
+            <span class="stack__b-n">01</span>
+            <div>
+              <div class="stack__b-t">Бесплатный хостинг навсегда</div>
+              <div class="stack__b-d">Сайт лежит на серверах GitHub. Не нужно платить ни за хостинг, ни за конструктор — только за домен (≈200 ₽ в год).</div>
             </div>
-          ))}
-        </div>
+          </li>
+          <li>
+            <span class="stack__b-n">02</span>
+            <div>
+              <div class="stack__b-t">Открывается за секунду</div>
+              <div class="stack__b-d">Посетитель не уходит из-за долгой загрузки — страница появляется сразу, даже на слабом интернете.</div>
+            </div>
+          </li>
+          <li>
+            <span class="stack__b-n">03</span>
+            <div>
+              <div class="stack__b-t">Сайт принадлежит вам</div>
+              <div class="stack__b-d">Никаких подписок и&nbsp;рисков, что сервис закроется. Исходники сайта передаю вам — можно переехать куда угодно.</div>
+            </div>
+          </li>
+        </ul>
+
+        <details class="stack__details">
+          <summary>Для тех, кому интересны технологии</summary>
+          <div class="stack__tech">
+            {tech.map((t) => (
+              <div class="tchip" style={`--tc: ${t.color}`}>
+                <span class="tchip__dot"></span>
+                <span class="tchip__name">{t.name}</span>
+                <span class="tchip__role">{t.role}</span>
+              </div>
+            ))}
+          </div>
+        </details>
       </div>
 
       <div class="stack__right reveal-right">
@@ -50,7 +75,7 @@ const tech = [
 
         <div class="stack__note">
           <span class="live-badge__dot"></span>
-          <span>Живой вывод. Команда действительно запускает проект.</span>
+          <span>Так выглядит сборка и публикация вашего сайта.</span>
         </div>
       </div>
     </div>
@@ -73,6 +98,68 @@ const tech = [
     margin: 0 0 40px;
     max-width: 480px;
   }
+
+  .stack__benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .stack__benefits li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: start;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .stack__benefits li:last-child { border-bottom: none; padding-bottom: 0; }
+  .stack__b-n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--color-accent);
+    padding-top: 4px;
+  }
+  .stack__b-t {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .stack__b-d {
+    font-size: 14px;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+
+  .stack__details {
+    margin-top: 8px;
+  }
+  .stack__details summary {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    cursor: pointer;
+    padding: 12px 0;
+    border-top: 1px solid var(--color-border);
+    list-style: none;
+    transition: color 0.2s;
+  }
+  .stack__details summary::-webkit-details-marker { display: none; }
+  .stack__details summary::before {
+    content: '+ ';
+    color: var(--color-accent);
+  }
+  .stack__details[open] summary::before { content: '− '; }
+  .stack__details summary:hover { color: var(--color-accent); }
+  .stack__details .stack__tech { margin-top: 16px; }
 
   .stack__tech {
     display: flex;
