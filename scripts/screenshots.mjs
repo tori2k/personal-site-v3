@@ -8,6 +8,7 @@ const OUT_DIR = resolve(__dirname, '../public/screenshots');
 
 const cases = [
   { slug: 'manifik', url: 'https://kb-manifik.surge.sh' },
+  { slug: 'znamya-truda', url: 'https://tori2k.github.io/znamya-truda-draft/' },
   { slug: 'cosmetologist', url: 'https://kb-cosmetologist.surge.sh' },
   { slug: 'psychologist', url: 'https://kb-psychologist.surge.sh' },
   { slug: 'tutor', url: 'https://kb-tutor.surge.sh' },
