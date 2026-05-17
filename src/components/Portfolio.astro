@@ -22,69 +22,18 @@ const featured = [
     img: 'znamya-truda.jpg',
     title: 'ФК «Знамя Труда»',
     niche: 'Футбольный клуб · Орехово-Зуево',
-    url: 'https://tori2k.github.io/znamya-truda-draft/',
-    status: 'В работе',
-    lede: 'Старейший действующий футбольный клуб России (основан в 1909). Нужен официальный сайт с матчами, новостями, историей и продажей абонементов.',
+    url: 'https://fczt1909.ru',
+    status: 'Запущен',
+    lede: 'Собрал официальный сайт для старейшего действующего футбольного клуба России: матчи, новости, история, команда и контакты в одной системе.',
     points: [
       'Расписание матчей и результаты',
-      'История клуба и состав команды',
-      'Продажа абонементов и билетов',
-      'Лента новостей, партнёры, контакты',
+      'Новости, история клуба и состав команды',
+      'Страницы партнёров и контактные блоки',
+      'Контент редактируется без программиста',
     ],
   },
 ];
 
-const others = [
-  {
-    slug: 'cosmetologist',
-    img: 'cosmetologist.jpg',
-    title: 'Премиум эстетика',
-    niche: 'Косметолог',
-    url: 'https://kb-cosmetologist.surge.sh',
-  },
-  {
-    slug: 'psychologist',
-    img: 'psychologist.jpg',
-    title: 'Пространство доверия',
-    niche: 'Психолог',
-    url: 'https://kb-psychologist.surge.sh',
-  },
-  {
-    slug: 'tutor',
-    img: 'tutor.jpg',
-    title: 'Школа результатов',
-    niche: 'Репетитор',
-    url: 'https://kb-tutor.surge.sh',
-  },
-  {
-    slug: 'nails',
-    img: 'nails.jpg',
-    title: 'Эстетика рук',
-    niche: 'Маникюр',
-    url: 'https://kb-nails.surge.sh',
-  },
-  {
-    slug: 'silverstandard',
-    img: 'silverstandard.jpg',
-    title: 'Серебряный Стандарт',
-    niche: 'B2B · услуги',
-    url: 'https://kb-silverstandard.surge.sh',
-  },
-  {
-    slug: 'fleshka',
-    img: 'fleshka.jpg',
-    title: 'FLESHKA',
-    niche: 'Продукт',
-    url: 'https://kb-fleshka.surge.sh',
-  },
-  {
-    slug: 'vaultkey',
-    img: 'vaultkey.jpg',
-    title: 'VAULTKEY',
-    niche: 'Крипто-кошелёк',
-    url: 'https://kb-vaultkey.surge.sh',
-  },
-];
 ---
 <section class="work section-dark" id="work">
   <div class="container-x">
@@ -94,7 +43,8 @@ const others = [
         Главные <em>проекты</em>
       </h2>
       <p class="work__lead">
-        Два флагмана — разобранно и&nbsp;подробно. Ниже — ещё семь работ, которые можно открыть и&nbsp;посмотреть вживую.
+        Два проекта, которые лучше всего показывают подход: понятная структура,
+        живые интеграции и запуск без тяжёлых конструкторов.
       </p>
     </div>
 
@@ -159,40 +109,6 @@ const others = [
       </div>
     </article>
 
-    <div class="others-head reveal">
-      <div class="sec-tag others-tag">Примеры других работ</div>
-      <p class="others-lead">
-        Разные ниши и&nbsp;форматы — чтобы показать, как может выглядеть сайт в&nbsp;вашей сфере.
-      </p>
-    </div>
-
-    <div class="others">
-      {others.map((o, i) => (
-        <a
-          href={o.url}
-          target="_blank"
-          rel="noopener"
-          class="ocard reveal"
-          style={`transition-delay: ${i * 0.05}s`}
-        >
-          <div class="ocard__img">
-            <img
-              src={`${base}screenshots/${o.img}`}
-              alt={o.title}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <div class="ocard__meta">
-            <div class="ocard__text">
-              <div class="ocard__niche">{o.niche}</div>
-              <div class="ocard__title">{o.title}</div>
-            </div>
-            <svg class="ocard__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
-          </div>
-        </a>
-      ))}
-    </div>
   </div>
 </section>
 
@@ -431,96 +347,13 @@ const others = [
     }
   }
 
-  /* Others — компактная сетка */
-  .others-head {
-    margin: 0 0 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .others-tag { color: var(--color-muted); }
-  .others-tag::before { background: var(--color-muted) !important; }
-  .others-lead {
-    font-size: 14px;
-    color: var(--color-muted-2);
-    margin: 0;
-    max-width: 480px;
-  }
-
-  .others {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-  }
-  .ocard {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.4s cubic-bezier(.22,1,.36,1);
-  }
-  .ocard:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-4px);
-  }
-  .ocard__img {
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: #0f0f0f;
-  }
-  .ocard__img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    transition: transform 0.6s cubic-bezier(.22,1,.36,1);
-  }
-  .ocard:hover .ocard__img img { transform: scale(1.06); }
-  .ocard__meta {
-    padding: 16px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-  .ocard__niche {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--color-muted-2);
-    margin-bottom: 4px;
-  }
-  .ocard__title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-text);
-    letter-spacing: -0.01em;
-  }
-  .ocard__arrow {
-    color: var(--color-muted-2);
-    flex-shrink: 0;
-    transition: color 0.3s, transform 0.3s;
-  }
-  .ocard:hover .ocard__arrow {
-    color: var(--color-accent);
-    transform: translate(2px, -2px);
-  }
-
   @media (max-width: 1000px) {
     .fcard { grid-template-columns: 1fr; }
     .fcard__media { min-height: 260px; }
-    .others { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 600px) {
     .work { padding: 80px 0; }
     .fcard__body { padding: 28px 22px; }
-    .others { grid-template-columns: 1fr; }
     .featured { margin-bottom: 60px; }
   }
 </style>
