@@ -1,0 +1,168 @@
+---
+const steps = [
+  { n: '01', t: 'Бриф',        d: 'Заполняете эту страницу. Это 8–10 минут.' },
+  { n: '02', t: 'Созвон',      d: '15-минутный созвон, чтобы я задал уточняющие вопросы.' },
+  { n: '03', t: 'Смета',       d: 'В тот же день присылаю смету, сроки и пакет.' },
+  { n: '04', t: 'Договор',     d: 'Подписываем договор, фиксируем скоуп. 50% предоплата.' },
+  { n: '05', t: 'Работа',      d: 'Делаю концепцию первого экрана. После утверждения — полная вёрстка.' },
+  { n: '06', t: 'Запуск',      d: 'Запускаю сайт, передаю доступы, неделя бесплатных правок.' },
+];
+---
+<section class="brief-intro section-dark">
+  <div class="container-x">
+    <div class="brief-intro__head reveal">
+      <div class="sec-tag">/brief</div>
+      <h1 class="display-h">
+        Расскажите<br/>о&nbsp;<em>проекте</em>.
+      </h1>
+      <p class="brief-intro__lead">
+        Чтобы я&nbsp;не&nbsp;задавал вам одни и&nbsp;те&nbsp;же вопросы по&nbsp;кругу
+        и&nbsp;сразу понимал, подойдём&nbsp;ли мы&nbsp;друг другу&nbsp;&mdash; пожалуйста,
+        заполните бриф ниже. Это сэкономит время нам обоим и&nbsp;даст мне
+        контекст для точной сметы.
+      </p>
+      <div class="brief-intro__meta">
+        <div class="brief-intro__meta-item">
+          <span class="brief-intro__meta-num">8&ndash;10</span>
+          <span class="brief-intro__meta-lbl">минут на&nbsp;заполнение</span>
+        </div>
+        <div class="brief-intro__meta-item">
+          <span class="brief-intro__meta-num">12</span>
+          <span class="brief-intro__meta-lbl">коротких вопросов</span>
+        </div>
+        <div class="brief-intro__meta-item">
+          <span class="brief-intro__meta-num">24&nbsp;ч</span>
+          <span class="brief-intro__meta-lbl">ответ со&nbsp;сметой</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-intro__steps">
+      <div class="brief-intro__steps-head reveal">
+        <span class="font-mono brief-intro__steps-tag">Как мы&nbsp;будем работать</span>
+        <span class="brief-intro__steps-line"></span>
+      </div>
+      <div class="brief-intro__steps-grid">
+        {steps.map((s, i) => (
+          <div class="brief-step reveal" style={`transition-delay:${i * 0.05}s`}>
+            <div class="brief-step__num font-mono">{s.n}</div>
+            <div class="brief-step__body">
+              <h3 class="brief-step__title font-display">{s.t}</h3>
+              <p class="brief-step__desc">{s.d}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .brief-intro { padding: 80px 0 60px; }
+  .brief-intro__head {
+    max-width: 720px;
+    margin-bottom: 60px;
+  }
+  .brief-intro__head .display-h {
+    margin-top: 22px;
+    font-size: clamp(40px, 6.4vw, 84px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+  .brief-intro__head .display-h em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--color-muted);
+  }
+  .brief-intro__lead {
+    margin: 28px 0 0;
+    color: var(--color-muted);
+    font-size: clamp(15px, 1.5vw, 18px);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+  .brief-intro__meta {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px 48px;
+  }
+  .brief-intro__meta-item { display: flex; flex-direction: column; }
+  .brief-intro__meta-num {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .brief-intro__meta-lbl {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--color-muted);
+    letter-spacing: 0.5px;
+  }
+
+  .brief-intro__steps { margin-top: 30px; }
+  .brief-intro__steps-head {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .brief-intro__steps-tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-muted-2);
+  }
+  .brief-intro__steps-line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+  }
+  .brief-intro__steps-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .brief-step {
+    background: var(--color-bg-2);
+    padding: 26px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    transition: background 0.3s;
+  }
+  .brief-step:hover { background: var(--color-surface); }
+  .brief-step__num {
+    font-size: 14px;
+    color: var(--color-muted-2);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+  .brief-step__title {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .brief-step__desc {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 760px) {
+    .brief-intro__steps-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 1100px) {
+    .brief-intro__steps-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
