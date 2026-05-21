@@ -7,8 +7,21 @@ const base = import.meta.env.BASE_URL;
 
 const tpls = [
   {
-    slug: '01-premium',
+    slug: 'aurora',
+    href: 'https://tori2k.github.io/template-aurora/',
+    external: true,
     num: '01',
+    title: 'Aurora · SaaS-продукт',
+    sub: 'Aurora — AI infrastructure',
+    desc: 'Premium SaaS-лендинг. Aurora-блобы с parallax, magnetic-кнопки, bento-grid с анимированными SVG, sticky-scroll showcase с синхронизированным кодом. Для финтеха, AI-продуктов, B2B стартапов уровня Linear/Vercel.',
+    fontPair: 'Geist + JetBrains Mono',
+    palette: ['#08061a', '#5fc6ff', '#ff6ec7'],
+    tags: ['next.js 16', 'framer motion', 'tailwind 4', '★ premium'],
+    flagship: true,
+  },
+  {
+    slug: '01-premium',
+    num: '02',
     title: 'Премиум-минимал',
     sub: 'Atelier Vermeer',
     desc: 'Айвори, графит, золото. Cormorant serif с курсивами. Liquid-glass карточки, scroll-rotate, золотая печать «est.». Для юристов, экспертов, premium-бьюти, частной практики.',
@@ -18,7 +31,7 @@ const tpls = [
   },
   {
     slug: '02-dark-saas',
-    num: '02',
+    num: '03',
     title: 'Тёмный SaaS / Fin-tech',
     sub: 'Helix Finance',
     desc: 'Полночный синий, neon-cyan, glass-эффекты, gradient blobs. Live-чарт с анимацией, metrics-grid, glow-кнопки. Для IT, финтеха, B2B SaaS, стартапов с продуктом.',
@@ -28,7 +41,7 @@ const tpls = [
   },
   {
     slug: '03-brutalism',
-    num: '03',
+    num: '04',
     title: 'Брутализм / Awwwards',
     sub: 'Studio Faktor',
     desc: 'Электро-жёлтый и чёрный, Anton-заголовки во всю ширину, marquee-лента, asymmetric grid. Толстые рамки, обводка outline-шрифтом. Для агентств, дизайнеров, креативных брендов.',
@@ -38,7 +51,7 @@ const tpls = [
   },
   {
     slug: '04-editorial',
-    num: '04',
+    num: '05',
     title: 'Editorial / журнальный',
     sub: 'REVUE Magazine',
     desc: 'Кремовая бумага, бордо-акценты. Playfair Display заголовки, многоколоночный текст, буквица, pull-quotes, статистика рядом со статьёй. Для журналов, блогеров, ресторанов, культурных проектов.',
@@ -48,7 +61,7 @@ const tpls = [
   },
   {
     slug: '05-y2k',
-    num: '05',
+    num: '06',
     title: 'Y2K / retro-future',
     sub: 'NULL_POINTER',
     desc: 'Pixel-арт, CRT-сканлайны, glitch-анимация на заголовке. Press Start 2P + VT323. Винд-95-окна, неоновые розовый и cyan, perspective-grid floor, vaporwave-солнце. Для музыки, инди-продуктов, креативных нишевых брендов.',
@@ -60,7 +73,7 @@ const tpls = [
 ---
 <Layout
   title="Шаблоны сайтов · Кирилл Барышев"
-  description="Пять готовых дизайн-направлений для сайта: премиум-минимал, тёмный SaaS, брутализм, editorial, Y2K. Откройте любой — это живой шаблон."
+  description="Шесть готовых дизайн-направлений: Aurora SaaS, премиум-минимал, тёмный SaaS, брутализм, editorial, Y2K. Откройте любой — это живой шаблон."
 >
   <Nav />
   <main>
@@ -70,7 +83,7 @@ const tpls = [
         <div class="tpl-gallery__head reveal">
           <div class="sec-tag">шаблоны</div>
           <h1 class="display-h">
-            Пять<br/>
+            Шесть<br/>
             <em>визуальных направлений.</em>
           </h1>
           <p class="tpl-gallery__lead">
@@ -79,14 +92,20 @@ const tpls = [
             под ваш бренд: меняю тексты, фотографии, добавляю/убираю секции.
           </p>
           <p class="tpl-gallery__hint">
-            <span class="tpl-gallery__hint-num">5</span>
-            <span>стилей с разными шрифтами, цветами и&nbsp;фишками&nbsp;— это&nbsp;не&nbsp;один&nbsp;CSS, а&nbsp;пять отдельных дизайн-языков.</span>
+            <span class="tpl-gallery__hint-num">6</span>
+            <span>стилей с разными шрифтами, цветами и&nbsp;фишками&nbsp;— это&nbsp;не&nbsp;один&nbsp;CSS, а&nbsp;шесть отдельных дизайн-языков. Первый&nbsp;— на Next.js&nbsp;16 с&nbsp;Framer Motion, остальные на&nbsp;Astro.</span>
           </p>
         </div>
 
         <div class="tpl-grid">
           {tpls.map((t, i) => (
-            <a href={`${base}templates/${t.slug}/`} class="tpl-card reveal" style={`transition-delay: ${i * 0.08}s`}>
+            <a
+              href={t.external ? t.href : `${base}templates/${t.slug}/`}
+              target={t.external ? '_blank' : undefined}
+              rel={t.external ? 'noopener noreferrer' : undefined}
+              class:list={['tpl-card', 'reveal', t.flagship && 'tpl-card--flagship']}
+              style={`transition-delay: ${i * 0.08}s`}
+            >
               <div class="tpl-card__head">
                 <span class="tpl-card__num font-mono">{t.num}</span>
                 <div class="tpl-card__palette">
@@ -196,6 +215,33 @@ const tpls = [
     border-color: var(--color-text);
     transform: translateY(-3px);
     box-shadow: 0 22px 50px rgba(11, 20, 36, 0.08);
+  }
+  .tpl-card--flagship {
+    position: relative;
+    background:
+      linear-gradient(180deg, rgba(95, 198, 255, 0.05), rgba(162, 128, 255, 0.05)),
+      var(--color-bg-2);
+    border-color: rgba(95, 198, 255, 0.35);
+  }
+  .tpl-card--flagship::before {
+    content: '★ flagship';
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #08061a;
+    background: linear-gradient(120deg, #5fc6ff 0%, #a280ff 50%, #ff6ec7 100%);
+    padding: 5px 11px;
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgba(95, 198, 255, 0.35);
+  }
+  .tpl-card--flagship:hover {
+    border-color: rgba(95, 198, 255, 0.7);
+    box-shadow: 0 22px 50px rgba(95, 198, 255, 0.18);
   }
   .tpl-card__head {
     display: flex; justify-content: space-between; align-items: center;
