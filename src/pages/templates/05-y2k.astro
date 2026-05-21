@@ -1,0 +1,605 @@
+---
+import TemplateLayout from '../../layouts/templates/TemplateLayout.astro';
+
+const tracks = [
+  { n: '01', title: 'CYBER LULLABY',  len: '03:42', tag: 'synthwave' },
+  { n: '02', title: 'NEON DREAMING',  len: '04:18', tag: 'vaporwave' },
+  { n: '03', title: 'GLITCH IN THE MATRIX', len: '05:02', tag: 'glitch' },
+  { n: '04', title: 'PIXEL HEART',    len: '03:11', tag: 'chiptune' },
+  { n: '05', title: 'LOST PHONE CALL', len: '04:47', tag: 'ambient' },
+];
+---
+<TemplateLayout
+  title="05 · Y2K — NULL_POINTER (synthwave duo)"
+  description="Образец шаблона сайта в Y2K / retro-future стиле: pixel-арт, CRT-эффекты, неоновые цвета."
+  fontsHref="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap"
+>
+  <main class="y2k">
+    <div class="y2k-scanlines" aria-hidden="true"></div>
+    <div class="y2k-vignette" aria-hidden="true"></div>
+
+    <header class="y2k-nav">
+      <div class="y2k-container y2k-nav__inner">
+        <a href="#top" class="y2k-nav__brand">
+          <span class="y2k-nav__chevron">▸</span>
+          <span class="y2k-nav__name">NULL_POINTER<span class="y2k-blink">_</span></span>
+        </a>
+        <nav class="y2k-nav__links">
+          <a href="#listen">listen</a>
+          <a href="#tracks">tracks</a>
+          <a href="#shop">shop</a>
+          <a href="#contact">contact</a>
+        </nav>
+        <div class="y2k-nav__status">
+          <span class="y2k-nav__status-dot"></span>
+          ONLINE
+        </div>
+      </div>
+    </header>
+
+    <section id="top" class="y2k-hero">
+      <div class="y2k-grid-floor" aria-hidden="true"></div>
+      <div class="y2k-sun" aria-hidden="true"></div>
+
+      <div class="y2k-container y2k-hero__inner">
+        <div class="y2k-hero__sticker">★ NEW ALBUM ★ OUT NOW ★</div>
+
+        <h1 class="y2k-hero__title">
+          <span class="y2k-glitch" data-text="NULL_POINTER">NULL_POINTER</span>
+        </h1>
+
+        <div class="y2k-hero__subtitle">
+          synthwave duo // est. 1998 // last updated: 21.05.2026
+        </div>
+
+        <div class="y2k-hero__copy">
+          <p>
+            Электронный дуэт из&nbsp;Москвы и&nbsp;Тбилиси. С&nbsp;1998 года
+            играем что-то между synthwave, vaporwave и&nbsp;поломанным
+            ASCII-артом. 5&nbsp;альбомов, 1&nbsp;винил, ноль концертов.
+          </p>
+        </div>
+
+        <div class="y2k-hero__actions">
+          <a href="#listen" class="y2k-btn y2k-btn--pink">
+            ▶ PLAY NEW ALBUM
+          </a>
+          <a href="#shop" class="y2k-btn">► VINYL · $25</a>
+        </div>
+
+        <div class="y2k-hero__pixels">
+          <span class="y2k-px"></span>
+          <span class="y2k-px"></span>
+          <span class="y2k-px"></span>
+          <span class="y2k-px"></span>
+          <span class="y2k-px"></span>
+          <span class="y2k-px"></span>
+          <span class="y2k-px"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="tracks" class="y2k-tracks">
+      <div class="y2k-container">
+        <div class="y2k-section-head">
+          <span class="y2k-section-tag">[ T01 ]</span>
+          <h2 class="y2k-h2">
+            new&nbsp;album //<br/>
+            <span class="y2k-pink">last_pixel.exe</span>
+          </h2>
+          <p class="y2k-section-lead">
+            5&nbsp;tracks · 21&nbsp;minutes · recorded on&nbsp;a&nbsp;broken Sony Walkman
+          </p>
+        </div>
+
+        <div class="y2k-window">
+          <div class="y2k-window__head">
+            <span class="y2k-window__title">▣ tracklist.txt — NULL_POINTER</span>
+            <div class="y2k-window__controls">
+              <span>_</span><span>□</span><span>×</span>
+            </div>
+          </div>
+          <div class="y2k-window__body">
+            <div class="y2k-tracks__list">
+              {tracks.map((t) => (
+                <div class="y2k-track">
+                  <span class="y2k-track__num">{t.n}</span>
+                  <span class="y2k-track__play">▶</span>
+                  <span class="y2k-track__title">{t.title}</span>
+                  <span class="y2k-track__tag">/{t.tag}</span>
+                  <span class="y2k-track__len">{t.len}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="y2k-window__foot">
+            <span>5 ITEMS · 21:00 TOTAL</span>
+            <span class="y2k-blink">●</span>
+            <span>READY</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="y2k-contact">
+      <div class="y2k-container">
+        <div class="y2k-window y2k-window--cyan">
+          <div class="y2k-window__head y2k-window__head--cyan">
+            <span class="y2k-window__title">▣ guestbook.html</span>
+            <div class="y2k-window__controls">
+              <span>_</span><span>□</span><span>×</span>
+            </div>
+          </div>
+          <div class="y2k-window__body y2k-window__body--cyan">
+            <h2 class="y2k-h2 y2k-contact__title">
+              talk to us //<br/>
+              <span class="y2k-cyan">leave a message</span>
+            </h2>
+
+            <form class="y2k-form" onsubmit="event.preventDefault();">
+              <label>
+                <span>&gt; your_name:</span>
+                <input type="text" placeholder="cyber_traveller" />
+              </label>
+              <label>
+                <span>&gt; your_email:</span>
+                <input type="email" placeholder="user@dial-up.net" />
+              </label>
+              <label>
+                <span>&gt; message:</span>
+                <textarea rows="4" placeholder="hi! love your sound, did you ever..."></textarea>
+              </label>
+              <button type="submit" class="y2k-btn y2k-btn--cyan">
+                ► SEND_TRANSMISSION
+              </button>
+            </form>
+
+            <div class="y2k-contact__visitors">
+              <div class="y2k-counter">
+                VISITOR # <span class="y2k-counter__num">001<span class="y2k-blink">|</span>4789</span>
+              </div>
+              <div class="y2k-counter">
+                LAST UPDATED: <span class="y2k-counter__num">21.05.2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="y2k-foot">
+      <div class="y2k-container">
+        <div class="y2k-foot__ascii" aria-hidden="true">
+          <pre>{`
+   ┌─────────────────────────────┐
+   │   NULL_POINTER · 1998-2026  │
+   │   ▒▓█ end of transmission █▓▒│
+   └─────────────────────────────┘
+          `}</pre>
+        </div>
+        <div class="y2k-foot__row">
+          <span>© NULL_POINTER · 1998—2026 · all rights reserved</span>
+          <span>template 05 // y2k retro-future</span>
+        </div>
+        <div class="y2k-foot__webring">
+          <a href="#">← prev site</a>
+          <span>· random ·</span>
+          <a href="#">next site →</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <style is:global>
+    body { background: #0a001f; }
+    .y2k {
+      --bg:      #0a001f;
+      --bg-2:    #14002e;
+      --pink:    #ff3ec9;
+      --pink-2:  #ff6dd6;
+      --cyan:    #4ddfff;
+      --cyan-2:  #7be8ff;
+      --yellow:  #fff04d;
+      --green:   #4dff8e;
+      --text:    #f6ebff;
+      --muted:   #9b87b6;
+      font: 400 18px/1.5 'VT323', monospace;
+      color: var(--text);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .y2k-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+
+    .y2k-scanlines {
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 2px,
+        rgba(255, 62, 201, 0.04) 2px,
+        rgba(255, 62, 201, 0.04) 3px
+      );
+      pointer-events: none; z-index: 999;
+    }
+    .y2k-vignette {
+      position: fixed; inset: 0;
+      background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+      pointer-events: none; z-index: 998;
+    }
+
+    .y2k-pink { color: var(--pink); text-shadow: 0 0 12px rgba(255, 62, 201, 0.6); }
+    .y2k-cyan { color: var(--cyan); text-shadow: 0 0 12px rgba(77, 223, 255, 0.6); }
+    .y2k-blink { animation: y2k-blink 1s steps(2) infinite; }
+    @keyframes y2k-blink { 50% { opacity: 0; } }
+
+    .y2k-h2 {
+      margin: 16px 0 0;
+      font: 400 clamp(36px, 5.6vw, 64px)/1.05 'VT323', monospace;
+      letter-spacing: 1px;
+      color: var(--text);
+      text-transform: lowercase;
+    }
+    .y2k-section-head { max-width: 720px; margin-bottom: 40px; }
+    .y2k-section-tag {
+      display: inline-block;
+      font: 400 11px/1 'Press Start 2P', monospace;
+      letter-spacing: 1px;
+      color: var(--yellow);
+      padding: 8px 12px;
+      border: 2px solid var(--yellow);
+      background: rgba(255, 240, 77, 0.08);
+    }
+    .y2k-section-lead {
+      margin: 18px 0 0;
+      font-size: 19px;
+      color: var(--muted);
+      max-width: 540px;
+    }
+
+    .y2k-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 24px;
+      font: 400 11px/1 'Press Start 2P', monospace;
+      letter-spacing: 1px;
+      background: var(--cyan);
+      color: var(--bg);
+      border: 3px solid var(--text);
+      border-radius: 0;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 0 var(--text), 8px 8px 0 0 rgba(255, 62, 201, 0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      text-transform: uppercase;
+    }
+    .y2k-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 0 var(--text), 12px 12px 0 0 rgba(255, 62, 201, 0.6);
+    }
+    .y2k-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 0 var(--text);
+    }
+    .y2k-btn--pink {
+      background: var(--pink);
+      color: var(--text);
+      box-shadow: 4px 4px 0 0 var(--text), 8px 8px 0 0 rgba(77, 223, 255, 0.4);
+    }
+    .y2k-btn--pink:hover { box-shadow: 6px 6px 0 0 var(--text), 12px 12px 0 0 rgba(77, 223, 255, 0.6); }
+    .y2k-btn--cyan { background: var(--cyan); color: var(--bg); }
+
+    /* === NAV === */
+    .y2k-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg-2);
+      border-bottom: 2px solid var(--pink);
+      box-shadow: 0 4px 0 0 rgba(255, 62, 201, 0.3);
+    }
+    .y2k-nav__inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px;
+      padding: 14px 24px;
+    }
+    .y2k-nav__brand {
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 400 18px/1 'VT323', monospace;
+      color: var(--text);
+    }
+    .y2k-nav__chevron { color: var(--cyan); font-size: 22px; }
+    .y2k-nav__name {
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: var(--cyan);
+      text-shadow: 0 0 8px rgba(77, 223, 255, 0.5);
+    }
+    .y2k-nav__links { display: none; gap: 22px; }
+    .y2k-nav__links a {
+      font: 400 18px/1 'VT323', monospace;
+      color: var(--text);
+      transition: color 0.15s;
+    }
+    .y2k-nav__links a:hover { color: var(--pink); text-decoration: underline; }
+    .y2k-nav__status {
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 400 11px/1 'Press Start 2P', monospace;
+      color: var(--green);
+      letter-spacing: 1px;
+    }
+    .y2k-nav__status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: y2k-blink 1.4s steps(2) infinite;
+    }
+
+    /* === HERO === */
+    .y2k-hero {
+      position: relative;
+      padding: 50px 0 80px;
+      overflow: hidden;
+      border-bottom: 2px solid var(--pink);
+    }
+    .y2k-grid-floor {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 50%;
+      background-image:
+        linear-gradient(to top, rgba(255, 62, 201, 0.5), transparent 80%),
+        repeating-linear-gradient(to right, transparent 0, transparent 39px, rgba(77, 223, 255, 0.5) 39px, rgba(77, 223, 255, 0.5) 40px),
+        repeating-linear-gradient(to bottom, transparent 0, transparent 39px, rgba(77, 223, 255, 0.5) 39px, rgba(77, 223, 255, 0.5) 40px);
+      transform: perspective(400px) rotateX(60deg);
+      transform-origin: center bottom;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .y2k-sun {
+      position: absolute;
+      top: 25%; left: 50%;
+      transform: translateX(-50%);
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #fff04d 0%, #ff3ec9 60%, transparent 95%);
+      filter: blur(2px);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .y2k-sun::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(to bottom, transparent 0, transparent 14px, rgba(20, 0, 46, 0.7) 14px, rgba(20, 0, 46, 0.7) 20px);
+      border-radius: 50%;
+    }
+
+    .y2k-hero__inner { position: relative; padding-top: 30px; text-align: center; }
+    .y2k-hero__sticker {
+      display: inline-block;
+      padding: 10px 16px;
+      background: var(--yellow);
+      color: var(--bg);
+      font: 400 12px/1 'Press Start 2P', monospace;
+      letter-spacing: 1px;
+      transform: rotate(-3deg);
+      box-shadow: 4px 4px 0 0 var(--pink);
+    }
+    .y2k-hero__title {
+      margin: 30px 0 14px;
+      font: 400 clamp(48px, 9vw, 130px)/1 'Press Start 2P', monospace;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+
+    /* glitch effect */
+    .y2k-glitch {
+      position: relative;
+      display: inline-block;
+      color: var(--text);
+      text-shadow:
+        0 0 8px rgba(77, 223, 255, 0.6),
+        2px 0 0 var(--pink),
+        -2px 0 0 var(--cyan);
+      animation: y2k-glitch-jitter 4s steps(1) infinite;
+    }
+    @keyframes y2k-glitch-jitter {
+      0%, 92%, 100% { transform: translate(0); }
+      94% { transform: translate(-2px, 1px); }
+      96% { transform: translate(2px, -1px); }
+      98% { transform: translate(0, 1px); }
+    }
+
+    .y2k-hero__subtitle {
+      font: 400 18px/1.4 'VT323', monospace;
+      color: var(--cyan);
+      letter-spacing: 1px;
+    }
+    .y2k-hero__copy { max-width: 560px; margin: 24px auto 0; }
+    .y2k-hero__copy p {
+      margin: 0;
+      font-size: 19px; line-height: 1.6;
+      color: var(--text);
+    }
+    .y2k-hero__actions {
+      margin-top: 36px;
+      display: flex; flex-wrap: wrap; gap: 16px;
+      justify-content: center;
+    }
+    .y2k-hero__pixels {
+      margin-top: 40px;
+      display: flex; gap: 4px;
+      justify-content: center;
+    }
+    .y2k-px {
+      width: 10px; height: 10px;
+      background: var(--pink);
+      box-shadow: 0 0 4px var(--pink);
+      animation: y2k-px-pulse 1.6s ease-in-out infinite;
+    }
+    .y2k-px:nth-child(2) { background: var(--cyan); box-shadow: 0 0 4px var(--cyan); animation-delay: 0.1s; }
+    .y2k-px:nth-child(3) { background: var(--yellow); box-shadow: 0 0 4px var(--yellow); animation-delay: 0.2s; }
+    .y2k-px:nth-child(4) { background: var(--green); box-shadow: 0 0 4px var(--green); animation-delay: 0.3s; }
+    .y2k-px:nth-child(5) { background: var(--yellow); box-shadow: 0 0 4px var(--yellow); animation-delay: 0.4s; }
+    .y2k-px:nth-child(6) { background: var(--cyan); box-shadow: 0 0 4px var(--cyan); animation-delay: 0.5s; }
+    .y2k-px:nth-child(7) { background: var(--pink); box-shadow: 0 0 4px var(--pink); animation-delay: 0.6s; }
+    @keyframes y2k-px-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* === WINDOW (винд-95-style) === */
+    .y2k-window {
+      background: var(--bg-2);
+      border: 3px solid var(--pink);
+      border-radius: 0;
+      box-shadow: 8px 8px 0 0 var(--pink), 16px 16px 0 0 rgba(255, 62, 201, 0.3);
+    }
+    .y2k-window--cyan {
+      border-color: var(--cyan);
+      box-shadow: 8px 8px 0 0 var(--cyan), 16px 16px 0 0 rgba(77, 223, 255, 0.3);
+    }
+    .y2k-window__head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px;
+      background: var(--pink);
+      color: var(--text);
+      font: 400 16px/1 'VT323', monospace;
+      letter-spacing: 1px;
+    }
+    .y2k-window__head--cyan { background: var(--cyan); color: var(--bg); }
+    .y2k-window__title { font-size: 18px; }
+    .y2k-window__controls { display: flex; gap: 6px; }
+    .y2k-window__controls span {
+      width: 22px; height: 18px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--text);
+      background: rgba(0, 0, 0, 0.2);
+      font: 400 14px/1 'VT323', monospace;
+    }
+    .y2k-window__head--cyan .y2k-window__controls span { border-color: var(--bg); background: rgba(255, 255, 255, 0.15); }
+    .y2k-window__body { padding: 24px 22px; }
+    .y2k-window__body--cyan { padding: 30px 28px; }
+    .y2k-window__foot {
+      display: flex; gap: 16px;
+      padding: 8px 14px;
+      background: var(--bg);
+      border-top: 2px solid var(--pink);
+      font: 400 12px/1 'Press Start 2P', monospace;
+      color: var(--cyan);
+      letter-spacing: 0.5px;
+    }
+
+    /* === TRACKS === */
+    .y2k-tracks { padding: 80px 0; }
+    .y2k-tracks__list { display: flex; flex-direction: column; gap: 4px; }
+    .y2k-track {
+      display: grid;
+      grid-template-columns: 36px 28px 1fr auto auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 14px;
+      background: rgba(255, 62, 201, 0.08);
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      font: 400 20px/1 'VT323', monospace;
+    }
+    .y2k-track:hover {
+      background: rgba(255, 62, 201, 0.18);
+      border-color: var(--pink);
+    }
+    .y2k-track__num {
+      font: 400 10px/1 'Press Start 2P', monospace;
+      color: var(--yellow);
+    }
+    .y2k-track__play {
+      color: var(--cyan);
+      font-size: 18px;
+      width: 28px; height: 28px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 2px solid var(--cyan);
+      background: rgba(77, 223, 255, 0.1);
+    }
+    .y2k-track:hover .y2k-track__play { background: var(--cyan); color: var(--bg); }
+    .y2k-track__title { color: var(--text); letter-spacing: 0.5px; }
+    .y2k-track__tag { color: var(--muted); font-size: 16px; }
+    .y2k-track__len {
+      font: 700 12px/1 'Space Mono', monospace;
+      color: var(--cyan);
+      letter-spacing: 1px;
+    }
+
+    /* === CONTACT === */
+    .y2k-contact { padding: 80px 0; }
+    .y2k-contact__title { margin: 0 0 28px; }
+    .y2k-form { display: flex; flex-direction: column; gap: 18px; max-width: 520px; }
+    .y2k-form label {
+      display: flex; flex-direction: column; gap: 6px;
+      font: 400 18px/1 'VT323', monospace;
+      color: var(--cyan);
+    }
+    .y2k-form input, .y2k-form textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 2px solid var(--cyan);
+      color: var(--text);
+      font: 400 18px/1.5 'VT323', monospace;
+      letter-spacing: 0.5px;
+      outline: none;
+      border-radius: 0;
+    }
+    .y2k-form input:focus, .y2k-form textarea:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(255, 62, 201, 0.18);
+    }
+    .y2k-form input::placeholder, .y2k-form textarea::placeholder { color: var(--muted); }
+    .y2k-form button { margin-top: 8px; align-self: flex-start; }
+
+    .y2k-contact__visitors {
+      margin-top: 30px;
+      padding-top: 22px;
+      border-top: 1px dashed var(--cyan);
+      display: flex; flex-wrap: wrap; gap: 20px;
+      font: 400 17px/1 'VT323', monospace;
+      color: var(--muted);
+    }
+    .y2k-counter__num {
+      color: var(--pink);
+      letter-spacing: 1px;
+    }
+
+    /* === FOOTER === */
+    .y2k-foot {
+      padding: 60px 0 30px;
+      border-top: 2px solid var(--pink);
+      background: var(--bg-2);
+    }
+    .y2k-foot__ascii pre {
+      margin: 0;
+      font: 400 14px/1.4 'VT323', monospace;
+      color: var(--cyan);
+      text-align: center;
+      white-space: pre;
+    }
+    .y2k-foot__row {
+      margin-top: 30px;
+      display: flex; flex-direction: column; gap: 8px;
+      font: 400 16px/1 'VT323', monospace;
+      color: var(--muted);
+    }
+    .y2k-foot__webring {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--muted);
+      display: flex; gap: 10px; justify-content: center;
+      font: 400 17px/1 'VT323', monospace;
+    }
+    .y2k-foot__webring a { color: var(--cyan); transition: color 0.15s; }
+    .y2k-foot__webring a:hover { color: var(--pink); }
+    .y2k-foot__webring span { color: var(--muted); }
+
+    @media (min-width: 760px) {
+      .y2k-foot__row { flex-direction: row; justify-content: space-between; }
+    }
+    @media (min-width: 1024px) {
+      .y2k-nav__links { display: flex; }
+    }
+  </style>
+</TemplateLayout>
