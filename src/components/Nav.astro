@@ -1,12 +1,16 @@
 ---
 const base = import.meta.env.BASE_URL;
+// якоря работают только на главной странице — на других страницах ведём на главную с якорем
+const isHome = Astro.url.pathname === base || Astro.url.pathname === '/' || Astro.url.pathname === '';
+const anchor = (a: string) => isHome ? a : `${base}${a}`;
+
 const items = [
-  { href: '#work', label: 'Работы' },
-  { href: '#stack', label: 'Стек' },
-  { href: '#pricing', label: 'Цены' },
-  { href: `${base}brief/`, label: 'Бриф' },
-  { href: `${base}blog/`, label: 'Блог' },
-  { href: '#faq', label: 'FAQ' },
+  { href: anchor('#work'),    label: 'Работы' },
+  { href: anchor('#stack'),   label: 'Стек' },
+  { href: anchor('#pricing'), label: 'Цены' },
+  { href: `${base}brief/`,    label: 'Бриф' },
+  { href: `${base}blog/`,     label: 'Блог' },
+  { href: anchor('#faq'),     label: 'FAQ' },
 ];
 ---
 <nav class="nav">
