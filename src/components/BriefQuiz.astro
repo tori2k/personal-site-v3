@@ -197,27 +197,29 @@ const contact = [
           </div>
         </div>
 
-        <!-- success -->
-        <div class="bq-success" id="bq-success" hidden>
-          <div class="bq-success__icon">✓</div>
-          <h3 class="bq-success__title font-display">Бриф получен.</h3>
-          <p class="bq-success__text">
-            Спасибо! Изучу детали и&nbsp;вернусь со&nbsp;сметой и&nbsp;вопросами
-            в&nbsp;течение 24&nbsp;часов&nbsp;— на&nbsp;Telegram или email.
-          </p>
-          <a href="/" class="bq-btn bq-btn--ghost">← на главную</a>
-        </div>
-
-        <!-- error -->
-        <div class="bq-error" id="bq-error" hidden>
-          <p>
-            Не&nbsp;удалось отправить бриф автоматически. Пожалуйста, напишите мне
-            в&nbsp;<a href="https://t.me/kirillbaryev">Telegram</a> или
-            на&nbsp;<a href="mailto:frm.scrtch.team@gmail.com">email</a>&nbsp;—
-            я&nbsp;помогу вручную.
-          </p>
-        </div>
       </form>
+
+      <!-- success (вне формы — чтобы не скрывался вместе с ней) -->
+      <div class="bq-success" id="bq-success" hidden>
+        <div class="bq-success__icon">✓</div>
+        <h3 class="bq-success__title font-display">Заявка отправлена</h3>
+        <p class="bq-success__text">
+          Спасибо! Данные получены. Изучу детали и&nbsp;вернусь
+          со&nbsp;сметой и&nbsp;вопросами в&nbsp;течение 24&nbsp;часов&nbsp;—
+          на&nbsp;Telegram или email.
+        </p>
+        <a href="/" class="bq-btn bq-btn--ghost">← на главную</a>
+      </div>
+
+      <!-- error -->
+      <div class="bq-error" id="bq-error" hidden>
+        <p>
+          Не&nbsp;удалось отправить бриф автоматически. Пожалуйста, напишите мне
+          в&nbsp;<a href="https://t.me/kirillbaryev">Telegram</a> или
+          на&nbsp;<a href="mailto:frm.scrtch.team@gmail.com">email</a>&nbsp;—
+          я&nbsp;помогу вручную.
+        </p>
+      </div>
     </div>
   </div>
 </section>
