@@ -452,6 +452,50 @@ body {
   50%      { transform: scale(1.15); opacity: 1; }
 }
 
+/* Мерцание ближних звёзд (наложено поверх дрейфа через opacity-пульс слоя) */
+.cosmos__stars--near {
+  animation: cosmos-drift-near 100s linear infinite, cosmos-twinkle 5s ease-in-out infinite;
+}
+@keyframes cosmos-twinkle {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 0.95; }
+}
+
+/* Кометы — летят по диагонали с тающим хвостом */
+.cosmos__comet {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 1px rgba(255,255,255,0.8);
+  opacity: 0;
+}
+.cosmos__comet::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 120px;
+  height: 1px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, transparent, rgba(95,198,255,0.7), #fff);
+}
+.cosmos__comet--1 {
+  top: 12%; left: 70%;
+  animation: comet-fall 9s ease-in 2s infinite;
+}
+.cosmos__comet--2 {
+  top: 5%; left: 40%;
+  animation: comet-fall 11s ease-in 7s infinite;
+}
+@keyframes comet-fall {
+  0%   { opacity: 0; transform: translate(0, 0) rotate(28deg); }
+  8%   { opacity: 1; }
+  22%  { opacity: 0; transform: translate(-420px, 230px) rotate(28deg); }
+  100% { opacity: 0; transform: translate(-420px, 230px) rotate(28deg); }
+}
+
 /* Контент над космосом */
 .noise-overlay { z-index: 2; }
 .nav, main, footer { position: relative; z-index: 3; }
@@ -459,7 +503,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .cosmos__stars--far,
   .cosmos__stars--near,
-  .cosmos__aurora { animation: none !important; }
+  .cosmos__aurora,
+  .cosmos__comet { animation: none !important; }
+  .cosmos__comet { display: none; }
 }
 
 /* ============================================

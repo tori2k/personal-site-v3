@@ -41,6 +41,8 @@ const {
     <div class="cosmos__stars cosmos__stars--near"></div>
     <div class="cosmos__aurora cosmos__aurora--1"></div>
     <div class="cosmos__aurora cosmos__aurora--2"></div>
+    <div class="cosmos__comet cosmos__comet--1"></div>
+    <div class="cosmos__comet cosmos__comet--2"></div>
   </div>
   <div class="noise-overlay"></div>
 
@@ -153,6 +155,22 @@ const {
 
       document.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
       document.addEventListener('mouseenter', () => { cursor.style.opacity = '1'; });
+    }
+
+    // Magnetic-эффект: элементы [data-magnetic] притягиваются к курсору
+    if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+      document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+        const strength = parseFloat(el.dataset.magnetic || '0.3');
+        el.addEventListener('mousemove', (e) => {
+          const r = el.getBoundingClientRect();
+          const mx = e.clientX - (r.left + r.width / 2);
+          const my = e.clientY - (r.top + r.height / 2);
+          el.style.transform = `translate(${mx * strength}px, ${my * strength}px)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = 'translate(0, 0)';
+        });
+      });
     }
   </script>
 </body>
