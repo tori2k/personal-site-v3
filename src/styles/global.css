@@ -462,38 +462,46 @@ body {
 }
 
 /* Кометы — летят по диагонали с тающим хвостом */
+/* Кометы: голова движется по траектории (translate),
+   хвост (::after) тянется СТРОГО ПОЗАДИ — в сторону, обратную движению.
+   Траектория: вниз-влево. Значит хвост идёт вверх-вправо (вправо-вверх от головы). */
 .cosmos__comet {
   position: absolute;
-  width: 2px;
-  height: 2px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 0 6px 1px rgba(255,255,255,0.8);
+  box-shadow: 0 0 8px 2px rgba(255,255,255,0.9);
   opacity: 0;
 }
 .cosmos__comet::after {
   content: '';
   position: absolute;
+  /* Хвост начинается от головы и уходит вверх-вправо (позади по ходу движения) */
+  left: 50%;
   top: 50%;
-  right: 0;
-  width: 120px;
-  height: 1px;
-  transform: translateY(-50%);
-  background: linear-gradient(90deg, transparent, rgba(95,198,255,0.7), #fff);
+  width: 140px;
+  height: 1.5px;
+  transform-origin: left center;
+  /* Поворот хвоста на угол, обратный движению: движение ~150° → хвост в -30° (вверх-вправо) */
+  transform: rotate(-30deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(95,198,255,0.5), transparent);
 }
 .cosmos__comet--1 {
-  top: 12%; left: 70%;
-  animation: comet-fall 9s ease-in 2s infinite;
+  top: 10%; left: 75%;
+  animation: comet-fall 8s ease-in 2s infinite;
 }
 .cosmos__comet--2 {
-  top: 5%; left: 40%;
-  animation: comet-fall 11s ease-in 7s infinite;
+  top: 4%; left: 45%;
+  animation: comet-fall 12s ease-in 9s infinite;
 }
+/* Голова летит вниз-влево; хвост статично смотрит назад (вверх-вправо), не вращаем */
 @keyframes comet-fall {
-  0%   { opacity: 0; transform: translate(0, 0) rotate(28deg); }
-  8%   { opacity: 1; }
-  22%  { opacity: 0; transform: translate(-420px, 230px) rotate(28deg); }
-  100% { opacity: 0; transform: translate(-420px, 230px) rotate(28deg); }
+  0%   { opacity: 0; transform: translate(0, 0); }
+  6%   { opacity: 1; }
+  20%  { opacity: 1; }
+  26%  { opacity: 0; transform: translate(-480px, 270px); }
+  100% { opacity: 0; transform: translate(-480px, 270px); }
 }
 
 /* Контент над космосом */
