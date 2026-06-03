@@ -1,23 +1,15 @@
 ---
 ---
 <section class="hero section-dark">
-  <!-- Aurora — источник света всей секции -->
-  <div class="hero__aurora" aria-hidden="true"></div>
   <div class="hero__cursor-glow" id="heroGlow"></div>
 
-  <div class="container-x hero__inner">
-    <div class="hero__top">
-      <span class="live-badge">
-        <span class="live-badge__dot"></span>
-        Беру 2 проекта в июнь
-      </span>
-      <div class="hero__meta">
-        <span>(01)</span>
-        <span class="hero__meta-sep">/</span>
-        <span>лендинги · автоматизации</span>
-      </div>
-    </div>
+  <!-- 3D стеклянная линза (three.js, lazy, fallback на CSS) -->
+  <div class="hero__lens" aria-hidden="true">
+    <canvas id="heroLensCanvas"></canvas>
+    <div class="hero__lens-fallback"></div>
+  </div>
 
+  <div class="container-x hero__inner">
     <h1 class="hero__title text-glow" id="heroTitle">
       <span class="hero__line hero__line--1">Разработка</span>
       <span class="hero__line hero__line--2"><em>лендингов</em></span>
@@ -97,83 +89,46 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: var(--color-bg);
   }
 
-  /* ============ ДВИЖУЩИЙСЯ КОСМОС ============ */
-  /* Три слоя звёзд разной глубины, медленный дрейф = ощущение «космос плывёт» */
-  .hero::before,
-  .hero::after {
-    content: '';
+  /* Космос и aurora теперь глобальные (в Layout) — здесь не дублируем */
+
+  /* 3D стеклянная линза — в правом верхнем углу, не перекрывает заголовок */
+  .hero__lens {
     position: absolute;
-    inset: -50%;
-    z-index: 0;
+    top: 4%;
+    right: -4%;
+    width: min(34vw, 440px);
+    height: min(34vw, 440px);
+    z-index: 1;
     pointer-events: none;
-    background-repeat: repeat;
+    opacity: 0.8;
   }
-  /* Дальние мелкие звёзды */
-  .hero::before {
-    background-image:
-      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.7), transparent),
-      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.5), transparent),
-      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.6), transparent),
-      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.4), transparent),
-      radial-gradient(1px 1px at 90% 50%, rgba(255,255,255,0.5), transparent),
-      radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.6), transparent),
-      radial-gradient(1px 1px at 33% 15%, rgba(255,255,255,0.4), transparent),
-      radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.5), transparent);
-    background-size: 280px 280px;
-    opacity: 0.5;
-    animation: drift-far 120s linear infinite;
+  .hero__lens canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
   }
-  /* Ближние крупные звёзды с aurora-оттенком */
-  .hero::after {
-    background-image:
-      radial-gradient(1.5px 1.5px at 15% 25%, rgba(95,198,255,0.9), transparent),
-      radial-gradient(2px 2px at 55% 65%, rgba(255,255,255,0.95), transparent),
-      radial-gradient(1.5px 1.5px at 85% 35%, rgba(162,128,255,0.8), transparent),
-      radial-gradient(2px 2px at 35% 85%, rgba(255,255,255,0.9), transparent),
-      radial-gradient(1.5px 1.5px at 75% 15%, rgba(95,198,255,0.7), transparent);
-    background-size: 420px 420px;
-    opacity: 0.7;
-    animation: drift-near 80s linear infinite;
-  }
-  @keyframes drift-far {
-    from { transform: translate(0, 0); }
-    to   { transform: translate(-280px, -140px); }
-  }
-  @keyframes drift-near {
-    from { transform: translate(0, 0); }
-    to   { transform: translate(420px, 210px); }
-  }
-
-  /* Aurora — источник света сверху-справа */
-  .hero__aurora {
+  /* CSS-fallback: стеклянная сфера для mobile/reduced-motion/слабых */
+  .hero__lens-fallback {
     position: absolute;
-    top: -20%;
-    right: -10%;
-    width: 70vw;
-    height: 70vw;
-    max-width: 1100px;
-    max-height: 1100px;
+    inset: 12%;
     border-radius: 50%;
-    background: radial-gradient(
-      circle at 50% 50%,
-      rgba(95,198,255,0.22) 0%,
-      rgba(162,128,255,0.16) 35%,
-      rgba(255,110,199,0.08) 55%,
-      transparent 72%
-    );
-    filter: blur(60px);
-    pointer-events: none;
-    z-index: 0;
-    animation: aurora-breathe 14s ease-in-out infinite;
-    will-change: transform, opacity;
+    background:
+      radial-gradient(circle at 35% 30%, rgba(255,255,255,0.25), transparent 40%),
+      radial-gradient(circle at 65% 70%, rgba(95,198,255,0.35), transparent 55%),
+      radial-gradient(circle at 50% 50%, rgba(162,128,255,0.25), rgba(6,7,13,0.1) 70%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow:
+      inset 0 2px 20px rgba(255,255,255,0.15),
+      inset 0 -10px 40px rgba(95,198,255,0.2),
+      0 20px 60px rgba(95,198,255,0.15);
+    opacity: 0;
+    transition: opacity 0.6s;
   }
-  @keyframes aurora-breathe {
-    0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.9; }
-    50%      { transform: scale(1.12) translate(-3%, 3%); opacity: 1; }
-  }
+  /* Когда canvas пуст (3D не запущен) — показываем fallback */
+  .hero__lens.fallback-active .hero__lens-fallback { opacity: 1; }
 
   /* Cursor-reactive glow — теперь aurora-cyan (виден на тёмном) */
   .hero__cursor-glow {
@@ -219,28 +174,29 @@
   .hero__title {
     font-family: 'Unbounded', sans-serif;
     font-weight: 500;
-    font-size: clamp(48px, 10vw, 150px);
-    line-height: 0.92;
+    font-size: clamp(40px, 6.5vw, 104px);
+    line-height: 0.98;
     letter-spacing: -0.03em;
-    margin: 40px 0;
+    margin: 0 0 28px;
     color: var(--color-text);
     display: flex;
     flex-direction: column;
   }
   .hero__line {
     display: block;
+    text-align: left;
     will-change: transform;
-  }
-  .hero__line--2 {
-    text-align: center;
   }
   .hero__line--2 em {
     font-style: italic;
     font-weight: 300;
-    color: var(--color-accent);
-  }
-  .hero__line--3 {
-    text-align: right;
+    /* Яркий cyan для контраста на тёмном космосе */
+    color: #8FD8FF;
+    /* Сильный тёмный контур + glow, чтобы текст читался поверх линзы/космоса */
+    text-shadow:
+      0 0 1px rgba(6,7,13,1),
+      0 2px 24px rgba(6,7,13,0.95),
+      0 0 50px rgba(95,198,255,0.4);
   }
 
   /* Bottom row */
@@ -338,17 +294,44 @@
     .hero__metrics { grid-template-columns: repeat(2, 1fr); }
     .marquee-track { font-size: 16px; gap: 20px; }
     .hero__sub { max-width: 100%; }
+    /* На мобайле линза мельче и не мешает тексту */
+    .hero__lens {
+      width: 70vw; height: 70vw;
+      right: -10%; top: 18%;
+      opacity: 0.5;
+    }
   }
 
   /* Останавливаем движение космоса для reduced-motion */
   @media (prefers-reduced-motion: reduce) {
-    .hero::before,
-    .hero::after,
-    .hero__aurora { animation: none !important; }
+    .hero__cursor-glow { display: none; }
   }
 </style>
 
 <script>
+  // 3D-линза: lazy-загрузка three.js только когда нужно
+  const lensCanvas = document.getElementById('heroLensCanvas') as HTMLCanvasElement | null;
+  const lensWrap = document.querySelector<HTMLElement>('.hero__lens');
+  if (lensCanvas && lensWrap) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isLowEnd = (navigator.hardwareConcurrency || 4) < 4;
+    const isTouch = window.matchMedia('(hover: none)').matches;
+    if (reduceMotion || isLowEnd || isTouch) {
+      // Сразу показываем CSS-fallback, three.js не грузим
+      lensWrap.classList.add('fallback-active');
+    } else {
+      // Lazy-импорт three.js после первого кадра (не блокируем LCP)
+      requestIdleCallback?.(() => {
+        import('../scripts/heroLens').then(({ initHeroLens }) => {
+          const cleanup = initHeroLens(lensCanvas);
+          if (!cleanup) lensWrap.classList.add('fallback-active');
+        }).catch(() => lensWrap.classList.add('fallback-active'));
+      }) ?? import('../scripts/heroLens').then(({ initHeroLens }) => {
+        initHeroLens(lensCanvas);
+      });
+    }
+  }
+
   // Cursor glow follow
   const glow = document.getElementById('heroGlow');
   const hero = document.querySelector<HTMLElement>('.hero');
