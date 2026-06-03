@@ -150,54 +150,121 @@ body {
 }
 .section-cream .display-h em { color: var(--color-muted); }
 
-/* Button */
+/* ============================================
+   LIQUID GLASS КНОПКИ (Apple-style)
+   Полупрозрачное стекло: преломление фона + блик-фаска
+   + многослойная тень + движущийся блик и cyan-glow на hover
+   ============================================ */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 26px 14px 22px;
+  padding: 15px 28px 15px 24px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   font-size: 13px;
   letter-spacing: 1.5px;
-  border: 1px solid var(--color-text);
-  color: var(--color-text);
-  background: transparent;
-  cursor: none;
-  transition: all 0.3s cubic-bezier(.22,1,.36,1);
-  text-decoration: none;
-  border-radius: 999px;
   text-transform: uppercase;
+  text-decoration: none;
+  cursor: none;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
+  border-radius: 999px;
+  color: var(--color-text);
+  /* Стекло */
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -8px 16px rgba(255,255,255,0.04),
+    0 4px 12px rgba(0,0,0,0.25),
+    0 8px 28px rgba(0,0,0,0.18);
+  transition: transform 0.35s cubic-bezier(.22,1,.36,1),
+              box-shadow 0.35s cubic-bezier(.22,1,.36,1),
+              border-color 0.35s, background 0.35s;
+}
+/* Верхний световой блик-фаска (преломление сверху) */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.22) 0%,
+    rgba(255,255,255,0.05) 30%,
+    transparent 55%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+/* Движущийся блик на hover (sheen) */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255,255,255,0.25),
+    transparent
+  );
+  transform: skewX(-18deg);
+  transition: left 0.6s cubic-bezier(.22,1,.36,1);
+  pointer-events: none;
+  z-index: -1;
 }
 .btn:hover {
-  background: var(--color-text);
-  color: var(--color-bg);
-  border-color: var(--color-text);
+  transform: translateY(-2px);
+  border-color: rgba(95,198,255,0.5);
+  background: rgba(95,198,255,0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.45),
+    inset 0 -8px 18px rgba(95,198,255,0.08),
+    0 6px 16px rgba(0,0,0,0.3),
+    0 0 40px rgba(95,198,255,0.25);
 }
+.btn:hover::after { left: 120%; }
+.btn:active { transform: translateY(0) scale(0.97); }
+
+/* Главная CTA — более «налитое» светлое стекло (контраст) */
 .btn--filled {
-  background: var(--color-text);
-  color: var(--color-bg);
-  border-color: var(--color-text);
+  color: #06070D;
+  background: rgba(255,255,255,0.9);
+  border-color: rgba(255,255,255,0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -10px 20px rgba(95,198,255,0.12),
+    0 6px 18px rgba(0,0,0,0.3),
+    0 0 30px rgba(95,198,255,0.15);
+}
+.btn--filled::before {
+  background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 50%);
 }
 .btn--filled:hover {
-  background: #000;
-  border-color: #000;
-  color: var(--color-bg);
+  color: #06070D;
+  background: rgba(255,255,255,1);
+  border-color: rgba(95,198,255,0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -10px 22px rgba(95,198,255,0.2),
+    0 8px 22px rgba(0,0,0,0.35),
+    0 0 50px rgba(95,198,255,0.35);
 }
 .btn__plus {
   font-size: 16px;
   line-height: 1;
 }
-.section-cream .btn {
-  color: var(--color-text);
-  border-color: var(--color-text);
-}
-.section-cream .btn:hover {
-  background: var(--color-text);
-  color: var(--color-bg);
-  border-color: var(--color-text);
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::after { display: none; }
+  .btn:hover { transform: none; }
 }
 
 /* Live badge — нейтральный */
