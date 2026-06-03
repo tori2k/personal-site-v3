@@ -9,7 +9,6 @@ const items = [
   { href: `${base}templates/`, label: 'Шаблоны' },
   { href: anchor('#pricing'),  label: 'Цены' },
   { href: `${base}brief/`,     label: 'Бриф' },
-  { href: `${base}blog/`,      label: 'Блог' },
   { href: anchor('#faq'),      label: 'FAQ' },
 ];
 ---
@@ -56,9 +55,10 @@ const items = [
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 50;
-    backdrop-filter: blur(20px);
-    background: rgba(242,239,231,0.78);
-    border-bottom: 1px solid rgba(17,17,17,0.08);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    background: rgba(6,7,13,0.72);
+    border-bottom: 1px solid rgba(244,246,251,0.08);
   }
   .nav__inner {
     display: flex;
@@ -149,9 +149,10 @@ const items = [
   .nav__mobile {
     position: absolute;
     top: 100%; left: 0; right: 0;
-    background: rgba(242,239,231,0.98);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(17,17,17,0.08);
+    background: rgba(6,7,13,0.96);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border-bottom: 1px solid rgba(244,246,251,0.08);
     flex-direction: column;
     padding: 20px 24px 28px;
     gap: 8px;
@@ -166,7 +167,7 @@ const items = [
     color: var(--color-text);
     text-decoration: none;
     padding: 12px 0;
-    border-bottom: 1px solid rgba(17,17,17,0.08);
+    border-bottom: 1px solid rgba(244,246,251,0.08);
   }
   .nav__mobile .nav__cta {
     margin-top: 12px;

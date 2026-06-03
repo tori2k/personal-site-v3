@@ -18,7 +18,7 @@ const {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  <meta name="theme-color" content="#f2efe7" />
+  <meta name="theme-color" content="#06070D" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
@@ -83,16 +83,41 @@ const {
   </style>
 
   <script>
-    // Reveal on scroll
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
+    import Lenis from 'lenis';
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Lenis — инерционный smooth-scroll (база 60fps-плавности).
+    // Отключаем для prefers-reduced-motion.
+    if (!reduceMotion) {
+      const lenis = new Lenis({
+        duration: 1.1,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
       });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => io.observe(el));
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+      // Прокидываем прогресс скролла для будущих scroll-driven эффектов
+      lenis.on('scroll', ({ scroll }: { scroll: number }) => {
+        document.documentElement.style.setProperty('--scroll-y', String(scroll));
+      });
+    }
+
+    // Reveal on scroll — при reduced-motion элементы уже видимы через CSS, observer не нужен
+    if (!reduceMotion) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => io.observe(el));
+    }
 
     // Custom cursor
     const cursor = document.getElementById('cursor');

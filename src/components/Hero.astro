@@ -1,33 +1,35 @@
 ---
 ---
 <section class="hero section-dark">
+  <!-- Aurora — источник света всей секции -->
+  <div class="hero__aurora" aria-hidden="true"></div>
   <div class="hero__cursor-glow" id="heroGlow"></div>
 
   <div class="container-x hero__inner">
     <div class="hero__top">
       <span class="live-badge">
         <span class="live-badge__dot"></span>
-        Беру 2 проекта на май
+        Беру 2 проекта в июнь
       </span>
       <div class="hero__meta">
         <span>(01)</span>
         <span class="hero__meta-sep">/</span>
-        <span>сайты под заявки</span>
+        <span>лендинги · автоматизации</span>
       </div>
     </div>
 
-    <h1 class="hero__title" id="heroTitle">
-      <span class="hero__line hero__line--1">Лендинг</span>
-      <span class="hero__line hero__line--2"><em>за 72</em></span>
-      <span class="hero__line hero__line--3">часа.</span>
+    <h1 class="hero__title text-glow" id="heroTitle">
+      <span class="hero__line hero__line--1">Разработка</span>
+      <span class="hero__line hero__line--2"><em>лендингов</em></span>
+      <span class="hero__line hero__line--3">и автоматизаций.</span>
     </h1>
 
     <div class="hero__bottom">
-      <div class="hero__sub">
+      <div class="hero__sub glass">
         <p>
-          Помогаю экспертам и малому бизнесу быстро упаковать услугу в сайт:
-          оффер, структура, дизайн, заявки в Telegram. Без агентства, долгих
-          созвонов и бюджета 100 000 ₽.
+          Собираю сайты под заявки и системы, которые работают без вас:
+          оплаты, заявки в Telegram, админка, интеграции.
+          Чистый код, скорость, ваши исходники.
         </p>
       </div>
 
@@ -56,7 +58,7 @@
         </div>
         <div class="metric">
           <div class="metric__n">0<small>₽</small></div>
-          <div class="metric__l">за хостинг сайта</div>
+          <div class="metric__l">за хостинг</div>
         </div>
       </div>
     </div>
@@ -65,23 +67,23 @@
   <!-- Marquee -->
   <div class="hero__marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span>ЛЕНДИНГ ЗА 72 ЧАСА</span><span>·</span>
+      <span>ЛЕНДИНГИ ПОД ЗАЯВКИ</span><span>·</span>
+      <span>АВТОМАТИЗАЦИИ И БОТЫ</span><span>·</span>
+      <span>ОНЛАЙН-ОПЛАТЫ</span><span>·</span>
       <span>ЗАЯВКИ В TELEGRAM</span><span>·</span>
-      <span>ОФФЕР И СТРУКТУРА</span><span>·</span>
-      <span>АДАПТИВ ПОД ТЕЛЕФОН</span><span>·</span>
-      <span>РАБОТАЕТ НА ТЕЛЕФОНЕ</span><span>·</span>
-      <span>БЕЗ TILDA И WORDPRESS</span><span>·</span>
+      <span>ИНТЕГРАЦИИ И CRM</span><span>·</span>
+      <span>ЧИСТЫЙ КОД БЕЗ TILDA</span><span>·</span>
       <span>СВОЙ ДОМЕН</span><span>·</span>
-      <span>РАЗБОР БЕСПЛАТНО</span><span>·</span>
+      <span>ИСХОДНИКИ ВАШИ</span><span>·</span>
       <!-- дубль для seamless scroll -->
-      <span>ЛЕНДИНГ ЗА 72 ЧАСА</span><span>·</span>
+      <span>ЛЕНДИНГИ ПОД ЗАЯВКИ</span><span>·</span>
+      <span>АВТОМАТИЗАЦИИ И БОТЫ</span><span>·</span>
+      <span>ОНЛАЙН-ОПЛАТЫ</span><span>·</span>
       <span>ЗАЯВКИ В TELEGRAM</span><span>·</span>
-      <span>ОФФЕР И СТРУКТУРА</span><span>·</span>
-      <span>АДАПТИВ ПОД ТЕЛЕФОН</span><span>·</span>
-      <span>РАБОТАЕТ НА ТЕЛЕФОНЕ</span><span>·</span>
-      <span>БЕЗ TILDA И WORDPRESS</span><span>·</span>
+      <span>ИНТЕГРАЦИИ И CRM</span><span>·</span>
+      <span>ЧИСТЫЙ КОД БЕЗ TILDA</span><span>·</span>
       <span>СВОЙ ДОМЕН</span><span>·</span>
-      <span>РАЗБОР БЕСПЛАТНО</span><span>·</span>
+      <span>ИСХОДНИКИ ВАШИ</span><span>·</span>
     </div>
   </div>
 </section>
@@ -95,20 +97,96 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background: var(--color-bg);
   }
 
-  /* Cursor-reactive glow */
+  /* ============ ДВИЖУЩИЙСЯ КОСМОС ============ */
+  /* Три слоя звёзд разной глубины, медленный дрейф = ощущение «космос плывёт» */
+  .hero::before,
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    z-index: 0;
+    pointer-events: none;
+    background-repeat: repeat;
+  }
+  /* Дальние мелкие звёзды */
+  .hero::before {
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 90% 50%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 33% 15%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.5), transparent);
+    background-size: 280px 280px;
+    opacity: 0.5;
+    animation: drift-far 120s linear infinite;
+  }
+  /* Ближние крупные звёзды с aurora-оттенком */
+  .hero::after {
+    background-image:
+      radial-gradient(1.5px 1.5px at 15% 25%, rgba(95,198,255,0.9), transparent),
+      radial-gradient(2px 2px at 55% 65%, rgba(255,255,255,0.95), transparent),
+      radial-gradient(1.5px 1.5px at 85% 35%, rgba(162,128,255,0.8), transparent),
+      radial-gradient(2px 2px at 35% 85%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(1.5px 1.5px at 75% 15%, rgba(95,198,255,0.7), transparent);
+    background-size: 420px 420px;
+    opacity: 0.7;
+    animation: drift-near 80s linear infinite;
+  }
+  @keyframes drift-far {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(-280px, -140px); }
+  }
+  @keyframes drift-near {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(420px, 210px); }
+  }
+
+  /* Aurora — источник света сверху-справа */
+  .hero__aurora {
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 70vw;
+    height: 70vw;
+    max-width: 1100px;
+    max-height: 1100px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(95,198,255,0.22) 0%,
+      rgba(162,128,255,0.16) 35%,
+      rgba(255,110,199,0.08) 55%,
+      transparent 72%
+    );
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+    animation: aurora-breathe 14s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  @keyframes aurora-breathe {
+    0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.9; }
+    50%      { transform: scale(1.12) translate(-3%, 3%); opacity: 1; }
+  }
+
+  /* Cursor-reactive glow — теперь aurora-cyan (виден на тёмном) */
   .hero__cursor-glow {
     position: absolute;
     top: 0; left: 0;
-    width: 700px; height: 700px;
+    width: 600px; height: 600px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(17,17,17,0.12) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(95,198,255,0.10) 0%, transparent 65%);
     filter: blur(40px);
     pointer-events: none;
     transform: translate(-50%, -50%);
     transition: transform 0.4s cubic-bezier(.22,1,.36,1);
-    z-index: 0;
+    z-index: 1;
     will-change: transform;
   }
 
@@ -141,8 +219,8 @@
   .hero__title {
     font-family: 'Unbounded', sans-serif;
     font-weight: 500;
-    font-size: clamp(64px, 14vw, 220px);
-    line-height: 0.88;
+    font-size: clamp(48px, 10vw, 150px);
+    line-height: 0.92;
     letter-spacing: -0.03em;
     margin: 40px 0;
     color: var(--color-text);
@@ -173,11 +251,14 @@
     align-items: end;
     padding-bottom: 60px;
   }
+  .hero__sub {
+    padding: 24px 28px;
+    max-width: 560px;
+  }
   .hero__sub p {
     font-size: clamp(15px, 1.3vw, 18px);
     line-height: 1.55;
-    color: var(--color-muted);
-    max-width: 540px;
+    color: var(--color-text);
     margin: 0;
   }
   .hero__actions {
@@ -256,6 +337,14 @@
     .hero__actions { justify-self: start; }
     .hero__metrics { grid-template-columns: repeat(2, 1fr); }
     .marquee-track { font-size: 16px; gap: 20px; }
+    .hero__sub { max-width: 100%; }
+  }
+
+  /* Останавливаем движение космоса для reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero::before,
+    .hero::after,
+    .hero__aurora { animation: none !important; }
   }
 </style>
 
@@ -291,9 +380,10 @@
     requestAnimationFrame(tick);
   });
 
-  // Scroll-driven scale of hero title
+  // Scroll-driven scale of hero title (отключаем для reduced-motion)
   const title = document.getElementById('heroTitle');
-  if (title) {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (title && !reduceMotion) {
     const onScroll = () => {
       const y = window.scrollY;
       const scale = Math.max(0.85, 1 - y / 1800);

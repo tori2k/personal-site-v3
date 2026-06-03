@@ -1,9 +1,9 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-accent: #111111;
-  --color-accent-soft: rgba(17,17,17,0.08);
-  --color-accent-glow: rgba(17,17,17,0.15);
+  --color-accent: #5FC6FF;
+  --color-accent-soft: rgba(95,198,255,0.08);
+  --color-accent-glow: rgba(95,198,255,0.20);
 
   --font-display: 'Unbounded', 'Inter', sans-serif;
   --font-sans: 'Inter', -apple-system, sans-serif;
@@ -11,18 +11,34 @@
 }
 
 :root {
-  --color-bg: #f2efe7;
-  --color-bg-2: #ece8dd;
-  --color-surface: #e8e4d8;
-  --color-text: #1a1a1a;
-  --color-muted: #6a6658;
-  --color-muted-2: #96907f;
-  --color-border: rgba(17,17,17,0.10);
-  --color-border-2: rgba(17,17,17,0.22);
-  --color-cream: #f2efe7;
-  --color-cream-2: #e8e4d8;
-  --color-cream-text: #111111;
-  color-scheme: light;
+  /* Основа (тёмная) — значения переменных переключают всю систему */
+  --color-bg: #06070D;
+  --color-bg-2: #0A0C16;
+  --color-surface: #11131F;
+  --color-text: #F4F6FB;
+  --color-muted: #8A90A6;
+  --color-muted-2: #4A4F63;
+  --color-border: rgba(244,246,251,0.10);
+  --color-border-2: rgba(244,246,251,0.20);
+  /* cream-алиасы перенаправлены на тёмные «приподнятые» поверхности */
+  --color-cream: #0A0C16;
+  --color-cream-2: #11131F;
+  --color-cream-text: #F4F6FB;
+
+  /* Aurora-свет (источники света, не заливка) */
+  --aurora-cyan: #5FC6FF;
+  --aurora-violet: #A280FF;
+  --aurora-magenta: #FF6EC7;
+
+  /* Человеческий тёплый акцент (наследие ЧТИВО) */
+  --signal-warm: #A22E1F;
+
+  /* Стекло (токены из glass3d.dev) */
+  --glass-tint: hsl(225 40% 12% / 0.45);
+  --glass-blur: blur(32px) brightness(0.9) saturate(1.8);
+  --glass-edge: inset 0 1px 0 rgba(255,255,255,0.18);
+
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -68,7 +84,7 @@ body {
   .container-x { padding: 0 40px; }
 }
 
-/* Sections — все светлые, section-dark оставлен для совместимости */
+/* Sections — тёмная система. section-dark = void, section-cream = приподнятый слой */
 .section-dark { background: var(--color-bg); color: var(--color-text); }
 .section-cream {
   background: var(--color-cream);
@@ -216,13 +232,78 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--color-border-2); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text); }
 
-/* Noise overlay */
+/* Noise overlay — на тёмном фоне работает через screen */
 .noise-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.035;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.8'/></svg>");
-  mix-blend-mode: multiply;
+  mix-blend-mode: screen;
+}
+
+/* ============================================
+   GLASS / AURORA / GLOW — фундамент тёмной системы
+   ============================================ */
+
+/* Стеклянная поверхность (анатомия из glass3d.dev) */
+.glass {
+  position: relative;
+  background: var(--glass-tint);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow:
+    0 0.75px 0.75px rgba(0,0,0,.20),
+    0 2px 2px rgba(0,0,0,.18),
+    0 4px 4px rgba(0,0,0,.16),
+    0 8px 8px rgba(0,0,0,.14),
+    0 14px 14px rgba(0,0,0,.12),
+    var(--glass-edge);
+}
+
+/* Aurora-свечение (источник света за контентом) */
+.aurora-glow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--aurora-cyan) 0%,
+    var(--aurora-violet) 45%,
+    transparent 70%
+  );
+  will-change: transform;
+}
+
+/* Свечение текста от aurora (для oversized-заголовков) */
+.text-glow {
+  text-shadow:
+    0 0 40px rgba(95,198,255,0.15),
+    0 0 80px rgba(162,128,255,0.10);
+}
+
+/* ============================================
+   ДОСТУПНОСТЬ — prefers-reduced-motion
+   Отключает ВСЁ движение для тех, кто его не выносит
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Reveal-элементы сразу видимы, без сдвига */
+  .reveal, .reveal-left, .reveal-right {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Бесконечные анимации замораживаем */
+  .live-badge__dot { animation: none !important; }
+  .aurora-glow { filter: blur(80px); }
 }
