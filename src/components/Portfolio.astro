@@ -89,7 +89,7 @@ const featured = [
           Собрал концепт сайта для&nbsp;<em>ЧТИВО ДОМА</em>
         </h3>
         <p class="diptych__lede">
-          В&nbsp;апреле был в&nbsp;ЧТИВО ДОМЕ у&nbsp;Сергея Минаева. Место попало&nbsp;в, вдохновился — собрал сайт-визитку в&nbsp;их&nbsp;фирменной стилистике. Это не&nbsp;заказ и&nbsp;не&nbsp;предложение, просто упражнение в&nbsp;рамках места, которое понравилось.
+          В&nbsp;апреле был в&nbsp;ЧТИВО ДОМЕ у&nbsp;Сергея Минаева. Место зацепило&nbsp;— вдохновился и&nbsp;собрал сайт-визитку в&nbsp;их&nbsp;фирменной стилистике. Это не&nbsp;заказ и&nbsp;не&nbsp;предложение, просто упражнение в&nbsp;рамках места, которое понравилось.
         </p>
       </div>
 
@@ -137,13 +137,25 @@ const featured = [
     display: grid;
     grid-template-columns: 1.25fr 1fr;
     gap: 0;
-    background: var(--color-surface);
+    background: var(--glass-tint);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: 18px;
     overflow: hidden;
-    transition: border-color 0.4s;
+    box-shadow:
+      0 8px 24px rgba(0,0,0,0.25),
+      var(--glass-edge);
+    transition: border-color 0.4s, box-shadow 0.4s, transform 0.4s cubic-bezier(.22,1,.36,1);
   }
-  .fcard:hover { border-color: var(--color-accent); }
+  .fcard:hover {
+    border-color: rgba(95,198,255,0.4);
+    box-shadow:
+      0 20px 50px rgba(0,0,0,0.35),
+      0 0 60px rgba(95,198,255,0.12),
+      var(--glass-edge);
+    transform: translateY(-4px);
+  }
 
   .fcard__media {
     position: relative;
@@ -170,10 +182,11 @@ const featured = [
     text-transform: uppercase;
     color: var(--color-text);
     padding: 6px 12px;
-    background: rgba(242,239,231,0.92);
-    border: 1px solid rgba(17,17,17,0.15);
+    background: rgba(6,7,13,0.7);
+    border: 1px solid rgba(244,246,251,0.18);
     border-radius: 999px;
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .fcard__body {
@@ -276,7 +289,7 @@ const featured = [
     position: relative;
     aspect-ratio: 4/5;
     overflow: hidden;
-    border-radius: 4px;
+    border-radius: 14px;
     background: var(--color-surface);
     display: block;
     text-decoration: none;
