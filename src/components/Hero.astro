@@ -1,19 +1,13 @@
 ---
 ---
-<section class="hero section-dark">
+<section class="hero section-dark" id="hero">
   <div class="hero__cursor-glow" id="heroGlow"></div>
 
-  <!-- 3D стеклянная линза (three.js, lazy, fallback на CSS) -->
-  <div class="hero__lens" aria-hidden="true">
-    <canvas id="heroLensCanvas"></canvas>
-    <div class="hero__lens-fallback"></div>
-  </div>
-
   <div class="container-x hero__inner">
-    <h1 class="hero__title text-glow" id="heroTitle">
-      <span class="hero__line hero__line--1">Разработка</span>
-      <span class="hero__line hero__line--2"><em>лендингов</em></span>
-      <span class="hero__line hero__line--3">и автоматизаций.</span>
+    <h1 class="hero__title text-glow">
+      <span class="hero__line">Разработка</span>
+      <span class="hero__line"><em>лендингов</em></span>
+      <span class="hero__line">и автоматиза<span id="planeAnchor">ций</span>.</span>
     </h1>
 
     <div class="hero__bottom">
@@ -67,7 +61,6 @@
       <span>ЧИСТЫЙ КОД БЕЗ TILDA</span><span>·</span>
       <span>СВОЙ ДОМЕН</span><span>·</span>
       <span>ИСХОДНИКИ ВАШИ</span><span>·</span>
-      <!-- дубль для seamless scroll -->
       <span>ЛЕНДИНГИ ПОД ЗАЯВКИ</span><span>·</span>
       <span>АВТОМАТИЗАЦИИ И БОТЫ</span><span>·</span>
       <span>ОНЛАЙН-ОПЛАТЫ</span><span>·</span>
@@ -90,55 +83,11 @@
     flex-direction: column;
     justify-content: space-between;
   }
-  /* На невысоких экранах не запираем в 100vh — даём контенту течь */
   @media (max-height: 800px) {
-    .hero {
-      min-height: auto;
-      padding: 100px 0 48px;
-    }
+    .hero { min-height: auto; padding: 100px 0 48px; }
     .hero__title { font-size: clamp(36px, 5.5vw, 80px); }
   }
 
-  /* Космос и aurora теперь глобальные (в Layout) — здесь не дублируем */
-
-  /* 3D стеклянная линза — в правом верхнем углу, не перекрывает заголовок */
-  .hero__lens {
-    position: absolute;
-    top: 4%;
-    right: -4%;
-    width: min(34vw, 440px);
-    height: min(34vw, 440px);
-    z-index: 1;
-    pointer-events: none;
-    opacity: 0.8;
-  }
-  .hero__lens canvas {
-    width: 100% !important;
-    height: 100% !important;
-    display: block;
-  }
-  /* CSS-fallback: стеклянная сфера для mobile/reduced-motion/слабых */
-  .hero__lens-fallback {
-    position: absolute;
-    inset: 12%;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 35% 30%, rgba(255,255,255,0.25), transparent 40%),
-      radial-gradient(circle at 65% 70%, rgba(95,198,255,0.35), transparent 55%),
-      radial-gradient(circle at 50% 50%, rgba(162,128,255,0.25), rgba(6,7,13,0.1) 70%);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    box-shadow:
-      inset 0 2px 20px rgba(255,255,255,0.15),
-      inset 0 -10px 40px rgba(95,198,255,0.2),
-      0 20px 60px rgba(95,198,255,0.15);
-    opacity: 0;
-    transition: opacity 0.6s;
-  }
-  /* Когда canvas пуст (3D не запущен) — показываем fallback */
-  .hero__lens.fallback-active .hero__lens-fallback { opacity: 1; }
-
-  /* Cursor-reactive glow — теперь aurora-cyan (виден на тёмном) */
   .hero__cursor-glow {
     position: absolute;
     top: 0; left: 0;
@@ -160,25 +109,9 @@
     flex-direction: column;
     gap: 40px;
     flex: 1;
+    justify-content: center;
   }
 
-  .hero__top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .hero__meta {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--color-muted);
-    text-transform: uppercase;
-  }
-  .hero__meta-sep { margin: 0 8px; color: var(--color-accent); }
-
-  /* Title — kinetic */
   .hero__title {
     font-family: 'Unbounded', sans-serif;
     font-weight: 500;
@@ -190,24 +123,17 @@
     display: flex;
     flex-direction: column;
   }
-  .hero__line {
-    display: block;
-    text-align: left;
-    will-change: transform;
-  }
-  .hero__line--2 em {
+  .hero__line { display: block; text-align: left; }
+  .hero__line em {
     font-style: italic;
     font-weight: 300;
-    /* Яркий cyan для контраста на тёмном космосе */
     color: #8FD8FF;
-    /* Сильный тёмный контур + glow, чтобы текст читался поверх линзы/космоса */
     text-shadow:
       0 0 1px rgba(6,7,13,1),
       0 2px 24px rgba(6,7,13,0.95),
       0 0 50px rgba(95,198,255,0.4);
   }
 
-  /* Bottom row */
   .hero__bottom {
     display: grid;
     grid-template-columns: 1.1fr auto;
@@ -215,22 +141,14 @@
     align-items: end;
     padding-bottom: 36px;
   }
-  .hero__sub {
-    padding: 24px 28px;
-    max-width: 560px;
-  }
+  .hero__sub { padding: 24px 28px; max-width: 560px; }
   .hero__sub p {
     font-size: clamp(15px, 1.3vw, 18px);
     line-height: 1.55;
     color: var(--color-text);
     margin: 0;
   }
-  .hero__actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-self: end;
-  }
+  .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; justify-self: end; }
 
   .hero__metrics {
     grid-column: 1 / -1;
@@ -256,7 +174,6 @@
   .metric__n small {
     font-size: 0.45em;
     color: var(--color-accent);
-    margin-left: 2px;
     align-self: flex-start;
     padding-top: 0.3em;
   }
@@ -269,7 +186,6 @@
     line-height: 1.4;
   }
 
-  /* Marquee */
   .hero__marquee {
     overflow: hidden;
     padding: 20px 0;
@@ -290,10 +206,7 @@
     letter-spacing: 0.02em;
     color: var(--color-muted);
   }
-  .marquee-track span:nth-child(even) {
-    color: var(--color-accent);
-    font-weight: 300;
-  }
+  .marquee-track span:nth-child(even) { color: var(--color-accent); font-weight: 300; }
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
@@ -306,57 +219,27 @@
     .hero__metrics { grid-template-columns: repeat(2, 1fr); }
     .marquee-track { font-size: 16px; gap: 20px; }
     .hero__sub { max-width: 100%; }
-    /* На мобайле линза мельче и не мешает тексту */
-    .hero__lens {
-      width: 70vw; height: 70vw;
-      right: -10%; top: 18%;
-      opacity: 0.5;
-    }
   }
 
-  /* Останавливаем движение космоса для reduced-motion */
   @media (prefers-reduced-motion: reduce) {
     .hero__cursor-glow { display: none; }
   }
 </style>
 
 <script>
-  // 3D-линза: lazy-загрузка three.js только когда нужно
-  const lensCanvas = document.getElementById('heroLensCanvas') as HTMLCanvasElement | null;
-  const lensWrap = document.querySelector<HTMLElement>('.hero__lens');
-  if (lensCanvas && lensWrap) {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isLowEnd = (navigator.hardwareConcurrency || 4) < 4;
-    const isTouch = window.matchMedia('(hover: none)').matches;
-    if (reduceMotion || isLowEnd || isTouch) {
-      // Сразу показываем CSS-fallback, three.js не грузим
-      lensWrap.classList.add('fallback-active');
-    } else {
-      // Lazy-импорт three.js после первого кадра (не блокируем LCP)
-      requestIdleCallback?.(() => {
-        import('../scripts/heroLens').then(({ initHeroLens }) => {
-          const cleanup = initHeroLens(lensCanvas);
-          if (!cleanup) lensWrap.classList.add('fallback-active');
-        }).catch(() => lensWrap.classList.add('fallback-active'));
-      }) ?? import('../scripts/heroLens').then(({ initHeroLens }) => {
-        initHeroLens(lensCanvas);
-      });
-    }
-  }
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Cursor glow follow
   const glow = document.getElementById('heroGlow');
   const hero = document.querySelector<HTMLElement>('.hero');
-  if (glow && hero) {
+  if (glow && hero && !reduceMotion) {
     hero.addEventListener('mousemove', (e) => {
       const rect = hero.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      glow.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+      glow.style.transform = `translate(${e.clientX - rect.left}px, ${e.clientY - rect.top}px) translate(-50%, -50%)`;
     });
   }
 
-  // Counter animation on load
+  // Counter animation
   const counters: Array<{ id: string; to: number; duration: number }> = [
     { id: 'm-projects', to: 7, duration: 1200 },
     { id: 'm-speed',    to: 3, duration: 1200 },
@@ -374,19 +257,4 @@
     };
     requestAnimationFrame(tick);
   });
-
-  // Scroll-driven scale of hero title (отключаем для reduced-motion)
-  const title = document.getElementById('heroTitle');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (title && !reduceMotion) {
-    const onScroll = () => {
-      const y = window.scrollY;
-      const scale = Math.max(0.85, 1 - y / 1800);
-      const opacity = Math.max(0, 1 - y / 600);
-      title.style.transform = `scale(${scale})`;
-      title.style.opacity = String(opacity);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  }
 </script>

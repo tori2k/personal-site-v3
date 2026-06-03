@@ -10,9 +10,6 @@ export default defineConfig({
   site: 'https://kirillbaryev.ru',
   integrations: [mdx(), sitemap()],
   vite: {
-    plugins: [tailwindcss()],
-    optimizeDeps: {
-      include: ['three']
-    }
+    plugins: [tailwindcss()]
   }
 });

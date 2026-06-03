@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import PaperPlane from '../components/PaperPlane.astro';
 
 interface Props {
   title?: string;
@@ -44,6 +45,7 @@ const {
     <div class="cosmos__comet cosmos__comet--1"></div>
     <div class="cosmos__comet cosmos__comet--2"></div>
   </div>
+  <PaperPlane />
   <div class="noise-overlay"></div>
 
   <!-- Custom cursor -->
@@ -109,7 +111,6 @@ const {
         requestAnimationFrame(raf);
       }
       requestAnimationFrame(raf);
-      // Прокидываем прогресс скролла для будущих scroll-driven эффектов
       lenis.on('scroll', ({ scroll }: { scroll: number }) => {
         document.documentElement.style.setProperty('--scroll-y', String(scroll));
       });

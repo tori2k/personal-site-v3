@@ -1,0 +1,320 @@
+---
+---
+<!--
+  Бумажный самолётик, летящий по «небу» при скролле. Стартует лёжа на «заций»,
+  летит по ПЛАВНОЙ ДУГЕ (Catmull-Rom сплайн), ныряет за блоки и выныривает
+  (чередование переднего/заднего плана + размер = глубина), покачивается и
+  кренится в виражах, оставляет редкие искры, эффектно садится внизу.
+  Без видимой траектории. fixed-слой; z-index переключается 1↔5 по глубине.
+-->
+<div class="plane-layer" id="planeLayer" aria-hidden="true">
+  <!-- искры за хвостом (пул, переиспользуются) -->
+  <div class="plane-sparks" id="planeSparks"></div>
+
+  <!-- Бумажный самолётик, ВИД СВЕРХУ. Нос справа (точка 46,24), симметричен
+       относительно оси — при любом угле полёта смотрит носом вперёд, без «спины».
+       Два крыла (свет/тень от центрального киля) + киль. -->
+  <div class="plane-craft" id="planeCraft">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <!-- верхнее крыло (свет) -->
+      <path d="M46 24 L6 10 L24 24 Z" fill="#AEE2FF"/>
+      <!-- нижнее крыло (тень) -->
+      <path d="M46 24 L6 38 L24 24 Z" fill="#5AA3DC"/>
+      <!-- центральный киль (тёмная складка, читается как «брюхо») -->
+      <path d="M46 24 L6 10 L10 24 L6 38 Z" fill="#3B86C2" opacity="0.0"/>
+      <path d="M24 24 L6 10 L9 24 Z" fill="#7CC3F0"/>
+      <path d="M24 24 L6 38 L9 24 Z" fill="#3F8BC6"/>
+      <!-- ось-сгиб (блик) -->
+      <path d="M46 24 L8 24" stroke="#EAF6FF" stroke-width="1" opacity="0.55" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<style>
+  /* Слой БЕЗ своего z-index/stacking-контекста — чтобы дочерний самолётик мог
+     реально прыгать между z:1 (за контентом) и z:5 (над контентом). */
+  .plane-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+  }
+  /* искры */
+  .plane-spark {
+    position: fixed;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #BFE8FF, rgba(95,198,255,0.4) 60%, transparent);
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+  /* самолётик: position fixed, transform из JS; z-index переключается JS */
+  /* Размер самолётика адаптивен через clamp (см. JS — он читает реальный размер).
+     Центр трансформации — середина SVG (ось самолёта). */
+  /* Размер задаётся через CSS-переменную --ps (px). Центрирование — через margin
+     в −0.5×--ps, чтобы точка пути приходилась на центр самолётика. Адаптив по экрану. */
+  .plane-craft {
+    position: fixed;
+    top: 0; left: 0;
+    --ps: 48px;
+    width: var(--ps); height: var(--ps);
+    margin: calc(var(--ps) / -2) 0 0 calc(var(--ps) / -2);
+    pointer-events: none;
+    will-change: transform, filter;
+    filter: drop-shadow(0 4px 12px rgba(95,198,255,0.35));
+    transform-origin: 50% 50%;
+    z-index: 5;
+  }
+  .plane-craft svg { width: 100%; height: 100%; }
+  /* Адаптив размера: крупные мониторы → крупнее, мобилки → мельче */
+  @media (min-width: 1600px) { .plane-craft { --ps: 60px; } }
+  @media (max-width: 1024px) { .plane-craft { --ps: 42px; } }
+  @media (max-width: 700px)  { .plane-craft { --ps: 34px; } }
+  @media (max-width: 440px)  { .plane-craft { --ps: 28px; } }
+</style>
+
+<script>
+  const craft = document.getElementById('planeCraft');
+  const sparksWrap = document.getElementById('planeSparks');
+
+  if (craft && sparksWrap) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ── Контрольные точки траектории в долях вьюпорта: [progress, x, y, depth] ──
+    //   depth: 0=далеко (мелкий, за блоками, тусклее) ↔ 1=близко (крупный, над контентом)
+    type WP = [number, number, number, number];
+    // Змейка с общим спуском вниз. Угол клампится в нижнюю полусферу (нос всегда вниз).
+    // depth БОЛЬШЕ НА ПЕРЕДНЕМ ПЛАНЕ (наезжает на блоки, z:50), редкие нырки за блок (z:1).
+    // depth высокий = передний план (z:100, наезжает). Нырки НЕ глубокие (0.55),
+    // чтобы самолётик не исчезал целиком за непрозрачным блоком, а лишь отдалялся.
+    // Самолётик ВСЕГДА по центру экрана по вертикали (y≈0.5, на уровне глаз),
+    // а ДУГА — по горизонтали (плавная змейка влево-вправо). Относительно человека
+    // он парит в середине, пока листаешь. Старт на «заций», финал — к кнопке.
+    const TRACK: WP[] = [
+      [0.00, 0.72, 0.40, 1.0],  // старт на «заций» (привязка к якорю перетянет)
+      [0.16, 0.68, 0.50, 1.0],  // дуга вправо, центр по Y
+      [0.34, 0.34, 0.48, 1.0],  // дуга влево
+      [0.52, 0.66, 0.52, 1.0],  // дуга вправо
+      [0.70, 0.36, 0.50, 1.0],  // дуга влево
+      [0.86, 0.58, 0.50, 1.0],  // дуга вправо к центру
+      [1.00, 0.50, 0.52, 1.0],  // центр, подлёт к кнопке
+    ];
+
+    // ── Catmull-Rom сплайн: гладкая кривая через точки (без острых углов) ──
+    const N = TRACK.length;
+    function catmull(p0: number, p1: number, p2: number, p3: number, t: number) {
+      const t2 = t * t, t3 = t2 * t;
+      return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3);
+    }
+    // вернуть {x,y,depth} в долях по глобальному прогрессу p (0..1) вдоль сплайна
+    function sampleSpline(p: number) {
+      const clamped = Math.max(0, Math.min(1, p));
+      // находим сегмент по progress-меткам
+      let seg = 0;
+      for (let i = 0; i < N - 1; i++) {
+        if (clamped >= TRACK[i][0] && clamped <= TRACK[i + 1][0]) { seg = i; break; }
+        if (clamped > TRACK[N - 1][0]) seg = N - 2;
+      }
+      const a = TRACK[seg], b = TRACK[seg + 1];
+      const localT = (clamped - a[0]) / (b[0] - a[0] || 1);
+      const p0 = TRACK[Math.max(0, seg - 1)];
+      const p1 = a, p2 = b;
+      const p3 = TRACK[Math.min(N - 1, seg + 2)];
+      return {
+        fx: catmull(p0[1], p1[1], p2[1], p3[1], localT),
+        fy: catmull(p0[2], p1[2], p2[2], p3[2], localT),
+        depth: catmull(p0[3], p1[3], p2[3], p3[3], localT),
+      };
+    }
+    // Кнопка «Получить разбор» (внизу) — цель посадки. Самолётик влетает в неё и исчезает.
+    const targetBtn = document.getElementById('planeTarget');
+    // экранная позиция центра кнопки (fixed-координаты)
+    function btnCenter() {
+      if (!targetBtn) return null;
+      const r = targetBtn.getBoundingClientRect();
+      // если кнопка не во вьюпорте — null (ещё не долетели)
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, r };
+    }
+
+    const LAND_START = 0.86;  // с этого прогресса — мягкий подлёт к центру кнопки
+    const START_END = 0.08;   // до этого прогресса самолётик привязан к слову «заций»
+
+    // якорь «заций» в Hero — точная стартовая позиция на ЛЮБОМ разрешении.
+    // Самолётик ЛЕЖИТ СВЕРХУ на букве: центр X буквы, Y — над её верхней кромкой.
+    const startAnchor = document.getElementById('planeAnchor');
+    function anchorCenter() {
+      if (!startAnchor) return null;
+      const r = startAnchor.getBoundingClientRect();
+      if (r.width === 0) return null;
+      return { x: r.left + r.width * 0.5, y: r.top - r.height * 0.18 }; // чуть выше буквы (лежит сверху)
+    }
+
+    function px(p: number) {
+      const s = sampleSpline(p);
+      let x = s.fx * window.innerWidth;
+      let y = s.fy * window.innerHeight;
+      let depth = s.depth;
+
+      // СТАРТ: притягиваемся к реальной позиции слова «заций» (адаптив под экран)
+      const ac = anchorCenter();
+      if (p < START_END && ac) {
+        const k = Math.min(1, p / START_END);          // 0 у старта → 1 в конце привязки
+        const ease = k * k * (3 - 2 * k);
+        x = ac.x + (x - ac.x) * ease;                  // от якоря к траектории
+        y = ac.y + (y - ac.y) * ease;
+      }
+
+      // ФИНАЛ: мягкий подлёт к центру кнопки (без спирали). Самолётик по центру
+      // плавно опускается прямо в «Получить разбор».
+      const bc = btnCenter();
+      if (p > LAND_START && bc) {
+        const k = Math.min(1, (p - LAND_START) / (1 - LAND_START)); // 0→1
+        const ease = k * k * (3 - 2 * k);                            // smoothstep
+        x = x + (bc.x - x) * ease;
+        y = y + (bc.y - y) * ease;
+        depth = depth + (1 - depth) * ease * 0.6;
+      }
+
+      // ГЛОБАЛЬНЫЙ КЛАМПИНГ: самолётик всегда в видимой области (с запасом под его размер),
+      // чтобы на любом экране не вылетал за края.
+      const pad = 36;
+      x = Math.max(pad, Math.min(window.innerWidth - pad, x));
+      y = Math.max(pad, Math.min(window.innerHeight - pad, y));
+      return { x, y, depth };
+    }
+
+    // ── Искры: пул элементов, спавнятся за хвостом на лету ──
+    const SPARKS = 14;
+    const sparkEls: HTMLElement[] = [];
+    for (let i = 0; i < SPARKS; i++) {
+      const s = document.createElement('div');
+      s.className = 'plane-spark';
+      sparksWrap.appendChild(s);
+      sparkEls.push(s);
+    }
+    let sparkIdx = 0;
+    let lastSparkFrame = 0;
+    function emitSpark(x: number, y: number, frame: number) {
+      if (frame - lastSparkFrame < 4) return;     // не чаще ~раз в 4 кадра
+      lastSparkFrame = frame;
+      const s = sparkEls[sparkIdx];
+      sparkIdx = (sparkIdx + 1) % SPARKS;
+      const jx = (pseudo(frame * 1.3) - 0.5) * 14;
+      const jy = (pseudo(frame * 2.7) - 0.5) * 14;
+      s.style.transform = `translate(${x + jx}px, ${y + jy}px) scale(${0.6 + pseudo(frame) * 0.6})`;
+      s.style.opacity = '0.9';
+      // гаснет анимацией через CSS-переход на след. кадре
+      requestAnimationFrame(() => {
+        s.style.transition = 'opacity 0.7s ease-out, transform 0.7s ease-out';
+        s.style.opacity = '0';
+        s.style.transform = `translate(${x + jx}px, ${y + jy + 18}px) scale(0.2)`;
+      });
+      // сброс перехода для переиспользования
+      window.setTimeout(() => { s.style.transition = 'none'; }, 720);
+    }
+    function pseudo(n: number) { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); }
+
+    let frame = 0;
+
+    function render(progress: number) {
+      frame++;
+      const cur = px(progress);
+      const ahead = px(Math.min(1, progress + 0.015));
+      const behind = px(Math.max(0, progress - 0.012));
+
+      // направление полёта
+      const dx = ahead.x - cur.x;
+      const dy = ahead.y - cur.y;
+
+      // ── ПОКАЧИВАНИЕ: лёгкое колебание (живое парение) ──
+      const wobble = Math.sin(frame * 0.06) * 2.2 + Math.cos(frame * 0.09) * 1.2;
+
+      // depth → масштаб, z-index, яркость
+      const depth = Math.max(0, Math.min(1, cur.depth));
+      let scale = 0.5 + depth * 0.85;     // далеко 0.5× ↔ близко 1.35×
+
+      // ── ВСАСЫВАНИЕ В КНОПКУ в самом конце спирали: scale→0 + fade ──
+      const suck = progress > 0.97 ? (progress - 0.97) / 0.03 : 0;
+      const suckEase = suck * suck;
+      scale *= (1 - suckEase);
+
+      // НОС по направлению полёта, в нижней полусфере (нос всегда вниз при полёте).
+      // SVG смотрит носом вправо (0°). angle = atan2(dy,dx).
+      let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      if (angle < 0) angle = -angle;            // вверх → отражаем вниз
+      angle = Math.max(25, Math.min(155, angle));
+
+      // СТАРТ ГОРИЗОНТАЛЬНО: на p<0.08 самолётик лежит ровно (нос вправо, 0°),
+      // затем плавно переходит к пикированию. На стопке (p≈0) — строго горизонтально.
+      const START_TILT = 0.08;
+      if (progress < START_TILT) {
+        const k = progress / START_TILT;            // 0→1
+        const ease = k * k * (3 - 2 * k);
+        angle = 0 + (angle - 0) * ease;             // от 0° (горизонт) к траекторному углу
+      }
+      // покачивание тоже гасим у старта, чтобы кадр был ровным
+      const startWobbleDamp = Math.min(1, progress / START_TILT);
+      const totalRot = angle + wobble * startWobbleDamp;
+
+      // ── ЭФФЕКТ «РАЗВЕИВАНИЯ»: лёгкий blur + потеря плотности по прогрессу ──
+      const dissolve = progress > 0.05 ? Math.min(1, (progress - 0.05) / 0.9) : 0;
+      const blurPx = dissolve * 1.6;
+
+      craft!.style.transform =
+        `translate(${cur.x}px, ${cur.y}px) rotate(${totalRot}deg) scale(${scale})`;
+      craft!.style.filter = `drop-shadow(0 4px 12px rgba(95,198,255,0.35)) blur(${blurPx.toFixed(2)}px)`;
+
+      // depth → яркость; развеивание чуть гасит; всасывание гасит в ноль
+      let craftOpacity = (0.55 + depth * 0.45) * (1 - dissolve * 0.25) * (1 - suckEase);
+      // ПЕРЕДНИЙ ПЛАН (depth>0.5 или финал): z=100 — НАЕЗЖАЕТ поверх всех блоков/nav.
+      // ЗАДНИЙ план: z=1 — за блоками, виден только в «небе» между секциями.
+      craft!.style.zIndex = (depth > 0.5 || progress > LAND_START) ? '100' : '1';
+      craft!.style.opacity = String(craftOpacity.toFixed(2));
+
+      // вспышка кнопки в момент попадания (suck→1)
+      if (targetBtn) {
+        if (suck > 0.5) {
+          const glow = 0.6 - (suck - 0.5) * 1.2;  // короткая вспышка и затухание
+          targetBtn.style.boxShadow = `0 0 ${30 * suck}px rgba(95,198,255,${Math.max(0, glow)})`;
+        } else {
+          targetBtn.style.boxShadow = '';
+        }
+      }
+
+      // искры за хвостом — пока летит (не в фазе всасывания)
+      if (!reduceMotion && progress > 0.02 && progress < 0.97) {
+        emitSpark(behind.x, behind.y, frame);
+      }
+    }
+
+    if (reduceMotion) {
+      render(0);  // лежит на «заций», без полёта/искр
+    } else {
+      let raf = 0;
+      // мягкое слежение прогресса (инерция → плавнее дуга)
+      let shown = 0, target = 0;
+      const loop = () => {
+        shown += (target - shown) * 0.12;
+        render(shown);
+        if (Math.abs(target - shown) > 0.0003) {
+          raf = requestAnimationFrame(loop);
+        } else {
+          raf = 0;
+        }
+      };
+      const recalc = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        target = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        if (!raf) raf = requestAnimationFrame(loop);
+      };
+      window.addEventListener('scroll', recalc, { passive: true });
+      window.addEventListener('resize', recalc, { passive: true });
+      // лёгкий «дыхательный» rAF на старте, чтобы покачивание жило даже без скролла
+      const idle = () => {
+        if (target < 0.01 && !raf) render(shown);
+        requestAnimationFrame(idle);
+      };
+      recalc();
+      idle();
+    }
+  }
+</script>
