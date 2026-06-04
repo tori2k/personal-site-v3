@@ -262,6 +262,19 @@ body {
   line-height: 1;
 }
 
+/* Кнопки на мобильных — не выходят за экран */
+@media (max-width: 480px) {
+  .btn {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .btn::after { display: none; }
   .btn:hover { transform: none; }

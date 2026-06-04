@@ -167,6 +167,17 @@ const SHEETS_WEBHOOK = 'https://script.google.com/macros/s/AKfycbyeXV7TI8klBfvtn
             Спасибо. Я посмотрю ссылку и вернусь с коротким разбором в Telegram.
           </p>
         </div>
+
+        <div class="rz-error glass reveal" id="razborError" style="display:none" role="alert" aria-live="assertive">
+          <div class="rz-error__icon">△</div>
+          <p class="rz-error__text">
+            Форма не отправилась — что-то пошло не так.
+          </p>
+          <a href="https://t.me/tori2k" target="_blank" rel="noopener" class="btn btn--filled">
+            <span class="btn__plus">(+)</span>
+            Написать напрямую в Telegram
+          </a>
+        </div>
       </div>
     </section>
 
@@ -392,23 +403,60 @@ const SHEETS_WEBHOOK = 'https://script.google.com/macros/s/AKfycbyeXV7TI8klBfvtn
     margin: 0;
   }
 
+  /* Error state */
+  .rz-error {
+    max-width: 720px;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    border-color: rgba(255, 100, 100, 0.3);
+    background: rgba(255, 80, 80, 0.05);
+  }
+  .rz-error__icon {
+    font-size: 32px;
+    color: #ff7070;
+    line-height: 1;
+  }
+  .rz-error__text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
   @media (max-width: 900px) {
     .rz-hero { padding: 100px 0 60px; min-height: auto; }
     .rz-hero__inner { grid-template-columns: 1fr; gap: 36px; }
     .rz-scope__grid { grid-template-columns: 1fr 1fr; }
-    .rz-form { padding: 32px 28px; }
+    .rz-form { padding: 32px 24px; }
     .rz-form__row { grid-template-columns: 1fr; }
+    .rz-for { padding: 28px 24px; }
   }
   @media (max-width: 600px) {
     .rz-scope { padding: 60px 0; }
     .rz-scope__grid { grid-template-columns: 1fr; }
     .rz-form-section { padding: 0 0 80px; }
   }
+  @media (max-width: 480px) {
+    .rz-hero { padding: 90px 0 40px; }
+    .rz-hero__h1 { font-size: clamp(32px, 8vw, 52px); }
+    .rz-for { padding: 20px 18px; }
+    .rz-form { padding: 24px 16px; gap: 16px; }
+    .rz-form__submit { width: 100%; justify-content: center; }
+    .rz-success { padding: 28px 20px; }
+    .rz-error { padding: 24px 16px; }
+    .rz-scope__card { padding: 20px 16px; }
+    .rz-gets__list li { font-size: 14px; }
+  }
 </style>
 
 <script define:vars={{ SHEETS_WEBHOOK }}>
   const form = document.getElementById('razborForm');
   const success = document.getElementById('razborSuccess');
+  const errorBlock = document.getElementById('razborError');
 
   if (form) {
     form.addEventListener('submit', async (e) => {
@@ -419,17 +467,24 @@ const SHEETS_WEBHOOK = 'https://script.google.com/macros/s/AKfycbyeXV7TI8klBfvtn
       const data = Object.fromEntries(new FormData(form));
       data._source = 'razbor';
 
+      let ok = false;
       try {
-        await fetch(SHEETS_WEBHOOK, {
+        const res = await fetch(SHEETS_WEBHOOK, {
           method: 'POST',
           body: JSON.stringify(data),
         });
+        // Google Apps Script всегда отвечает 200 при успехе
+        ok = res.ok;
       } catch (_) {
-        // silent — telegram webhook может не ответить CORS
+        ok = false;
       }
 
       form.style.display = 'none';
-      if (success) success.style.display = 'flex';
+      if (ok) {
+        if (success) success.style.display = 'flex';
+      } else {
+        if (errorBlock) errorBlock.style.display = 'flex';
+      }
     });
   }
 </script>

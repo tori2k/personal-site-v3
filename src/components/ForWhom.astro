@@ -172,6 +172,11 @@ const tabs = [
     .forwhom { padding: 72px 0; }
     .fw-panel__grid { grid-template-columns: 1fr; }
   }
+  @media (max-width: 480px) {
+    .fw-tab-btn { font-size: 11px; padding: 8px 14px; }
+    .fw-cell { padding: 18px 16px; }
+    .fw-panel__cta { width: 100%; justify-content: center; }
+  }
   @media (prefers-reduced-motion: reduce) {
     .fw-panel { animation: none; }
   }

@@ -17,15 +17,15 @@
       </h1>
 
       <p class="hero__sub">
-        Собираю оффер, лендинг, квиз, Telegram-заявки, аналитику и CRM/таблицу,
-        чтобы клиент понимал, почему выбрать вас,
-        а вы не теряли обращения в переписках.
+        Оффер, лендинг, квиз, Telegram-заявки и CRM/таблица —
+        чтобы клиент понимал ценность, а заявки не терялись.
       </p>
 
       <div class="hero__actions">
         <a href="/razbor" class="btn btn--filled" data-magnetic="0.4">
           <span class="btn__plus">(+)</span>
-          Получить бесплатный разбор
+          <span class="btn-text-full">Получить бесплатный разбор</span>
+          <span class="btn-text-short">Получить разбор</span>
         </a>
         <a href="/cases" class="btn">
           Посмотреть кейсы
@@ -175,6 +175,7 @@
     gap: 12px;
     flex-wrap: wrap;
   }
+  .btn-text-short { display: none; }
 
   /* Facts card */
   .hero__facts {
@@ -251,6 +252,18 @@
     .hero__inner { grid-template-columns: 1fr; gap: 32px; padding-bottom: 40px; }
     .hero__facts { max-width: 100%; }
     .marquee-track { font-size: 14px; gap: 20px; }
+  }
+  @media (max-width: 480px) {
+    .hero__inner { gap: 24px; padding-top: 28px; padding-bottom: 28px; }
+    .hero__badge { font-size: 10px; padding: 5px 12px; }
+    .hero__title { font-size: clamp(36px, 9vw, 52px); margin-bottom: 20px; }
+    .hero__sub { font-size: 15px; margin-bottom: 24px; }
+    .hero__actions { flex-direction: column; gap: 10px; }
+    .hero__actions .btn { width: 100%; justify-content: center; }
+    .btn-text-full { display: none; }
+    .btn-text-short { display: inline; }
+    .hero__facts { padding: 20px 18px; }
+    .marquee-track { font-size: 12px; gap: 16px; }
   }
   @media (max-height: 800px) {
     .hero { min-height: auto; }
