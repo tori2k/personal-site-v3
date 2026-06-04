@@ -130,12 +130,12 @@
     { p: 0.10, x: 0.38, y: 0.68, z: 0.80 },
     // ForWhom — выныривает вправо-вверх
     { p: 0.20, x: 0.74, y: 0.30, z: 0.92 },
-    // FlowBlock — ныряет влево вниз (за блоки)
-    { p: 0.29, x: 0.16, y: 0.72, z: 0.20 },
+    // FlowBlock — ныряет влево вниз (за блоки, полностью скрыт)
+    { p: 0.29, x: 0.16, y: 0.72, z: 0.05 },
     // Portfolio enter — вылет вправо вперёд (искры)
     { p: 0.38, x: 0.82, y: 0.32, z: 1.00, spark: true },
-    // Portfolio behind — ныряет за карточку
-    { p: 0.45, x: 0.22, y: 0.65, z: 0.15 },
+    // Portfolio behind — ныряет за карточку (полностью скрыт)
+    { p: 0.45, x: 0.22, y: 0.65, z: 0.05 },
     // Portfolio exit — вылет (искры)
     { p: 0.52, x: 0.76, y: 0.25, z: 1.00, spark: true },
     // Method — пикирует влево вниз
@@ -260,7 +260,7 @@
       const d   = tDots[i];
       const fade    = 1 - age / TLEN;
       const depth   = 0.3 + pos.z * 0.7;
-      const maxOp   = pos.z > 0.5 ? 0.45 : 0.12;      // на заднем плане почти нет
+      const maxOp   = pos.z > 0.5 ? 0.45 : pos.z < 0.15 ? 0 : 0.08; // скрыт вместе с самолётиком
       d.style.transform = `translate(${pos.x}px,${pos.y}px) scale(${depth*(1-age/TLEN*0.4)})`;
       d.style.opacity   = (fade * maxOp).toFixed(3);
     }
@@ -350,10 +350,17 @@
     const z     = Math.max(0, Math.min(1.2, pos.z));
 
     // ── Угол: нос смотрит по направлению полёта ──
+    // SVG смотрит носом вправо (0°). atan2(dy,dx) даёт угол вектора движения.
+    // Клампим в диапазон [25°, 155°] — нос НИКОГДА не смотрит вверх.
+    // При движении вправо-вниз угол ~20–80°, при движении влево-вниз ~100–160°.
     const dx = fwd.x - pos.x;
     const dy = fwd.y - pos.y;
-    let   angle = Math.atan2(dy, dx) * 180 / Math.PI;
-    if (prog < START_END) angle *= (prog / START_END) ** 1.5;
+    let   rawAngle = Math.atan2(dy, dx) * 180 / Math.PI;
+    // Нормализуем в -180..180, затем зеркалим верхнюю полусферу вниз
+    // чтобы нос всегда указывал в нижнюю полусферу (25°..155°)
+    if (rawAngle < 0) rawAngle = -rawAngle;          // зеркало: верх → вниз
+    let angle = Math.max(25, Math.min(155, rawAngle)); // жёсткий клампинг
+    if (prog < START_END) angle = 25 + (angle - 25) * (prog / START_END) ** 1.5;
 
     // Покачивание (живое парение)
     const wobble = Math.sin(fr * 0.052) * 2.8 + Math.cos(fr * 0.079) * 1.2;
@@ -369,10 +376,15 @@
     const scaleBase = isMobile() ? (0.65 + z * 0.35) : (0.48 + z * 0.62);
     const scale = scaleBase * (1 - suck);
 
-    // ── Opacity: задний план сильно темнее ──
-    const opacity = z > 0.5
-      ? (0.85 + z * 0.15) * (1 - suck)
-      : (0.18 + z * 0.34) * (1 - suck);
+    // ── Opacity: задний план полностью исчезает ──
+    // z < 0.15 → opacity 0 (полностью под блоком, не виден совсем)
+    // z 0.15..0.5 → плавное появление 0..0.35
+    // z > 0.5 → яркий 0.85..1.0
+    const opacity = (() => {
+      if (z < 0.15) return 0;                           // полностью скрыт
+      if (z < 0.5)  return ((z - 0.15) / 0.35) * 0.38; // плавное появление
+      return (0.85 + (z - 0.5) * 0.30) * (1 - suck);   // передний план
+    })() * (1 - suck);
 
     // ── Motion blur по скорости ──
     const spd = Math.hypot(pos.x - back.x, pos.y - back.y);
