@@ -1,0 +1,85 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+
+const title = 'Статьи об автоматизации заявок для малого бизнеса';
+const description = 'Разборы о том, как не терять заявки после клика: первый экран, формы, Telegram/WhatsApp, CRM, скорость ответа и дожим. Практика автоматизации обработки лидов.';
+
+// Список статей (паттерн для будущих публикаций)
+const articles = [
+  {
+    href: '/articles/pochemu-biznes-teryaet-zayavki-posle-klika',
+    tag: 'Разбор',
+    title: 'Почему бизнес теряет заявки после клика',
+    excerpt: '6 точек слива: первый экран, форма, мессенджеры, скорость ответа, CRM и дожим. Таблица «проблема → решение» и чек-лист.',
+    date: '5 июня 2026',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Статьи',
+  url: 'https://kirillbaryev.ru/articles/',
+  description,
+};
+---
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <Nav />
+  <main>
+    <section class="arts section-dark">
+      <div class="container-x">
+        <div class="arts__head reveal">
+          <div class="sec-tag">Статьи</div>
+          <h1 class="display-h arts__h1">Как не терять <em>заявки.</em></h1>
+          <p class="arts__sub">
+            Разборы про автоматизацию обработки лидов: где бизнес теряет заявки
+            после клика и как закрыть утечку без расширения штата.
+          </p>
+        </div>
+
+        <div class="arts__list">
+          {articles.map((a, i) => (
+            <a href={a.href} class:list={['acard', 'reveal']} style={`transition-delay:${i * 0.07}s`}>
+              <div class="acard__top">
+                <span class="acard__tag">{a.tag}</span>
+                <span class="acard__date">{a.date}</span>
+              </div>
+              <h2 class="acard__title">{a.title}</h2>
+              <p class="acard__excerpt">{a.excerpt}</p>
+              <span class="acard__more">Читать →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .arts { padding: 140px 0 110px; }
+  .arts__head { max-width: 680px; margin-bottom: 48px; }
+  .arts__h1 { margin: 16px 0 16px; }
+  .arts__h1 em { color: var(--aurora-cyan); }
+  .arts__sub { font-size: clamp(15px, 1.4vw, 18px); color: var(--color-muted); line-height: 1.6; max-width: 560px; margin: 0; }
+
+  .arts__list { display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 760px; }
+  .acard {
+    display: block; padding: 28px 30px; border-radius: 18px;
+    background: var(--glass-tint); backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--color-border); text-decoration: none;
+    transition: border-color 0.3s, transform 0.3s cubic-bezier(.22,1,.36,1);
+  }
+  .acard:hover { border-color: rgba(95,198,255,0.35); transform: translateY(-3px); }
+  .acard__top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .acard__tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-accent); }
+  .acard__date { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--color-muted-2); }
+  .acard__title { font-family: 'Unbounded', sans-serif; font-size: clamp(20px, 2.4vw, 28px); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; color: var(--color-text); margin: 0 0 12px; }
+  .acard__excerpt { font-size: 15px; line-height: 1.6; color: var(--color-muted); margin: 0 0 16px; }
+  .acard__more { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--color-accent); }
+
+  @media (max-width: 600px) { .arts { padding: 100px 0 72px; } .acard { padding: 24px 20px; } }
+</style>
