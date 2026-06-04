@@ -55,21 +55,21 @@
   .plane-craft {
     position: fixed;
     top: 0; left: 0;
-    --ps: 48px;
+    --ps: 72px;
     width: var(--ps); height: var(--ps);
     margin: calc(var(--ps) / -2) 0 0 calc(var(--ps) / -2);
     pointer-events: none;
     will-change: transform, filter;
-    filter: drop-shadow(0 4px 12px rgba(95,198,255,0.35));
+    filter: drop-shadow(0 4px 18px rgba(95,198,255,0.45));
     transform-origin: 50% 50%;
     z-index: 5;
   }
   .plane-craft svg { width: 100%; height: 100%; }
   /* Адаптив размера: крупные мониторы → крупнее, мобилки → мельче */
-  @media (min-width: 1600px) { .plane-craft { --ps: 60px; } }
-  @media (max-width: 1024px) { .plane-craft { --ps: 42px; } }
-  @media (max-width: 700px)  { .plane-craft { --ps: 34px; } }
-  @media (max-width: 440px)  { .plane-craft { --ps: 28px; } }
+  @media (min-width: 1600px) { .plane-craft { --ps: 88px; } }
+  @media (max-width: 1024px) { .plane-craft { --ps: 60px; } }
+  @media (max-width: 700px)  { .plane-craft { --ps: 48px; } }
+  @media (max-width: 440px)  { .plane-craft { --ps: 38px; } }
 </style>
 
 <script>
@@ -90,8 +90,8 @@
     // а ДУГА — по горизонтали (плавная змейка влево-вправо). Относительно человека
     // он парит в середине, пока листаешь. Старт на «заций», финал — к кнопке.
     const TRACK: WP[] = [
-      [0.00, 0.72, 0.40, 1.0],  // старт на «заций» (привязка к якорю перетянет)
-      [0.16, 0.68, 0.50, 1.0],  // дуга вправо, центр по Y
+      [0.00, 0.88, 0.22, 1.0],  // старт: правый верхний угол (якорь перетянет точнее)
+      [0.16, 0.72, 0.46, 1.0],  // плавный вход в центр
       [0.34, 0.34, 0.48, 1.0],  // дуга влево
       [0.52, 0.66, 0.52, 1.0],  // дуга вправо
       [0.70, 0.36, 0.50, 1.0],  // дуга влево
@@ -145,7 +145,7 @@
       if (!startAnchor) return null;
       const r = startAnchor.getBoundingClientRect();
       if (r.width === 0) return null;
-      return { x: r.left + r.width * 0.5, y: r.top - r.height * 0.18 }; // чуть выше буквы (лежит сверху)
+      return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.5 }; // центр якоря
     }
 
     function px(p: number) {

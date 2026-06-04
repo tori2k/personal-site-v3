@@ -2,12 +2,14 @@
 ---
 <section class="hero section-dark" id="hero">
   <div class="hero__cursor-glow" id="heroGlow"></div>
+  <!-- Якорь старта самолётика — правый верхний угол hero, не перекрывает текст -->
+  <span id="planeAnchor" class="plane-anchor-spot" aria-hidden="true"></span>
 
   <div class="container-x hero__inner">
     <h1 class="hero__title text-glow">
       <span class="hero__line">Сайты и AI-воронки</span>
       <span class="hero__line"><em>для экспертов</em></span>
-      <span class="hero__line">под зая<span id="planeAnchor">вки</span>.</span>
+      <span class="hero__line">под заявки.</span>
     </h1>
 
     <div class="hero__bottom">
@@ -88,6 +90,14 @@
 </section>
 
 <style>
+  .plane-anchor-spot {
+    position: absolute;
+    top: 130px;
+    right: 5%;
+    width: 1px; height: 1px;
+    pointer-events: none;
+  }
+
   .hero {
     position: relative;
     min-height: 100vh;
