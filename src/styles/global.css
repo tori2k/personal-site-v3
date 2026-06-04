@@ -504,9 +504,13 @@ body {
   100% { opacity: 0; transform: translate(-480px, 270px); }
 }
 
-/* Контент над космосом */
+/* Контент над космосом.
+   main БЕЗ z-index — иначе создаёт stacking context и самолётик не может
+   вылезти поверх блоков изнутри. isolation:isolate поднимает содержимое
+   над .cosmos (z=0) без создания нового stacking context для fixed-элементов. */
 .noise-overlay { z-index: 2; }
-.nav, main, footer { position: relative; z-index: 3; }
+.nav, footer { position: relative; z-index: 3; }
+main { position: relative; isolation: isolate; }
 
 @media (prefers-reduced-motion: reduce) {
   .cosmos__stars--far,

@@ -31,41 +31,40 @@
 </div>
 
 <style>
-  /* Слой без isolation/z-index, чтобы не создавать stacking-контекст.
-     Самолётик прыгает сам: z:2 (за main) ↔ z:200 (над всем включая nav). */
+  /* Слой — position:fixed, z-index:500 — выше ВСЕГО (backdrop-filter, nav, main).
+     backdrop-filter на .glass создаёт stacking context и перекрывает fixed-детей
+     с любым z-index. Единственное надёжное решение: сам слой выше всего,
+     а "задний план" имитируем через opacity+scale, не через z-index. */
   .plane-layer {
     position: fixed;
     inset: 0;
     pointer-events: none;
+    z-index: 500;
   }
-  /* искры */
+  /* искры — absolute внутри fixed-слоя, координаты те же что и у craft */
   .plane-spark {
-    position: fixed;
+    position: absolute;
     width: 4px; height: 4px;
     border-radius: 50%;
     background: radial-gradient(circle, #BFE8FF, rgba(95,198,255,0.4) 60%, transparent);
     will-change: transform, opacity;
     opacity: 0;
   }
-  /* самолётик: position fixed, transform из JS; z-index переключается JS */
-  /* Размер самолётика адаптивен через clamp (см. JS — он читает реальный размер).
-     Центр трансформации — середина SVG (ось самолёта). */
-  /* Размер задаётся через CSS-переменную --ps (px). Центрирование — через margin
-     в −0.5×--ps, чтобы точка пути приходилась на центр самолётика. Адаптив по экрану. */
+  /* самолётик — absolute внутри fixed-слоя с inset:0.
+     Координаты из JS (translate(x,y)) работают идентично position:fixed
+     т.к. содержащий блок = весь viewport. */
   .plane-craft {
-    position: fixed;
+    position: absolute;
     top: 0; left: 0;
     --ps: 72px;
     width: var(--ps); height: var(--ps);
     margin: calc(var(--ps) / -2) 0 0 calc(var(--ps) / -2);
     pointer-events: none;
-    will-change: transform, filter;
+    will-change: transform, filter, opacity;
     filter: drop-shadow(0 4px 18px rgba(95,198,255,0.45));
     transform-origin: 50% 50%;
-    z-index: 5;
   }
   .plane-craft svg { width: 100%; height: 100%; }
-  /* Адаптив размера: крупные мониторы → крупнее, мобилки → мельче */
   @media (min-width: 1600px) { .plane-craft { --ps: 88px; } }
   @media (max-width: 1024px) { .plane-craft { --ps: 60px; } }
   @media (max-width: 700px)  { .plane-craft { --ps: 48px; } }
@@ -263,23 +262,23 @@
       const startWobbleDamp = Math.min(1, progress / START_TILT);
       const totalRot = angle + wobble * startWobbleDamp;
 
-      // ── ЭФФЕКТ «РАЗВЕИВАНИЯ»: лёгкий blur + потеря плотности по прогрессу ──
+      // Лёгкий blur нарастает по ходу полёта (ощущение скорости)
       const dissolve = progress > 0.05 ? Math.min(1, (progress - 0.05) / 0.9) : 0;
-      const blurPx = dissolve * 1.6;
+      const blurPx = dissolve * 1.2;
 
       craft!.style.transform =
         `translate(${cur.x}px, ${cur.y}px) rotate(${totalRot}deg) scale(${scale})`;
       craft!.style.filter = `drop-shadow(0 4px 12px rgba(95,198,255,0.35)) blur(${blurPx.toFixed(2)}px)`;
 
-      // Передний/задний план: резкое переключение по depth
-      // depth > 0.5 → над блоками (z=100, полная яркость)
-      // depth < 0.5 → за блоками (z=1, чуть тусклее — эффект глубины)
-      const isFront = depth > 0.5 || progress > LAND_START;
+      // Глубина через opacity + scale (не z-index).
+      // Слой plane-layer z:500 всегда выше всего — backdrop-filter на .glass
+      // создаёт stacking context и ломает fixed z-index, поэтому z не используем.
+      // "Задний план" (depth=0): мелкий + тёмный → читается как "за блоком".
+      // "Передний план" (depth=1): крупный + яркий → читается как "над блоком".
+      const isFront = depth > 0.5;
       let craftOpacity = isFront
-        ? (0.85 + depth * 0.15) * (1 - suckEase)           // спереди: яркий
-        : (0.35 + depth * 0.25) * (1 - dissolve * 0.15) * (1 - suckEase);  // сзади: приглушён
-      // z:200 — над nav(50) и main(3); z:2 — под main(3), самолётик "за" блоками
-      craft!.style.zIndex = isFront ? '200' : '2';
+        ? (0.88 + depth * 0.12) * (1 - suckEase)           // спереди: яркий ~1.0
+        : (0.22 + depth * 0.35) * (1 - suckEase);          // сзади: приглушённый ~0.22–0.4
       craft!.style.opacity = String(craftOpacity.toFixed(2));
 
       // вспышка кнопки в момент попадания (suck→1)
