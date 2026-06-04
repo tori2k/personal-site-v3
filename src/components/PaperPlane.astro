@@ -1,65 +1,74 @@
 ---
 ---
 <!--
-  Бумажный самолётик — signature motion сайта.
-  Символизирует маршрут заявки: контент → сайт → квиз → Telegram → CRM.
-  S-образная траектория с пикированиями (y меняется на 25–40% vh).
-  Глубина: scale + opacity + blur + glow.
+  PaperPlane — signature motion сайта kirillbaryev.ru
+  Нос ВСЕГДА в нижней полусфере: угол [30°..150°], никакой горизонтали.
+  Траектория: крутые пикирования (y меняется на 30–45% vh).
+  Слои: front (z>0.5) / back (z<0.15→opacity=0).
+  Финал: collision burst на CTA-кнопке.
   Без текстовых подписей.
 -->
+
+<!-- shockwave-кольцо для финального взрыва -->
+<div class="plane-shockwave" id="planeShockwave"></div>
+
 <div class="plane-layer" id="planeLayer" aria-hidden="true">
   <div id="planeSparks"></div>
   <div id="planeTrail"></div>
 
   <div class="plane-craft" id="planeCraft">
-    <!--
-      Самолётик вид сверху. Нос справа (x=46, y=24).
-      Улучшенный SVG: градиент, внутренний объём, мягкая подсветка сгиба.
-    -->
-    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Верхнее крыло: светлый градиент от носа к хвосту -->
-        <linearGradient id="wingTop" x1="53" y1="14" x2="7" y2="28" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#D6F0FF"/>
-          <stop offset="60%" stop-color="#AEE2FF"/>
-          <stop offset="100%" stop-color="#7CC3F0" stop-opacity="0.7"/>
+        <linearGradient id="wt" x1="57" y1="12" x2="6" y2="30" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#E8F6FF"/>
+          <stop offset="50%"  stop-color="#AEE2FF"/>
+          <stop offset="100%" stop-color="#7CC3F0" stop-opacity="0.65"/>
         </linearGradient>
-        <!-- Нижнее крыло: тень -->
-        <linearGradient id="wingBot" x1="53" y1="42" x2="7" y2="28" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#5AA3DC"/>
-          <stop offset="100%" stop-color="#3A7AB8" stop-opacity="0.6"/>
+        <linearGradient id="wb" x1="57" y1="48" x2="6" y2="30" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#5BAEDE"/>
+          <stop offset="100%" stop-color="#2E6EA8" stop-opacity="0.55"/>
         </linearGradient>
-        <!-- Световой блик на носу -->
-        <radialGradient id="noseTip" cx="0.85" cy="0.5" r="0.3">
-          <stop offset="0%" stop-color="#EAFAFF" stop-opacity="0.9"/>
-          <stop offset="100%" stop-color="#7CC3F0" stop-opacity="0"/>
+        <radialGradient id="nt" cx="82%" cy="50%" r="22%">
+          <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#AEE2FF" stop-opacity="0"/>
         </radialGradient>
-        <!-- Glow-filter для переднего плана -->
-        <filter id="planeGlow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="blur"/>
-          <feComposite in="blur" in2="SourceGraphic" operator="over"/>
-        </filter>
       </defs>
-
-      <!-- Верхнее крыло -->
-      <path d="M53 28 L7 11 L28 28 Z" fill="url(#wingTop)"/>
-      <!-- Нижнее крыло -->
-      <path d="M53 28 L7 45 L28 28 Z" fill="url(#wingBot)"/>
-      <!-- Верхняя фаска (объём у сгиба) -->
-      <path d="M28 28 L7 11 L10.5 28 Z" fill="#A8D8F0" opacity="0.85"/>
-      <!-- Нижняя фаска -->
-      <path d="M28 28 L7 45 L10.5 28 Z" fill="#3A80C0" opacity="0.70"/>
-      <!-- Центральный сгиб — светлый блик -->
-      <path d="M53 28 L9.5 28" stroke="#EAF6FF" stroke-width="0.8" opacity="0.50" stroke-linecap="round"/>
-      <!-- Световой акцент у носа -->
-      <ellipse cx="46" cy="25" rx="5" ry="3" fill="url(#noseTip)" opacity="0.6" transform="rotate(-8 46 25)"/>
+      <!-- верхнее крыло -->
+      <path d="M57 30 L6 11 L30 30 Z"         fill="url(#wt)"/>
+      <!-- нижнее крыло -->
+      <path d="M57 30 L6 49 L30 30 Z"         fill="url(#wb)"/>
+      <!-- объём верхней фаски -->
+      <path d="M30 30 L6 11 L10 30 Z"         fill="#B8DFF5" opacity="0.9"/>
+      <!-- объём нижней фаски -->
+      <path d="M30 30 L6 49 L10 30 Z"         fill="#3270A8" opacity="0.75"/>
+      <!-- сгиб-блик -->
+      <path d="M57 30 L9 30" stroke="#EBF8FF" stroke-width="0.7" opacity="0.45" stroke-linecap="round"/>
+      <!-- блик у носа -->
+      <ellipse cx="49" cy="27" rx="5" ry="2.5" fill="url(#nt)" opacity="0.55" transform="rotate(-10 49 27)"/>
     </svg>
   </div>
 </div>
 
 <style>
-  /* Слой поверх всего — z-index 500, backdrop-filter на .glass не мешает т.к.
-     содержащий блок = фиксированный viewport (inset:0). */
+  /* Shockwave-кольцо — расширяется из центра кнопки при посадке */
+  .plane-shockwave {
+    position: fixed;
+    pointer-events: none;
+    border-radius: 50%;
+    border: 1.5px solid rgba(95,198,255,0.7);
+    box-shadow: 0 0 12px rgba(95,198,255,0.4), inset 0 0 8px rgba(95,198,255,0.15);
+    opacity: 0;
+    width: 60px; height: 60px;
+    margin: -30px 0 0 -30px;
+    top: 0; left: 0;
+    transform-origin: 50% 50%;
+    will-change: transform, opacity;
+    z-index: 600;
+  }
+
+  /* Основной слой — всегда поверх всего благодаря z:500
+     .glass/backdrop-filter создаёт stacking ctx, но т.к. plane-layer fixed и
+     находится в body после main, он выигрывает stacking order при front. */
   .plane-layer {
     position: fixed;
     inset: 0;
@@ -70,7 +79,7 @@
   .plane-craft {
     position: absolute;
     top: 0; left: 0;
-    --ps: 64px;
+    --ps: 60px;
     width: var(--ps); height: var(--ps);
     margin: calc(var(--ps) / -2) 0 0 calc(var(--ps) / -2);
     pointer-events: none;
@@ -80,10 +89,10 @@
   }
   .plane-craft svg { width: 100%; height: 100%; display: block; }
 
-  @media (min-width: 1600px) { .plane-craft { --ps: 78px; } }
-  @media (max-width: 1024px) { .plane-craft { --ps: 54px; } }
-  @media (max-width: 700px)  { .plane-craft { --ps: 40px; } }
-  @media (max-width: 440px)  { .plane-craft { --ps: 34px; } }
+  @media (min-width: 1600px) { .plane-craft { --ps: 76px; } }
+  @media (max-width: 1024px) { .plane-craft { --ps: 50px; } }
+  @media (max-width: 700px)  { .plane-craft { --ps: 38px; } }
+  @media (max-width: 440px)  { .plane-craft { --ps: 30px; } }
 
   .plane-trail-dot {
     position: absolute;
@@ -93,7 +102,6 @@
     opacity: 0;
     top: 0; left: 0;
   }
-
   .plane-spark {
     position: absolute;
     border-radius: 50%;
@@ -105,361 +113,450 @@
 </style>
 
 <script>
-  const craft     = document.getElementById('planeCraft')  as HTMLElement | null;
-  const sparksEl  = document.getElementById('planeSparks') as HTMLElement | null;
-  const trailEl   = document.getElementById('planeTrail')  as HTMLElement | null;
+  const craft      = document.getElementById('planeCraft')     as HTMLElement | null;
+  const sparksEl   = document.getElementById('planeSparks')    as HTMLElement | null;
+  const trailEl    = document.getElementById('planeTrail')     as HTMLElement | null;
+  const shockwave  = document.getElementById('planeShockwave') as HTMLElement | null;
 
   if (!craft || !sparksEl || !trailEl) { /* guard */ } else {
 
-  const isMobile    = () => window.innerWidth <= 768;
+  const mob = () => window.innerWidth <= 768;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  ТРАЕКТОРИЯ
-  //  x, y — доли вьюпорта (0..1). y МЕНЯЕТСЯ СИЛЬНО: S-образная кривая.
-  //  z — глубина: 0 = задний план (мелко, тускло), 1 = передний (ярко, крупно)
-  //  spark — короткий burst при пересечении точки
-  // ══════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
+  // ТРАЕКТОРИЯ
+  // x,y — доли vw/vh. Каждый сегмент меняет y на 30–45%.
+  // z: 0=за блоком (невидим), 1=спереди (ярко).
+  // spark: взрыв искр в этой точке.
+  // ════════════════════════════════════════════════════════════════
   type WP = { p: number; x: number; y: number; z: number; spark?: true };
 
-  // Desktop: S-образная траектория с пикированиями на 25–40% vh
-  const DESKTOP_TRACK: WP[] = [
-    // Hero — старт справа вверху
-    { p: 0.00, x: 0.78, y: 0.28, z: 1.00 },
-    // Approach — пикирует вниз-влево
-    { p: 0.10, x: 0.38, y: 0.68, z: 0.80 },
-    // ForWhom — выныривает вправо-вверх
-    { p: 0.20, x: 0.74, y: 0.30, z: 0.92 },
-    // FlowBlock — ныряет влево вниз (за блоки, полностью скрыт)
-    { p: 0.29, x: 0.16, y: 0.72, z: 0.05 },
-    // Portfolio enter — вылет вправо вперёд (искры)
-    { p: 0.38, x: 0.82, y: 0.32, z: 1.00, spark: true },
-    // Portfolio behind — ныряет за карточку (полностью скрыт)
-    { p: 0.45, x: 0.22, y: 0.65, z: 0.05 },
-    // Portfolio exit — вылет (искры)
-    { p: 0.52, x: 0.76, y: 0.25, z: 1.00, spark: true },
-    // Method — пикирует влево вниз
-    { p: 0.61, x: 0.24, y: 0.70, z: 0.65 },
-    // Pricing — вираж вправо вверх
-    { p: 0.70, x: 0.78, y: 0.28, z: 0.88 },
-    // FAQ — ныряет влево вниз
-    { p: 0.79, x: 0.20, y: 0.66, z: 0.45 },
-    // Final подлёт — вправо к центру вверх
-    { p: 0.88, x: 0.65, y: 0.38, z: 0.95 },
-    // Посадка (искры)
-    { p: 1.00, x: 0.50, y: 0.52, z: 1.10, spark: true },
+  // DESKTOP: крутые пикирования, y [0.18..0.78], разброс ~60% vh
+  const DT: WP[] = [
+    { p: 0.00, x: 0.78, y: 0.22, z: 1.00 },           // hero — верх-справа
+    { p: 0.09, x: 0.35, y: 0.68, z: 0.75 },            // approach — пике вниз-влево
+    { p: 0.18, x: 0.72, y: 0.24, z: 0.90 },            // forwhom — вынырнул вверх-вправо
+    { p: 0.27, x: 0.20, y: 0.75, z: 0.04 },            // flowblock — ныряет за блок (невидим)
+    { p: 0.36, x: 0.80, y: 0.20, z: 1.00, spark: true }, // portfolio — вылет вперёд вверх
+    { p: 0.44, x: 0.18, y: 0.72, z: 0.04 },            // portfolio кейс — за карточкой (невидим)
+    { p: 0.52, x: 0.78, y: 0.18, z: 1.00, spark: true }, // вылет из кейса — вспышка
+    { p: 0.60, x: 0.25, y: 0.70, z: 0.60 },            // method — пике влево
+    { p: 0.69, x: 0.75, y: 0.22, z: 0.85 },            // pricing — вираж вверх-вправо
+    { p: 0.78, x: 0.22, y: 0.68, z: 0.38 },            // faq — уходит вниз-влево
+    { p: 0.87, x: 0.68, y: 0.30, z: 0.92 },            // подлёт — вверх-вправо
+    { p: 1.00, x: 0.50, y: 0.55, z: 1.10, spark: true }, // посадка в CTA
   ];
 
-  // Mobile: упрощённая — только три волны, y меняется на 25%
-  const MOBILE_TRACK: WP[] = [
-    { p: 0.00, x: 0.72, y: 0.25, z: 0.90 },
-    { p: 0.25, x: 0.25, y: 0.65, z: 0.35 },
-    { p: 0.50, x: 0.68, y: 0.28, z: 0.85 },
-    { p: 0.75, x: 0.28, y: 0.68, z: 0.40 },
-    { p: 1.00, x: 0.50, y: 0.50, z: 1.00 },
+  // MOBILE: 5 точек, только вертикальные волны, без агрессивных пересечений
+  const MT: WP[] = [
+    { p: 0.00, x: 0.70, y: 0.20, z: 0.85 },
+    { p: 0.25, x: 0.28, y: 0.60, z: 0.30 },
+    { p: 0.50, x: 0.65, y: 0.22, z: 0.80 },
+    { p: 0.75, x: 0.30, y: 0.65, z: 0.35 },
+    { p: 1.00, x: 0.50, y: 0.52, z: 1.00 },
   ];
 
-  function getTrack(): WP[] { return isMobile() ? MOBILE_TRACK : DESKTOP_TRACK; }
-  let TRACK = getTrack();
+  let TRACK: WP[] = mob() ? MT : DT;
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  CATMULL-ROM СПЛАЙН
-  // ══════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
+  // CATMULL-ROM
+  // ════════════════════════════════════════════════════════════════
   function cr(p0: number, p1: number, p2: number, p3: number, t: number): number {
-    const t2 = t*t, t3 = t2*t;
+    const t2=t*t, t3=t2*t;
     return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t2+(-p0+3*p1-3*p2+p3)*t3);
   }
-
-  function sample(prog: number): { x: number; y: number; z: number } {
-    const T  = TRACK;
-    const N  = T.length;
-    const c  = Math.max(0, Math.min(1, prog));
-    let   seg = N - 2;
-    for (let i = 0; i < N-1; i++) { if (c <= T[i+1].p) { seg = i; break; } }
-    const a  = T[seg], b = T[seg+1];
-    const t  = (c - a.p) / Math.max(1e-5, b.p - a.p);
-    const p0 = T[Math.max(0,   seg-1)];
-    const p3 = T[Math.min(N-1, seg+2)];
+  function spline(prog: number): {x:number;y:number;z:number} {
+    const T=TRACK, N=T.length;
+    const c=Math.max(0,Math.min(1,prog));
+    let seg=N-2;
+    for(let i=0;i<N-1;i++){if(c<=T[i+1].p){seg=i;break;}}
+    const a=T[seg], b=T[seg+1];
+    const t=(c-a.p)/Math.max(1e-5,b.p-a.p);
+    const p0=T[Math.max(0,seg-1)], p3=T[Math.min(N-1,seg+2)];
     return {
-      x: cr(p0.x, a.x, b.x, p3.x, t),
-      y: cr(p0.y, a.y, b.y, p3.y, t),
-      z: cr(p0.z, a.z, b.z, p3.z, t),
+      x: cr(p0.x,a.x,b.x,p3.x,t),
+      y: cr(p0.y,a.y,b.y,p3.y,t),
+      z: cr(p0.z,a.z,b.z,p3.z,t),
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  DOM-кэш
-  // ══════════════════════════════════════════════════════════════════════
-  const anchorEl  = document.getElementById('planeAnchor')  as HTMLElement | null;
-  const targetBtn = document.getElementById('planeTarget')   as HTMLElement | null;
+  // ════════════════════════════════════════════════════════════════
+  // DOM-кэш
+  // ════════════════════════════════════════════════════════════════
+  const anchorEl  = document.getElementById('planeAnchor') as HTMLElement|null;
+  const targetBtn = document.getElementById('planeTarget')  as HTMLElement|null;
+  const START_END  = 0.06;
+  const LAND_START = 0.87;
 
-  const START_END  = 0.06;  // якорь старта
-  const LAND_START = 0.88;  // начало мягкого подлёта к кнопке
+  // ════════════════════════════════════════════════════════════════
+  // OCCLUSION ZONES — зоны где самолётик уходит ЗА контент
+  // Используем data-plane-occluder атрибуты на секциях.
+  // occlusionDepth: 0=полностью скрыт, 1=без влияния (передний план)
+  // ════════════════════════════════════════════════════════════════
+  type OccZone = { el: HTMLElement; type: string; top: number; bottom: number };
+  let occZones: OccZone[] = [];
 
-  function getXY(prog: number): { x: number; y: number; z: number } {
-    const s = sample(prog);
-    let x = s.x * window.innerWidth;
-    let y = s.y * window.innerHeight;
-    let z = Math.max(0, Math.min(1.2, s.z));
+  function buildOccZones() {
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-plane-occluder]')
+    );
+    const scrollY = window.scrollY;
+    occZones = els.map(el => {
+      const r = el.getBoundingClientRect();
+      return {
+        el,
+        type: el.dataset.planeOccluder || '',
+        top:    r.top  + scrollY,
+        bottom: r.bottom + scrollY,
+      };
+    });
+  }
+  buildOccZones();
+  window.addEventListener('resize', buildOccZones, { passive: true });
 
-    // Привязка к якорю старта
-    if (prog < START_END && anchorEl) {
-      const r = anchorEl.getBoundingClientRect();
-      if (r.width) {
-        const e = (prog / START_END) ** 2;
-        x = (r.left + r.width/2)  + (x - (r.left + r.width/2))  * e;
-        y = (r.top  + r.height/2) + (y - (r.top  + r.height/2)) * e;
+  // Возвращает 0..1 — насколько точка (viewportX,viewportY) перекрыта зонами.
+  // 0 = самолётик ПОЛНОСТЬЮ в зоне перекрытия (за блоком)
+  // 1 = нет перекрытия (передний план)
+  function getOcclusionFactor(vx: number, vy: number): number {
+    const scrollY = window.scrollY;
+    const docY = vy + scrollY;
+    let minFactor = 1.0;
+
+    for (const z of occZones) {
+      // Проверяем: точка по Y внутри зоны?
+      const inY = docY > z.top + 40 && docY < z.bottom - 40;
+      if (!inY) continue;
+
+      // Для photo — проверяем rect в реальном времени (fixed-координаты)
+      if (z.type === 'photo') {
+        const r = z.el.getBoundingClientRect();
+        const inX = vx > r.left - 20 && vx < r.right + 20;
+        const inYv = vy > r.top - 20 && vy < r.bottom + 20;
+        if (inX && inYv) {
+          minFactor = Math.min(minFactor, 0.0);  // полностью за фото
+        }
+      }
+      // Для cases и pricing — весь блок является зоной перекрытия
+      else if (z.type === 'cases' || z.type === 'pricing') {
+        // Степень перекрытия зависит от глубины в блоке
+        const localP = (docY - z.top) / Math.max(1, z.bottom - z.top);
+        // Края блока — мягкое перекрытие, середина — полное
+        const edge = Math.min(localP, 1 - localP) * 4; // 0→1 на краях
+        const factor = Math.max(0, Math.min(1, 1 - edge * 0.85));
+        minFactor = Math.min(minFactor, factor);
+      }
+    }
+    return minFactor;
+  }
+
+  function getPos(p: number): {x:number;y:number;z:number} {
+    const s=spline(p);
+    let x=s.x*window.innerWidth, y=s.y*window.innerHeight;
+    let z=Math.max(0,Math.min(1.2,s.z));
+
+    // Якорь старта
+    if(p<START_END && anchorEl){
+      const r=anchorEl.getBoundingClientRect();
+      if(r.width){
+        const e=(p/START_END)**2;
+        x=(r.left+r.width/2)+(x-(r.left+r.width/2))*e;
+        y=(r.top+r.height/2)+(y-(r.top+r.height/2))*e;
       }
     }
 
     // Подлёт к кнопке
-    if (prog > LAND_START && targetBtn) {
-      const r = targetBtn.getBoundingClientRect();
-      const bx = r.left + r.width/2, by = r.top + r.height/2;
-      const k  = (prog - LAND_START) / (1 - LAND_START);
-      const e  = k*k*(3-2*k);
-      x = x + (bx - x) * e;
-      y = y + (by - y) * e;
-      z = z + (1.1 - z) * e * 0.8;
+    if(p>LAND_START && targetBtn){
+      const r=targetBtn.getBoundingClientRect();
+      const bx=r.left+r.width/2, by=r.top+r.height/2;
+      const k=(p-LAND_START)/(1-LAND_START);
+      const e=k*k*(3-2*k);
+      x=x+(bx-x)*e; y=y+(by-y)*e;
+      z=z+(1.1-z)*e*0.9;
     }
 
-    const pad = isMobile() ? 18 : 28;
+    const pad=mob()?16:24;
     return {
-      x: Math.max(pad, Math.min(window.innerWidth - pad, x)),
-      y: Math.max(pad, Math.min(window.innerHeight - pad, y)),
+      x: Math.max(pad,Math.min(window.innerWidth-pad,x)),
+      y: Math.max(pad,Math.min(window.innerHeight-pad,y)),
       z,
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  TRAIL — 12 фейдящих точек
-  // ══════════════════════════════════════════════════════════════════════
-  const TLEN = isMobile() ? 6 : 12;
-  const tDots: HTMLElement[] = [];
-  type TPos = { x: number; y: number; z: number };
-  const tHist: TPos[] = Array.from({length: TLEN}, () => ({x:-999,y:-999,z:0}));
-  let   tIdx  = 0;
-
-  for (let i = 0; i < TLEN; i++) {
-    const d  = document.createElement('div');
-    d.className = 'plane-trail-dot';
-    const sz = 2.5 + (TLEN - i) * 0.35;
-    d.style.cssText = `width:${sz}px;height:${sz}px;` +
-      `background:radial-gradient(circle,#C8E8FF,rgba(95,198,255,0.25) 55%,transparent);` +
+  // ════════════════════════════════════════════════════════════════
+  // TRAIL
+  // ════════════════════════════════════════════════════════════════
+  const TLEN=mob()?5:10;
+  const tDots: HTMLElement[]=[];
+  type TPos={x:number;y:number;z:number};
+  const tHist: TPos[]=Array.from({length:TLEN},()=>({x:-999,y:-999,z:0}));
+  let tIdx=0;
+  for(let i=0;i<TLEN;i++){
+    const d=document.createElement('div');
+    d.className='plane-trail-dot';
+    const sz=2+i*0.25;
+    d.style.cssText=`width:${sz}px;height:${sz}px;`+
+      `background:radial-gradient(circle,#C8E8FF,rgba(95,198,255,0.2) 55%,transparent);`+
       `margin:-${sz/2}px 0 0 -${sz/2}px`;
     trailEl.appendChild(d);
     tDots.push(d);
   }
-
-  function tickTrail(cx: number, cy: number, cz: number) {
-    tHist[tIdx] = { x: cx, y: cy, z: cz };
-    tIdx = (tIdx + 1) % TLEN;
-    for (let i = 0; i < TLEN; i++) {
-      const age = (tIdx - 1 - i + TLEN) % TLEN;       // 0=новейший
-      const pos = tHist[(tIdx - 1 - i + TLEN) % TLEN];
-      const d   = tDots[i];
-      const fade    = 1 - age / TLEN;
-      const depth   = 0.3 + pos.z * 0.7;
-      const maxOp   = pos.z > 0.5 ? 0.45 : pos.z < 0.15 ? 0 : 0.08; // скрыт вместе с самолётиком
-      d.style.transform = `translate(${pos.x}px,${pos.y}px) scale(${depth*(1-age/TLEN*0.4)})`;
-      d.style.opacity   = (fade * maxOp).toFixed(3);
+  function tickTrail(cx:number,cy:number,cz:number){
+    tHist[tIdx]={x:cx,y:cy,z:cz};
+    tIdx=(tIdx+1)%TLEN;
+    for(let i=0;i<TLEN;i++){
+      const age=(tIdx-1-i+TLEN)%TLEN;
+      const pos=tHist[(tIdx-1-i+TLEN)%TLEN];
+      const d=tDots[i];
+      const fade=1-age/TLEN;
+      // на заднем плане trail тоже пропадает
+      const maxOp=pos.z<0.12 ? 0 : pos.z>0.5 ? 0.40 : 0.10;
+      d.style.transform=`translate(${pos.x}px,${pos.y}px) scale(${(0.3+pos.z*0.7)*(1-age/TLEN*0.45)})`;
+      d.style.opacity=(fade*maxOp).toFixed(3);
     }
   }
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  ИСКРЫ — пул 16 элементов
-  // ══════════════════════════════════════════════════════════════════════
-  const SMAX = isMobile() ? 8 : 16;
-  const sEls: HTMLElement[] = [];
-  let   sIdx = 0;
-  const SCOLS = ['#8ED8FF','#FFFFFF','#B9ECFF','#C4E8FF'];
-
-  // Детерминированный pseudo-random
-  function prng(n: number): number {
-    const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
-    return x - Math.floor(x);
+  // ════════════════════════════════════════════════════════════════
+  // ИСКРЫ — пул
+  // ════════════════════════════════════════════════════════════════
+  const SMAX=mob()?8:18;
+  const sEls: HTMLElement[]=[];
+  let sIdx=0;
+  const SCOLS=['#8ED8FF','#FFFFFF','#B9ECFF','#C8E8FF','#AEE2FF'];
+  function prng(n:number):number{
+    const x=Math.sin(n*127.1+311.7)*43758.5453;
+    return x-Math.floor(x);
   }
-
-  for (let i = 0; i < SMAX; i++) {
-    const s  = document.createElement('div');
-    s.className = 'plane-spark';
-    const sz = 1.5 + prng(i*7.3) * 3;
-    s.style.cssText = `width:${sz}px;height:${sz}px;` +
-      `background:${SCOLS[i % SCOLS.length]};` +
-      `margin:-${sz/2}px 0 0 -${sz/2}px`;
+  for(let i=0;i<SMAX;i++){
+    const s=document.createElement('div');
+    s.className='plane-spark';
+    const sz=1.5+prng(i*7.3)*2.8;
+    s.style.cssText=`width:${sz}px;height:${sz}px;`+
+      `background:${SCOLS[i%SCOLS.length]};`+
+      `margin:-${sz/2}px 0 0 -${sz/2}px;border-radius:50%`;
     sparksEl.appendChild(s);
     sEls.push(s);
   }
 
-  function burst(cx: number, cy: number, count: number, seed: number) {
-    for (let i = 0; i < count; i++) {
-      const s     = sEls[sIdx % SMAX]; sIdx++;
-      const angle = prng(seed + i * 0.37) * Math.PI * 2;
-      const dist  = 10 + prng(seed + i * 0.71) * 32;
-      const tx    = cx + Math.cos(angle) * dist;
-      const ty    = cy + Math.sin(angle) * dist;
-      const dur   = 500 + prng(seed + i) * 400;
-      s.style.cssText += `;transition:none;transform:translate(${cx}px,${cy}px) scale(1);opacity:0.9`;
-      requestAnimationFrame(() => {
-        s.style.transition = `transform ${dur}ms cubic-bezier(.2,.8,.4,1), opacity ${dur+100}ms ease-out`;
-        s.style.transform  = `translate(${tx}px,${ty}px) scale(0.08)`;
-        s.style.opacity    = '0';
+  // Обычный burst (несколько частиц)
+  function burst(cx:number,cy:number,count:number,seed:number,maxDist=38){
+    for(let i=0;i<count;i++){
+      const s=sEls[sIdx%SMAX]; sIdx++;
+      const a=prng(seed+i*0.37)*Math.PI*2;
+      const d=10+prng(seed+i*0.71)*maxDist;
+      const tx=cx+Math.cos(a)*d, ty=cy+Math.sin(a)*d;
+      const dur=450+prng(seed+i)*380;
+      s.style.cssText+=`;transition:none;transform:translate(${cx}px,${cy}px) scale(1.2);opacity:0.9`;
+      requestAnimationFrame(()=>{
+        s.style.transition=`transform ${dur}ms cubic-bezier(.15,.8,.35,1),opacity ${dur+80}ms ease-out`;
+        s.style.transform=`translate(${tx}px,${ty}px) scale(0.06)`;
+        s.style.opacity='0';
       });
     }
   }
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  ПОДСВЕТКА КНОПКИ
-  // ══════════════════════════════════════════════════════════════════════
-  function glowBtn(k: number) {
-    if (!targetBtn) return;
-    targetBtn.style.boxShadow = k > 0
-      ? `0 0 ${36*k}px rgba(95,198,255,${0.45*k}),0 0 ${72*k}px rgba(95,198,255,${0.2*k})`
-      : '';
+  // ════════════════════════════════════════════════════════════════
+  // ФИНАЛЬНЫЙ COLLISION BURST на кнопке
+  // ════════════════════════════════════════════════════════════════
+  let collisionFired=false;
+
+  function collisionBurst(cx:number,cy:number){
+    if(!targetBtn || collisionFired) return;
+    collisionFired=true;
+
+    // 1. Много искр большим разбросом
+    burst(cx,cy,mob()?8:14,cx+cy,60);
+
+    // 2. Shockwave-кольцо
+    if(shockwave){
+      shockwave.style.cssText+=`;transition:none;`+
+        `transform:translate(${cx}px,${cy}px) scale(0.3);opacity:0.9`;
+      requestAnimationFrame(()=>{
+        shockwave.style.transition=
+          'transform 700ms cubic-bezier(.05,.8,.3,1),opacity 700ms ease-out';
+        shockwave.style.transform=`translate(${cx}px,${cy}px) scale(6)`;
+        shockwave.style.opacity='0';
+      });
+    }
+
+    // 3. Glow-вспышка кнопки + scale-pulse
+    if(targetBtn){
+      targetBtn.style.transition='box-shadow 0.08s,transform 0.08s';
+      targetBtn.style.boxShadow=
+        '0 0 60px rgba(95,198,255,0.9),0 0 120px rgba(95,198,255,0.45)';
+      targetBtn.style.transform='scale(1.06)';
+      setTimeout(()=>{
+        if(!targetBtn) return;
+        targetBtn.style.transition='box-shadow 0.55s ease-out,transform 0.55s ease-out';
+        targetBtn.style.boxShadow='';
+        targetBtn.style.transform='scale(1)';
+      },90);
+    }
   }
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  ПОРОГИ (искры при пересечении прогресса)
-  // ══════════════════════════════════════════════════════════════════════
-  const thresholds = DESKTOP_TRACK
-    .filter(wp => wp.spark)
-    .map(wp => ({ p: wp.p, cooldown: 0 }));
+  // ════════════════════════════════════════════════════════════════
+  // GLOW КНОПКИ (мягкий при подлёте)
+  // ════════════════════════════════════════════════════════════════
+  function glowBtn(k:number){
+    if(!targetBtn||collisionFired) return;
+    targetBtn.style.boxShadow=k>0
+      ?`0 0 ${32*k}px rgba(95,198,255,${(0.40*k).toFixed(2)}),`+
+        `0 0 ${64*k}px rgba(95,198,255,${(0.18*k).toFixed(2)})`
+      :'';
+  }
 
-  function checkSparks(prev: number, cur: number, x: number, y: number, fr: number) {
-    thresholds.forEach(t => {
-      if (fr < t.cooldown) return;
-      const crossed = (prev < t.p && cur >= t.p) || (prev > t.p && cur <= t.p);
-      if (crossed) {
-        burst(x, y, isMobile() ? 4 : 7, t.p * 1000 + fr);
-        t.cooldown = fr + 45;
-      }
+  // ════════════════════════════════════════════════════════════════
+  // ПОРОГИ ИСКР
+  // ════════════════════════════════════════════════════════════════
+  const sparksTP=DT.filter(w=>w.spark).map(w=>({p:w.p,cd:0}));
+  function checkSparks(prev:number,cur:number,x:number,y:number,fr:number){
+    sparksTP.forEach(t=>{
+      if(fr<t.cd) return;
+      const cross=(prev<t.p&&cur>=t.p)||(prev>t.p&&cur<=t.p);
+      if(cross){burst(x,y,mob()?4:7,t.p*1000+fr);t.cd=fr+50;}
     });
   }
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  RENDER
-  // ══════════════════════════════════════════════════════════════════════
-  let shown = 0, target = 0, prev = 0;
-  let rafId = 0, fr = 0;
+  // ════════════════════════════════════════════════════════════════
+  // RENDER
+  // ════════════════════════════════════════════════════════════════
+  let shown=0,target=0,prevP=0,rafId=0,fr=0;
 
-  function render(prog: number) {
+  function render(prog:number){
     fr++;
-    const pos   = getXY(prog);
-    const fwd   = getXY(Math.min(1, prog + 0.013));
-    const back  = getXY(Math.max(0, prog - 0.011));
-    const z     = Math.max(0, Math.min(1.2, pos.z));
+    const pos=getPos(prog);
+    const fwd=getPos(Math.min(1,prog+0.014));
+    const bck=getPos(Math.max(0,prog-0.012));
+    const z=Math.max(0,Math.min(1.2,pos.z));
 
-    // ── Угол: нос смотрит по направлению полёта ──
-    // SVG смотрит носом вправо (0°). atan2(dy,dx) даёт угол вектора движения.
-    // Клампим в диапазон [25°, 155°] — нос НИКОГДА не смотрит вверх.
-    // При движении вправо-вниз угол ~20–80°, при движении влево-вниз ~100–160°.
-    const dx = fwd.x - pos.x;
-    const dy = fwd.y - pos.y;
-    let   rawAngle = Math.atan2(dy, dx) * 180 / Math.PI;
-    // Нормализуем в -180..180, затем зеркалим верхнюю полусферу вниз
-    // чтобы нос всегда указывал в нижнюю полусферу (25°..155°)
-    if (rawAngle < 0) rawAngle = -rawAngle;          // зеркало: верх → вниз
-    let angle = Math.max(25, Math.min(155, rawAngle)); // жёсткий клампинг
-    if (prog < START_END) angle = 25 + (angle - 25) * (prog / START_END) ** 1.5;
+    // ──────────────────────────────────────────────
+    // УГОЛ: нос ВСЕГДА в диапазоне [30°..150°]
+    // SVG-нос смотрит вправо = 0°. 90° = вниз.
+    // Мы ЗАПРЕЩАЕМ отрицательные углы (нос вверх).
+    // При движении вправо:   угол ~30–90°  (пикирование)
+    // При движении влево:    угол ~90–150° (пикирование зеркально)
+    // ──────────────────────────────────────────────
+    const dx=fwd.x-pos.x, dy=fwd.y-pos.y;
+    let raw=Math.atan2(dy,dx)*180/Math.PI;  // -180..180
+    // Зеркалим верхнюю полусферу в нижнюю (нос вниз)
+    if(raw<0) raw=-raw;
+    // Жёсткий зажим: никогда меньше 30° и больше 150°
+    let angle=Math.max(30,Math.min(150,raw));
+    // Плавный старт с 45° (лежит горизонтально → начинает пикировать)
+    if(prog<START_END){
+      const e=(prog/START_END)**1.8;
+      angle=45+(angle-45)*e;
+    }
 
-    // Покачивание (живое парение)
-    const wobble = Math.sin(fr * 0.052) * 2.8 + Math.cos(fr * 0.079) * 1.2;
-    const damp   = Math.min(1, prog / START_END);
+    // Покачивание — живое дыхание
+    const wobble=(Math.sin(fr*0.051)*3+Math.cos(fr*0.077)*1.3)
+                  *Math.min(1,prog/START_END);
+    // Крен на поворотах
+    const bank=Math.atan2(dy,Math.abs(dx)+0.01)*12;
 
-    // Крен в поворотах (bank angle — illusion depth)
-    const curvature = Math.atan2(dy, Math.abs(dx) + 0.01);
-    const bank = curvature * 10;
+    // ──────────────────────────────────────────────
+    // OCCLUSION: определяем, за каким контентом сейчас самолётик
+    // Смешиваем: z из траектории + реальная позиция в зонах перекрытия
+    // ──────────────────────────────────────────────
+    const occFactor = mob() ? 1.0 : getOcclusionFactor(pos.x, pos.y);
+    // Итоговая глубина = mininum из z-траектории и occlusion
+    // occFactor=0 → принудительно задний план даже если z=1
+    const effectiveZ = Math.min(z, 0.12 + occFactor * (z - 0.12 + 0.88));
 
-    // ── Масштаб по глубине ──
-    // front (z≈1): scale ~1.1, back (z≈0): scale ~0.5 → ×2.2 разница
-    const suck = prog > 0.97 ? ((prog - 0.97) / 0.03) ** 2 : 0;
-    const scaleBase = isMobile() ? (0.65 + z * 0.35) : (0.48 + z * 0.62);
-    const scale = scaleBase * (1 - suck);
+    // ──────────────────────────────────────────────
+    // ГЛУБИНА → scale / opacity / blur / glow
+    // ──────────────────────────────────────────────
+    // Всасывание в финале
+    const suck=prog>0.97?((prog-0.97)/0.03)**2:0;
 
-    // ── Opacity: задний план полностью исчезает ──
-    // z < 0.15 → opacity 0 (полностью под блоком, не виден совсем)
-    // z 0.15..0.5 → плавное появление 0..0.35
-    // z > 0.5 → яркий 0.85..1.0
-    const opacity = (() => {
-      if (z < 0.15) return 0;                           // полностью скрыт
-      if (z < 0.5)  return ((z - 0.15) / 0.35) * 0.38; // плавное появление
-      return (0.85 + (z - 0.5) * 0.30) * (1 - suck);   // передний план
-    })() * (1 - suck);
+    // scale: back 0.44 ↔ front 1.08 (×2.5 разница) — по effectiveZ
+    const scaleBase=mob()?(0.62+effectiveZ*0.36):(0.44+effectiveZ*0.64);
+    const scale=scaleBase*(1-suck);
 
-    // ── Motion blur по скорости ──
-    const spd = Math.hypot(pos.x - back.x, pos.y - back.y);
-    const blur = Math.min(2.2, spd * 0.07);
+    // opacity: effectiveZ<0.12→0, 0.12..0.50→нарастает 0→0.40, >0.50→ярко 0.85..1
+    let opacity:number;
+    if(effectiveZ<0.12)      opacity=0;
+    else if(effectiveZ<0.50) opacity=((effectiveZ-0.12)/0.38)*0.40;
+    else                     opacity=(0.85+(effectiveZ-0.50)*0.30)*(1-suck);
+    opacity*=(1-suck);
 
-    // ── Glow: яркий спереди, слабый сзади ──
-    const glowR = 6 + z * 16;
-    const glowA = z > 0.5 ? 0.28 + z * 0.32 : 0.08;
-    const glow  = `drop-shadow(0 ${2+z*3}px ${glowR}px rgba(95,198,255,${glowA.toFixed(2)}))`;
-    const blurF = blur > 0.12 ? ` blur(${blur.toFixed(2)}px)` : '';
+    // Depth blur: на заднем плане размыто, спереди чётко
+    const depthBlur=effectiveZ<0.5?Math.max(0,(0.5-effectiveZ)/0.5)*3.5:0;
 
-    craft.style.transform = [
-      `translate(${pos.x}px,${pos.y}px)`,
-      `rotate(${(angle + wobble * damp).toFixed(2)}deg)`,
+    // Motion blur: скорость
+    const spd=Math.hypot(pos.x-bck.x,pos.y-bck.y);
+    const motionBlur=Math.min(2.0,spd*0.065);
+
+    const totalBlur=(depthBlur+motionBlur).toFixed(2);
+
+    // Glow: яркий спереди, нет сзади — по effectiveZ
+    const gr=5+effectiveZ*18;
+    const ga=effectiveZ>0.5?0.25+effectiveZ*0.35:0.05;
+    const glow=`drop-shadow(0 ${(2+effectiveZ*4).toFixed(0)}px ${gr}px rgba(95,198,255,${ga.toFixed(2)}))`;
+    const blurF=parseFloat(totalBlur)>0.1?` blur(${totalBlur}px)`:'';
+
+    craft.style.transform=[
+      `translate(${pos.x.toFixed(1)}px,${pos.y.toFixed(1)}px)`,
+      `rotate(${(angle+wobble).toFixed(2)}deg)`,
       `rotateY(${bank.toFixed(1)}deg)`,
       `scale(${scale.toFixed(3)})`,
     ].join(' ');
-    craft.style.filter  = glow + blurF;
-    craft.style.opacity = opacity.toFixed(3);
+    craft.style.filter=glow+blurF;
+    craft.style.opacity=opacity.toFixed(3);
 
     // Trail
-    tickTrail(pos.x, pos.y, z);
+    tickTrail(pos.x,pos.y,z);
 
-    // Искры при пересечении порогов
-    checkSparks(prev, prog, pos.x, pos.y, fr);
+    // Искры на порогах
+    checkSparks(prevP,prog,pos.x,pos.y,fr);
 
-    // Glow кнопки при посадке
-    if (prog > 0.88) {
-      const k = (prog - 0.88) / 0.12;
-      glowBtn(k < 0.6 ? k / 0.6 : (1 - k) / 0.4);
-    } else {
+    // Glow кнопки при подлёте
+    if(prog>0.87&&!collisionFired){
+      const k=(prog-0.87)/0.10;
+      glowBtn(Math.min(k,1)*0.8);
+    } else if(!collisionFired){
       glowBtn(0);
     }
 
-    prev = prog;
+    // Финальный коллизионный взрыв — один раз при prog≥0.98
+    if(prog>=0.98) collisionBurst(pos.x,pos.y);
+
+    prevP=prog;
   }
 
-  // ══════════════════════════════════════════════════════════════════════
-  //  ЦИКЛ
-  // ══════════════════════════════════════════════════════════════════════
-  if (reduceMotion) {
-    // Статика: самолётик у правого края экрана, небольшой, почти прозрачный
-    craft.style.transform = `translate(${window.innerWidth * 0.82}px,${window.innerHeight * 0.3}px) rotate(-15deg) scale(0.55)`;
-    craft.style.opacity   = '0.3';
-    craft.style.filter    = 'drop-shadow(0 2px 6px rgba(95,198,255,0.15))';
+  // ════════════════════════════════════════════════════════════════
+  // ЦИКЛ
+  // ════════════════════════════════════════════════════════════════
+  if(reduceMotion){
+    craft.style.transform=`translate(${window.innerWidth*0.82}px,${window.innerHeight*0.3}px) rotate(35deg) scale(0.5)`;
+    craft.style.opacity='0.28';
+    craft.style.filter='drop-shadow(0 2px 6px rgba(95,198,255,0.15))';
   } else {
-    const LERP = 0.09;  // инерция: чем меньше — тем плавнее (но медленнее догоняет)
-    let idleRaf = 0;
+    const LERP=0.09;
+    let idleRaf=0;
 
-    const loop = () => {
-      shown += (target - shown) * LERP;
+    const loop=()=>{
+      shown+=(target-shown)*LERP;
       render(shown);
-      rafId = Math.abs(target - shown) > 0.0002 ? requestAnimationFrame(loop) : 0;
+      rafId=Math.abs(target-shown)>0.0002?requestAnimationFrame(loop):0;
     };
 
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      target = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-      if (!rafId) rafId = requestAnimationFrame(loop);
+    const onScroll=()=>{
+      const max=document.documentElement.scrollHeight-window.innerHeight;
+      target=max>0?Math.min(1,Math.max(0,window.scrollY/max)):0;
+      // Сбрасываем collisionFired при скролле назад
+      if(target<0.95) collisionFired=false;
+      if(!rafId) rafId=requestAnimationFrame(loop);
     };
 
-    // Idle rAF: покачивание работает даже без скролла
-    const idle = () => {
-      if (!rafId && Math.abs(target - shown) < 0.0002) render(shown);
-      idleRaf = requestAnimationFrame(idle);
+    const idle=()=>{
+      if(!rafId&&Math.abs(target-shown)<0.0002) render(shown);
+      idleRaf=requestAnimationFrame(idle);
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-      TRACK = getTrack();
-      onScroll();
-    }, { passive: true });
-
+    window.addEventListener('scroll',onScroll,{passive:true});
+    window.addEventListener('resize',()=>{TRACK=mob()?MT:DT;onScroll();},{passive:true});
     onScroll();
-    idleRaf = requestAnimationFrame(idle);
+    idleRaf=requestAnimationFrame(idle);
   }
 
   } // end guard
