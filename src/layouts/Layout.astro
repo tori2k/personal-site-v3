@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css';
-import PaperPlane from '../components/PaperPlane.astro';
 
 interface Props {
   title?: string;
@@ -88,8 +87,6 @@ const {
   </div>
 
   <slot />
-  <!-- Самолётик после <main> в DOM — выигрывает stacking context над z-index:3 -->
-  <PaperPlane />
 
   <style is:global>
     .cursor {
