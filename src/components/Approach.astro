@@ -1,10 +1,33 @@
 ---
 const base = import.meta.env.BASE_URL;
+
+const cards = [
+  {
+    key: 'Оффер',
+    desc: 'Формулируем услугу так, чтобы клиент понял ценность и следующий шаг',
+  },
+  {
+    key: 'Заявка',
+    desc: 'Форма или квиз отправляют обращение в Telegram/CRM',
+  },
+  {
+    key: 'Система',
+    desc: 'Сайт, таблица лидов, аналитика и follow-up работают вместе',
+  },
+];
+
+const perks = [
+  'Чистый код без конструкторов и подписок',
+  'Первая версия за 3–5 дней',
+  'Заявки приходят в Telegram',
+  'Исходники остаются у вас',
+];
 ---
 <section class="approach section-dark" id="about">
   <div class="container-x">
     <div class="approach__grid">
-      <!-- Левая колонка: фото в стеклянной рамке -->
+
+      <!-- Левая колонка: фото -->
       <div class="approach__left reveal-left">
         <div class="approach__photo glass" data-tilt>
           <img src={`${base}kirill.jpg`} alt="Кирилл Барыев" loading="lazy" />
@@ -13,47 +36,64 @@ const base = import.meta.env.BASE_URL;
             это я
           </div>
         </div>
+
+        <!-- Доверие под фото -->
+        <div class="approach__trust glass">
+          <div class="trust__label">Один инженер. <em>Весь стек.</em></div>
+          <p class="trust__sub">
+            Делаю сам — от структуры до деплоя. Без подрядчиков и передачи задач.
+          </p>
+        </div>
       </div>
 
-      <!-- Правая колонка: заголовок + числа + строки выгод -->
+      <!-- Правая колонка -->
       <div class="approach__right reveal-right">
-        <div class="sec-tag">Подход</div>
+        <div class="approach__badge">
+          <span class="live-badge__dot"></span>
+          Для экспертов, юристов и сервисного бизнеса
+        </div>
+
         <h2 class="display-h approach__title">
-          Один инженер. <em>Весь стек.</em>
+          Сайты и AI-воронки <em>под заявки.</em>
         </h2>
+
         <p class="approach__lead">
-          Делаю сайты и автоматизации на чистом коде — без конструкторов,
-          с измеримым результатом и исходниками, которые остаются у вас.
+          Собираю оффер, лендинг, квиз, Telegram-заявки, аналитику и CRM/таблицу,
+          чтобы клиент понимал, почему выбрать вас, а вы не теряли обращения в переписках.
         </p>
 
-        <!-- Числа в стеклянных капсулах (приборная панель) -->
-        <div class="approach__stats">
-          <div class="stat glass">
-            <div class="stat__n"><span data-count="98">0</span></div>
-            <div class="stat__l">Lighthouse</div>
-          </div>
-          <div class="stat glass">
-            <div class="stat__n"><span data-count="7">0</span><small>+</small></div>
-            <div class="stat__l">проектов</div>
-          </div>
-          <div class="stat glass">
-            <div class="stat__n">&lt;1<small>с</small></div>
-            <div class="stat__l">загрузка</div>
-          </div>
+        <!-- 3 карточки результата -->
+        <div class="approach__cards">
+          {cards.map((c) => (
+            <div class="acard glass">
+              <div class="acard__key">{c.key}</div>
+              <div class="acard__desc">{c.desc}</div>
+            </div>
+          ))}
         </div>
 
-        <!-- 3 короткие выгоды -->
-        <ul class="approach__benefits">
-          <li><span class="approach__b-n">01</span> Чистый код без конструкторов и подписок</li>
-          <li><span class="approach__b-n">02</span> Открывается за секунду на любом устройстве</li>
-          <li><span class="approach__b-n">03</span> Исходники и ключ от репозитория — ваши</li>
+        <!-- CTA -->
+        <div class="approach__cta-row">
+          <a href="/razbor" class="btn btn--filled" data-magnetic="0.4">
+            <span class="btn__plus">(+)</span>
+            Получить бесплатный разбор
+          </a>
+          <a href="#work" class="btn">
+            Посмотреть кейсы
+          </a>
+        </div>
+
+        <!-- Технические преимущества -->
+        <ul class="approach__perks">
+          {perks.map((p, i) => (
+            <li>
+              <span class="approach__perk-n">0{i + 1}</span>
+              {p}
+            </li>
+          ))}
         </ul>
-
-        <!-- Стек одной строкой -->
-        <div class="approach__stack">
-          <span>Astro</span><span>TypeScript</span><span>Tailwind</span><span>React</span><span>Google Sheets</span><span>Т-Касса</span>
-        </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -62,12 +102,20 @@ const base = import.meta.env.BASE_URL;
   .approach { padding: 120px 0; }
   .approach__grid {
     display: grid;
-    grid-template-columns: 1fr 1.25fr;
+    grid-template-columns: 1fr 1.35fr;
     gap: 64px;
-    align-items: center;
+    align-items: start;
   }
 
-  /* Фото в стеклянной рамке с 3D-наклоном */
+  /* ── Левая колонка ── */
+  .approach__left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 100px;
+  }
+
   .approach__photo {
     position: relative;
     aspect-ratio: 4/5;
@@ -101,130 +149,140 @@ const base = import.meta.env.BASE_URL;
   }
   .approach__photo-badge .live-badge__dot { background: #06070D; box-shadow: none; }
 
-  .approach__title { margin: 0 0 20px; }
-  .approach__title em { color: var(--aurora-cyan); }
-  .approach__lead {
-    font-size: clamp(16px, 1.5vw, 19px);
-    line-height: 1.6;
+  /* Блок доверия под фото */
+  .approach__trust {
+    padding: 20px 22px;
+    border-radius: 14px;
+  }
+  .trust__label {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .trust__label em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--aurora-cyan);
+  }
+  .trust__sub {
+    font-size: 13px;
     color: var(--color-muted);
-    margin: 0 0 36px;
-    max-width: 520px;
+    line-height: 1.55;
+    margin: 0;
   }
 
-  /* Числа-капсулы */
-  .approach__stats {
+  /* ── Правая колонка ── */
+  .approach__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--color-muted);
+    margin-bottom: 20px;
+    padding: 6px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+
+  .approach__title { margin: 0 0 20px; }
+  .approach__title em { color: var(--aurora-cyan); }
+
+  .approach__lead {
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.65;
+    color: var(--color-muted);
+    margin: 0 0 32px;
+    max-width: 540px;
+  }
+
+  /* Карточки оффер/заявка/система */
+  .approach__cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 36px;
+    gap: 12px;
+    margin-bottom: 32px;
   }
-  .stat {
-    padding: 22px 20px;
+  .acard {
+    padding: 20px 18px;
     border-radius: 14px;
-    text-align: left;
+    transition: border-color 0.3s, transform 0.3s cubic-bezier(.22,1,.36,1);
   }
-  .stat__n {
+  .acard:hover {
+    border-color: rgba(95,198,255,0.4);
+    transform: translateY(-3px);
+  }
+  .acard__key {
     font-family: 'Unbounded', sans-serif;
+    font-size: 12px;
     font-weight: 500;
-    font-size: clamp(32px, 3.4vw, 48px);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--color-text);
-    display: flex;
-    align-items: baseline;
-  }
-  .stat__n small {
-    font-size: 0.45em;
+    letter-spacing: 0.5px;
     color: var(--aurora-cyan);
-    margin-left: 2px;
+    margin-bottom: 8px;
   }
-  .stat__l {
-    margin-top: 8px;
+  .acard__desc {
+    font-size: 12px;
+    color: var(--color-muted);
+    line-height: 1.55;
+  }
+
+  /* CTA */
+  .approach__cta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  /* Технические преимущества */
+  .approach__perks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .approach__perks li {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    font-size: 13px;
+    color: var(--color-muted);
+    line-height: 1.5;
+  }
+  .approach__perk-n {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--color-muted-2);
-  }
-
-  /* Выгоды */
-  .approach__benefits {
-    list-style: none;
-    margin: 0 0 28px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .approach__benefits li {
-    display: flex;
-    gap: 14px;
-    align-items: baseline;
-    font-size: 15px;
-    color: var(--color-text);
-    line-height: 1.5;
-  }
-  .approach__b-n {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--aurora-cyan);
+    color: var(--color-accent);
     flex-shrink: 0;
   }
 
-  /* Стек одной строкой */
-  .approach__stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .approach__stack span {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.5px;
-    color: var(--color-muted);
-    padding: 5px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
+  @media (max-width: 1100px) {
+    .approach__cards { grid-template-columns: 1fr 1fr; }
+    .acard:last-child { grid-column: 1 / -1; }
   }
 
   @media (max-width: 900px) {
     .approach { padding: 72px 0; }
     .approach__grid { grid-template-columns: 1fr; gap: 40px; }
-    .approach__stats { gap: 10px; }
-    .stat { padding: 16px 14px; }
+    .approach__left { position: static; }
+    .approach__cards { grid-template-columns: 1fr; }
+    .acard:last-child { grid-column: auto; }
   }
 </style>
 
 <script>
-  // Counter-roll для чисел при появлении (с учётом reduced-motion)
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const counters = document.querySelectorAll<HTMLElement>('.approach [data-count]');
 
-  function rollCounter(el: HTMLElement) {
-    const to = parseInt(el.dataset.count || '0', 10);
-    if (reduceMotion) { el.textContent = String(to); return; }
-    const dur = 1400;
-    const start = performance.now();
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - start) / dur);
-      const eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = String(Math.round(to * eased));
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        rollCounter(e.target as HTMLElement);
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.5 });
-  counters.forEach((c) => io.observe(c));
-
-  // Лёгкий 3D-наклон фото на курсор (desktop, не reduced-motion)
+  // Лёгкий 3D-наклон фото на курсор (desktop)
   if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
     const photo = document.querySelector<HTMLElement>('.approach__photo[data-tilt]');
     if (photo) {
