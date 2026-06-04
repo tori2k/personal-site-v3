@@ -4,12 +4,71 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  /** Абсолютный og:image (по умолчанию /og-image.jpg на домене) */
+  ogImage?: string;
+  /** Закрыть страницу от индексации (noindex, follow) */
+  noindex?: boolean;
+  /** Дополнительный per-page JSON-LD (объект или массив объектов schema.org) */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
-  title = 'Кирилл Барыев — лендинги и сайты для экспертов и бизнеса',
-  description = 'Помогаю экспертам и малому бизнесу запустить сайт с заявками в Telegram, своим доменом и понятной структурой. Первый разбор бесплатно.',
+  title = 'Создание сайтов и AI-воронок под заявки для экспертов, юристов и бизнеса',
+  description = 'Разрабатываю лендинги, сайты, квизы, Telegram-заявки, CRM/таблицы и AI-автоматизации для экспертов, юристов и сервисного бизнеса. Первый разбор бесплатно.',
+  ogImage,
+  noindex = false,
+  jsonLd,
 } = Astro.props;
+
+const SITE = 'https://kirillbaryev.ru';
+// Канонический абсолютный URL текущей страницы (со слэшем на конце для каталогов)
+const canonical = new URL(Astro.url.pathname, SITE).href;
+const ogImageUrl = ogImage ?? `${SITE}/og-image.jpg`;
+
+// Базовый JSON-LD на всех страницах: сайт + персона + услуга
+const baseJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Кирилл Барыев',
+    url: SITE,
+    inLanguage: 'ru',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Кирилл Барыев',
+    url: SITE,
+    image: `${SITE}/kirill.jpg`,
+    sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
+    jobTitle: 'Разработчик сайтов и AI-воронок',
+    knowsAbout: [
+      'разработка сайтов',
+      'лендинги под заявки',
+      'AI-воронки',
+      'Telegram-боты',
+      'квизы для лендинга',
+      'CRM и автоматизация заявок',
+      'лидогенерация',
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: 'Кирилл Барыев — разработка сайтов и AI-воронок',
+    url: SITE,
+    image: `${SITE}/og-image.jpg`,
+    description:
+      'Лендинги, сайты, квизы, Telegram-заявки, CRM/таблицы и AI-автоматизации для экспертов, юристов, консультантов, онлайн-школ и сервисного бизнеса.',
+    priceRange: 'от 49 000 ₽',
+    areaServed: 'RU',
+    founder: { '@type': 'Person', name: 'Кирилл Барыев' },
+    sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
+  },
+];
+
+const pageJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const allJsonLd = [...baseJsonLd, ...pageJsonLd];
 ---
 <!doctype html>
 <html lang="ru">
@@ -20,13 +79,26 @@ const {
   <meta name="description" content={description} />
   <meta name="theme-color" content="#06070D" />
 
+  <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex, follow" />}
+
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:locale" content="ru_RU" />
-  <meta property="og:image" content="/og-image.jpg" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:site_name" content="Кирилл Барыев" />
+  <meta property="og:image" content={ogImageUrl} />
 
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageUrl} />
+
+  <!-- Structured data: WebSite + Person + ProfessionalService (+ per-page) -->
+  {allJsonLd.map((node) => (
+    <script type="application/ld+json" set:html={JSON.stringify(node)} />
+  ))}
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

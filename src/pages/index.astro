@@ -11,8 +11,20 @@ import Pricing from '../components/Pricing.astro';
 import Faq from '../components/Faq.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Footer from '../components/Footer.astro';
+import { faqItems } from '../data/faq';
+
+// JSON-LD: FAQPage из тех же вопросов, что в блоке FAQ
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
-<Layout>
+<Layout jsonLd={faqJsonLd}>
   <Nav />
   <main>
     <Hero />

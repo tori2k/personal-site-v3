@@ -85,10 +85,30 @@ const services = [
     external: true,
   },
 ];
+
+// JSON-LD: каталог услуг (Service + OfferCatalog)
+const servicesJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Разработка сайтов и AI-воронок под заявки',
+  provider: { '@type': 'Person', name: 'Кирилл Барыев', url: 'https://kirillbaryev.ru' },
+  areaServed: 'RU',
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Продуктовая линейка',
+    itemListElement: services.map((s) => ({
+      '@type': 'Offer',
+      name: s.name,
+      description: s.pain,
+      ...(s.price ? { price: s.price.replace(/[^\d]/g, '') || undefined, priceCurrency: 'RUB' } : {}),
+    })),
+  },
+};
 ---
 <Layout
-  title="Услуги · Кирилл Барыев"
-  description="Полная продуктовая линейка: бесплатный разбор, экспресс-лендинг, лендинг эксперта, система заявок, сайт + CRM + автоматизации."
+  title="Разработка лендинга под заявки: сайт, квиз, Telegram и CRM — цены"
+  description="Продуктовая линейка: экспресс-лендинг, лендинг эксперта, сайт с Telegram-заявками, CRM, ботами и автоматизациями. Стоимость от 49 000 ₽."
+  jsonLd={servicesJsonLd}
 >
   <Nav />
   <main>
@@ -102,6 +122,11 @@ const services = [
           <p class="srv-hero__sub">
             От бесплатного разбора до полной системы заявок под ключ.
             Выберите формат или начните с разбора — скажу, что нужно именно вам.
+          </p>
+          <p class="srv-hero__links">
+            <a href="/razbor">Бесплатный разбор</a> ·
+            <a href="/cases">Кейсы</a> ·
+            <a href="/method">Метод 7 уровней</a>
           </p>
         </div>
       </div>
@@ -192,6 +217,14 @@ const services = [
     line-height: 1.65;
     margin: 0;
   }
+  .srv-hero__links {
+    margin: 20px 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--color-muted-2);
+  }
+  .srv-hero__links a { color: var(--color-accent); text-decoration: none; }
+  .srv-hero__links a:hover { text-decoration: underline; }
 
   .srv-list { padding: 40px 0 120px; }
   .srv-list .container-x { display: flex; flex-direction: column; gap: 16px; }

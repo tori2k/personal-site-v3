@@ -58,10 +58,37 @@ const cases = [
     automated: 'Форма брони → уведомление организаторам',
   },
 ];
+
+// JSON-LD: CollectionPage + BreadcrumbList
+const casesJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Кейсы сайтов под заявки',
+    url: 'https://kirillbaryev.ru/cases/',
+    description:
+      'Проекты Кирилла Барыева: сайты с системой заявок, Telegram-интеграцией и автоматизацией.',
+    hasPart: cases.map((c) => ({
+      '@type': 'CreativeWork',
+      name: c.title,
+      about: c.niche,
+      url: c.url,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://kirillbaryev.ru/' },
+      { '@type': 'ListItem', position: 2, name: 'Кейсы', item: 'https://kirillbaryev.ru/cases/' },
+    ],
+  },
+];
 ---
 <Layout
-  title="Кейсы · Кирилл Барыев"
-  description="Проекты: школа вокала Manifik, ФК Знамя Труда, ЧТИВО ДОМ. Сайты с системой заявок, Telegram-интеграцией и аналитикой."
+  title="Кейсы сайтов под заявки: лендинги, Telegram-интеграции и CRM"
+  description="Проекты Кирилла Барыева: сайты для школы вокала, футбольного клуба и культурного пространства. Лендинги, заявки, Telegram-интеграции и автоматизация."
+  jsonLd={casesJsonLd}
 >
   <Nav />
   <main>
@@ -74,6 +101,10 @@ const cases = [
           </h1>
           <p class="cases-hero__sub">
             Не просто «сделал сайт» — а как заявка теперь проходит путь от контента до CRM.
+          </p>
+          <p class="cases-hero__links">
+            <a href="/razbor">Получить бесплатный разбор</a> ·
+            <a href="/services">Услуги и цены</a>
           </p>
         </div>
       </div>
@@ -137,6 +168,14 @@ const cases = [
     line-height: 1.6;
     margin: 0;
   }
+  .cases-hero__links {
+    margin: 20px 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--color-muted-2);
+  }
+  .cases-hero__links a { color: var(--color-accent); text-decoration: none; }
+  .cases-hero__links a:hover { text-decoration: underline; }
 
   .cases-list { padding: 40px 0 100px; }
   .cases-list .container-x { display: flex; flex-direction: column; gap: 28px; }

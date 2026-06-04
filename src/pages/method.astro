@@ -68,8 +68,8 @@ const principles = [
 ];
 ---
 <Layout
-  title="Метод · Кирилл Барыев"
-  description="7 уровней сайта эксперта: от ссылки-визитки до системы заявок. Принципы сборки сайтов и AI-воронок под заявки."
+  title="7 уровней сайта эксперта: от визитки до системы заявок"
+  description="Метод Кирилла Барыева: как превратить сайт эксперта в систему заявок с оффером, квизом, Telegram, CRM и аналитикой."
 >
   <Nav />
   <main>
@@ -135,6 +135,10 @@ const principles = [
             <p class="mth-cta__sub">
               Разберу ваш сайт и скажу, что мешает заявкам.
               Бесплатно, в Telegram, без звонков.
+            </p>
+            <p class="mth-cta__links">
+              <a href="/services">Услуги и цены</a> ·
+              <a href="/cases">Кейсы</a>
             </p>
           </div>
           <a href="/razbor" class="btn btn--filled mth-cta__btn" data-magnetic="0.3">
@@ -241,6 +245,9 @@ const principles = [
   .mth-cta__h2 { margin: 16px 0 16px; }
   .mth-cta__h2 em { color: var(--aurora-cyan); }
   .mth-cta__sub { font-size: 16px; color: var(--color-muted); line-height: 1.6; margin: 0; max-width: 380px; }
+  .mth-cta__links { margin: 16px 0 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--color-muted-2); }
+  .mth-cta__links a { color: var(--color-accent); text-decoration: none; }
+  .mth-cta__links a:hover { text-decoration: underline; }
   .mth-cta__btn { flex-shrink: 0; align-self: center; }
 
   @media (max-width: 900px) {
