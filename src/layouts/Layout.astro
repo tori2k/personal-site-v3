@@ -79,7 +79,6 @@ const {
     <div class="cosmos__comet cosmos__comet--1"></div>
     <div class="cosmos__comet cosmos__comet--2"></div>
   </div>
-  <PaperPlane />
   <div class="noise-overlay"></div>
 
   <!-- Custom cursor -->
@@ -89,6 +88,8 @@ const {
   </div>
 
   <slot />
+  <!-- Самолётик после <main> в DOM — выигрывает stacking context над z-index:3 -->
+  <PaperPlane />
 
   <style is:global>
     .cursor {
