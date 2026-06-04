@@ -1,331 +1,488 @@
 ---
 ---
-<!--
-  Бумажный самолётик, летящий по «небу» при скролле. Стартует лёжа на «заций»,
-  летит по ПЛАВНОЙ ДУГЕ (Catmull-Rom сплайн), ныряет за блоки и выныривает
-  (чередование переднего/заднего плана + размер = глубина), покачивается и
-  кренится в виражах, оставляет редкие искры, эффектно садится внизу.
-  Без видимой траектории. fixed-слой; z-index переключается 1↔5 по глубине.
--->
 <div class="plane-layer" id="planeLayer" aria-hidden="true">
-  <!-- искры за хвостом (пул, переиспользуются) -->
-  <div class="plane-sparks" id="planeSparks"></div>
+  <div id="planeSparks"></div>
+  <div id="planeTrail"></div>
+  <div class="plane-caption" id="planeCaption"></div>
 
-  <!-- Бумажный самолётик, ВИД СВЕРХУ. Нос справа (точка 46,24), симметричен
-       относительно оси — при любом угле полёта смотрит носом вперёд, без «спины».
-       Два крыла (свет/тень от центрального киля) + киль. -->
   <div class="plane-craft" id="planeCraft">
     <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-      <!-- верхнее крыло (свет) -->
       <path d="M46 24 L6 10 L24 24 Z" fill="#AEE2FF"/>
-      <!-- нижнее крыло (тень) -->
       <path d="M46 24 L6 38 L24 24 Z" fill="#5AA3DC"/>
-      <!-- центральный киль (тёмная складка, читается как «брюхо») -->
-      <path d="M46 24 L6 10 L10 24 L6 38 Z" fill="#3B86C2" opacity="0.0"/>
       <path d="M24 24 L6 10 L9 24 Z" fill="#7CC3F0"/>
       <path d="M24 24 L6 38 L9 24 Z" fill="#3F8BC6"/>
-      <!-- ось-сгиб (блик) -->
       <path d="M46 24 L8 24" stroke="#EAF6FF" stroke-width="1" opacity="0.55" stroke-linecap="round"/>
     </svg>
   </div>
 </div>
 
 <style>
-  /* Слой — position:fixed, z-index:500 — выше ВСЕГО (backdrop-filter, nav, main).
-     backdrop-filter на .glass создаёт stacking context и перекрывает fixed-детей
-     с любым z-index. Единственное надёжное решение: сам слой выше всего,
-     а "задний план" имитируем через opacity+scale, не через z-index. */
   .plane-layer {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 500;
   }
-  /* искры — absolute внутри fixed-слоя, координаты те же что и у craft */
-  .plane-spark {
-    position: absolute;
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #BFE8FF, rgba(95,198,255,0.4) 60%, transparent);
-    will-change: transform, opacity;
-    opacity: 0;
-  }
-  /* самолётик — absolute внутри fixed-слоя с inset:0.
-     Координаты из JS (translate(x,y)) работают идентично position:fixed
-     т.к. содержащий блок = весь viewport. */
+
   .plane-craft {
     position: absolute;
     top: 0; left: 0;
-    --ps: 72px;
+    --ps: 68px;
     width: var(--ps); height: var(--ps);
     margin: calc(var(--ps) / -2) 0 0 calc(var(--ps) / -2);
     pointer-events: none;
     will-change: transform, filter, opacity;
-    filter: drop-shadow(0 4px 18px rgba(95,198,255,0.45));
     transform-origin: 50% 50%;
   }
-  .plane-craft svg { width: 100%; height: 100%; }
-  @media (min-width: 1600px) { .plane-craft { --ps: 88px; } }
-  @media (max-width: 1024px) { .plane-craft { --ps: 60px; } }
-  @media (max-width: 700px)  { .plane-craft { --ps: 48px; } }
-  @media (max-width: 440px)  { .plane-craft { --ps: 38px; } }
+  .plane-craft svg { width: 100%; height: 100%; display: block; }
+
+  @media (min-width: 1600px) { .plane-craft { --ps: 82px; } }
+  @media (max-width: 1024px) { .plane-craft { --ps: 56px; } }
+  @media (max-width: 700px)  { .plane-craft { --ps: 44px; } }
+  @media (max-width: 440px)  { .plane-craft { --ps: 36px; } }
+
+  /* Trail dots */
+  .plane-trail-dot {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+
+  /* Sparks */
+  .plane-spark {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+
+  /* Caption */
+  .plane-caption {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(95, 198, 255, 0.75);
+    pointer-events: none;
+    opacity: 0;
+    white-space: nowrap;
+    text-shadow: 0 0 8px rgba(95,198,255,0.4);
+    transition: opacity 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    .plane-caption { display: none; }
+  }
 </style>
 
 <script>
-  const craft = document.getElementById('planeCraft');
-  const sparksWrap = document.getElementById('planeSparks');
+  const craft = document.getElementById('planeCraft') as HTMLElement | null;
+  const sparksWrap = document.getElementById('planeSparks') as HTMLElement | null;
+  const trailWrap = document.getElementById('planeTrail') as HTMLElement | null;
+  const captionEl = document.getElementById('planeCaption') as HTMLElement | null;
 
-  if (craft && sparksWrap) {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!craft || !sparksWrap || !trailWrap) { /* skip */ } else {
 
-    // ── Контрольные точки траектории в долях вьюпорта: [progress, x, y, depth] ──
-    //   depth: 0=далеко (мелкий, за блоками, тусклее) ↔ 1=близко (крупный, над контентом)
-    type WP = [number, number, number, number];
-    // Змейка с общим спуском вниз. Угол клампится в нижнюю полусферу (нос всегда вниз).
-    // depth БОЛЬШЕ НА ПЕРЕДНЕМ ПЛАНЕ (наезжает на блоки, z:50), редкие нырки за блок (z:1).
-    // depth высокий = передний план (z:100, наезжает). Нырки НЕ глубокие (0.55),
-    // чтобы самолётик не исчезал целиком за непрозрачным блоком, а лишь отдалялся.
-    // Самолётик ВСЕГДА по центру экрана по вертикали (y≈0.5, на уровне глаз),
-    // а ДУГА — по горизонтали (плавная змейка влево-вправо). Относительно человека
-    // он парит в середине, пока листаешь. Старт на «заций», финал — к кнопке.
-    // depth: 1.0 = передний план (наезжает поверх блоков, крупнее)
-    //        0.0 = задний план (уходит за блоки, мельче в 1.5×)
-    // Чередуем каждую дугу: вправо=спереди, влево=сзади
-    const TRACK: WP[] = [
-      [0.00, 0.75, 0.44, 1.0],  // старт: правее центра, уровень середины hero
-      [0.12, 0.62, 0.48, 1.0],  // подтягивается к центру — спереди
-      [0.25, 0.28, 0.50, 0.0],  // дуга влево — уходит за блоки
-      [0.38, 0.68, 0.50, 1.0],  // дуга вправо — вылетает спереди
-      [0.52, 0.26, 0.50, 0.0],  // дуга влево — за блоки
-      [0.65, 0.70, 0.50, 1.0],  // дуга вправо — спереди
-      [0.78, 0.32, 0.50, 0.0],  // дуга влево — за блоки
-      [0.90, 0.55, 0.51, 1.0],  // к центру — спереди для посадки
-      [1.00, 0.50, 0.52, 1.0],  // финал, подлёт к кнопке
-    ];
+  const isMobile = window.innerWidth <= 768;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // ── Catmull-Rom сплайн: гладкая кривая через точки (без острых углов) ──
-    const N = TRACK.length;
-    function catmull(p0: number, p1: number, p2: number, p3: number, t: number) {
-      const t2 = t * t, t3 = t2 * t;
-      return 0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3);
+  // ── Контрольные точки маршрута ──────────────────────────────────────────
+  // x,y в долях viewport; z: 0=задний, 1=передний; spark: взрыв искр
+  type WP = {
+    p: number; x: number; y: number; z: number;
+    spark?: boolean; caption?: string;
+  };
+
+  const TRACK: WP[] = isMobile ? [
+    // Упрощённая мобильная траектория
+    { p: 0.00, x: 0.72, y: 0.38, z: 1.0 },
+    { p: 0.25, x: 0.30, y: 0.50, z: 0.3 },
+    { p: 0.50, x: 0.65, y: 0.48, z: 0.9 },
+    { p: 0.75, x: 0.35, y: 0.52, z: 0.4 },
+    { p: 1.00, x: 0.50, y: 0.55, z: 1.0 },
+  ] : [
+    // hero: старт справа
+    { p: 0.00, x: 0.76, y: 0.40, z: 1.0,  caption: 'старт' },
+    // approach: сайт
+    { p: 0.10, x: 0.55, y: 0.50, z: 0.85, caption: 'сайт' },
+    // forwhom: уходит за блок
+    { p: 0.20, x: 0.22, y: 0.48, z: 0.25, spark: false },
+    // flowblock: вылетает — квиз
+    { p: 0.30, x: 0.72, y: 0.44, z: 0.95, spark: true, caption: 'квиз' },
+    // portfolio: ныряет за кейс
+    { p: 0.38, x: 0.18, y: 0.52, z: 0.20 },
+    // portfolio: вылет из кейса
+    { p: 0.46, x: 0.80, y: 0.46, z: 1.0,  spark: true, caption: 'Telegram' },
+    // method: левая дуга
+    { p: 0.55, x: 0.28, y: 0.50, z: 0.65, caption: 'метод' },
+    // pricing: правая дуга — за блок
+    { p: 0.65, x: 0.74, y: 0.48, z: 0.35, caption: 'пакет' },
+    // faq: выныривает
+    { p: 0.76, x: 0.30, y: 0.46, z: 0.80, spark: true },
+    // final подлёт
+    { p: 0.88, x: 0.62, y: 0.50, z: 0.90, caption: 'разбор' },
+    // посадка
+    { p: 1.00, x: 0.50, y: 0.54, z: 1.1,  spark: true, caption: 'заявка доставлена' },
+  ];
+
+  const N = TRACK.length;
+
+  // ── Catmull-Rom ──────────────────────────────────────────────────────────
+  function cr(p0: number, p1: number, p2: number, p3: number, t: number): number {
+    const t2 = t * t, t3 = t2 * t;
+    return 0.5 * ((2*p1) + (-p0+p2)*t + (2*p0-5*p1+4*p2-p3)*t2 + (-p0+3*p1-3*p2+p3)*t3);
+  }
+
+  function sampleAt(prog: number): { x: number; y: number; z: number } {
+    const clamped = Math.max(0, Math.min(1, prog));
+    let seg = N - 2;
+    for (let i = 0; i < N - 1; i++) {
+      if (clamped <= TRACK[i+1].p) { seg = i; break; }
     }
-    // вернуть {x,y,depth} в долях по глобальному прогрессу p (0..1) вдоль сплайна
-    function sampleSpline(p: number) {
-      const clamped = Math.max(0, Math.min(1, p));
-      // находим сегмент по progress-меткам
-      let seg = 0;
-      for (let i = 0; i < N - 1; i++) {
-        if (clamped >= TRACK[i][0] && clamped <= TRACK[i + 1][0]) { seg = i; break; }
-        if (clamped > TRACK[N - 1][0]) seg = N - 2;
-      }
-      const a = TRACK[seg], b = TRACK[seg + 1];
-      const localT = (clamped - a[0]) / (b[0] - a[0] || 1);
-      const p0 = TRACK[Math.max(0, seg - 1)];
-      const p1 = a, p2 = b;
-      const p3 = TRACK[Math.min(N - 1, seg + 2)];
-      return {
-        fx: catmull(p0[1], p1[1], p2[1], p3[1], localT),
-        fy: catmull(p0[2], p1[2], p2[2], p3[2], localT),
-        depth: catmull(p0[3], p1[3], p2[3], p3[3], localT),
-      };
-    }
-    // Кнопка «Получить разбор» (внизу) — цель посадки. Самолётик влетает в неё и исчезает.
-    const targetBtn = document.getElementById('planeTarget');
-    // экранная позиция центра кнопки (fixed-координаты)
-    function btnCenter() {
-      if (!targetBtn) return null;
-      const r = targetBtn.getBoundingClientRect();
-      // если кнопка не во вьюпорте — null (ещё не долетели)
-      return { x: r.left + r.width / 2, y: r.top + r.height / 2, r };
-    }
+    const a = TRACK[seg], b = TRACK[seg+1];
+    const t = (clamped - a.p) / Math.max(0.0001, b.p - a.p);
+    const p0 = TRACK[Math.max(0, seg-1)];
+    const p3 = TRACK[Math.min(N-1, seg+2)];
+    return {
+      x: cr(p0.x, a.x, b.x, p3.x, t),
+      y: cr(p0.y, a.y, b.y, p3.y, t),
+      z: cr(p0.z, a.z, b.z, p3.z, t),
+    };
+  }
 
-    const LAND_START = 0.90;  // с этого прогресса — мягкий подлёт к центру кнопки
-    const START_END = 0.08;   // до этого прогресса самолётик привязан к слову «заций»
+  // ── DOM кэш ─────────────────────────────────────────────────────────────
+  const startAnchor = document.getElementById('planeAnchor') as HTMLElement | null;
+  const targetBtn   = document.getElementById('planeTarget') as HTMLElement | null;
+  const flowSteps   = Array.from(document.querySelectorAll<HTMLElement>('.flow__step'));
+  // flowblock section для определения прогресса
+  const flowSection = document.getElementById('flow');
 
-    // якорь «заций» в Hero — точная стартовая позиция на ЛЮБОМ разрешении.
-    // Самолётик ЛЕЖИТ СВЕРХУ на букве: центр X буквы, Y — над её верхней кромкой.
-    const startAnchor = document.getElementById('planeAnchor');
-    function anchorCenter() {
-      if (!startAnchor) return null;
-      const r = startAnchor.getBoundingClientRect();
-      if (r.width === 0) return null;
-      return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.5 }; // центр якоря
-    }
+  // Пересчитываем позиции секций на resize/load
+  let sectionsCache: { id: string; top: number; bottom: number }[] = [];
+  function cacheSections() {
+    const ids = ['hero','about','forwhom','flow','work','method','pricing','faq','contact'];
+    const scrollY = window.scrollY;
+    sectionsCache = ids.map(id => {
+      const el = document.getElementById(id);
+      if (!el) return { id, top: 0, bottom: 0 };
+      const r = el.getBoundingClientRect();
+      return { id, top: r.top + scrollY, bottom: r.bottom + scrollY };
+    });
+  }
+  cacheSections();
+  window.addEventListener('resize', cacheSections, { passive: true });
 
-    function px(p: number) {
-      const s = sampleSpline(p);
-      let x = s.fx * window.innerWidth;
-      let y = s.fy * window.innerHeight;
-      let depth = s.depth;
+  // ── Trail пул ─────────────────────────────────────────────────────────
+  const TRAIL_LEN = isMobile ? 5 : 10;
+  const trailEls: HTMLElement[] = [];
+  for (let i = 0; i < TRAIL_LEN; i++) {
+    const d = document.createElement('div');
+    d.className = 'plane-trail-dot';
+    const sz = 3 + (TRAIL_LEN - i) * 0.4;
+    d.style.cssText = `width:${sz}px;height:${sz}px;background:radial-gradient(circle,#BFE8FF,rgba(95,198,255,0.3) 60%,transparent)`;
+    trailWrap.appendChild(d);
+    trailEls.push(d);
+  }
+  // Буфер истории позиций для trail
+  type Pos = { x: number; y: number; z: number };
+  const trailHistory: Pos[] = Array(TRAIL_LEN).fill({ x: -999, y: -999, z: 0 });
+  let trailHistIdx = 0;
 
-      // СТАРТ: притягиваемся к реальной позиции слова «заций» (адаптив под экран)
-      const ac = anchorCenter();
-      if (p < START_END && ac) {
-        const k = Math.min(1, p / START_END);          // 0 у старта → 1 в конце привязки
-        const ease = k * k * (3 - 2 * k);
-        x = ac.x + (x - ac.x) * ease;                  // от якоря к траектории
-        y = ac.y + (y - ac.y) * ease;
-      }
+  function updateTrail(cx: number, cy: number, cz: number) {
+    trailHistory[trailHistIdx] = { x: cx, y: cy, z: cz };
+    trailHistIdx = (trailHistIdx + 1) % TRAIL_LEN;
 
-      // ФИНАЛ: мягкий подлёт к центру кнопки (без спирали). Самолётик по центру
-      // плавно опускается прямо в «Получить разбор».
-      const bc = btnCenter();
-      if (p > LAND_START && bc) {
-        const k = Math.min(1, (p - LAND_START) / (1 - LAND_START)); // 0→1
-        const ease = k * k * (3 - 2 * k);                            // smoothstep
-        x = x + (bc.x - x) * ease;
-        y = y + (bc.y - y) * ease;
-        depth = depth + (1 - depth) * ease * 0.6;
-      }
-
-      // ГЛОБАЛЬНЫЙ КЛАМПИНГ: самолётик всегда в видимой области (с запасом под его размер),
-      // чтобы на любом экране не вылетал за края.
-      const pad = 36;
-      x = Math.max(pad, Math.min(window.innerWidth - pad, x));
-      y = Math.max(pad, Math.min(window.innerHeight - pad, y));
-      return { x, y, depth };
-    }
-
-    // ── Искры: пул элементов, спавнятся за хвостом на лету ──
-    const SPARKS = 14;
-    const sparkEls: HTMLElement[] = [];
-    for (let i = 0; i < SPARKS; i++) {
-      const s = document.createElement('div');
-      s.className = 'plane-spark';
-      sparksWrap.appendChild(s);
-      sparkEls.push(s);
-    }
-    let sparkIdx = 0;
-    let lastSparkFrame = 0;
-    function emitSpark(x: number, y: number, frame: number) {
-      if (frame - lastSparkFrame < 4) return;     // не чаще ~раз в 4 кадра
-      lastSparkFrame = frame;
-      const s = sparkEls[sparkIdx];
-      sparkIdx = (sparkIdx + 1) % SPARKS;
-      const jx = (pseudo(frame * 1.3) - 0.5) * 14;
-      const jy = (pseudo(frame * 2.7) - 0.5) * 14;
-      s.style.transform = `translate(${x + jx}px, ${y + jy}px) scale(${0.6 + pseudo(frame) * 0.6})`;
-      s.style.opacity = '0.9';
-      // гаснет анимацией через CSS-переход на след. кадре
-      requestAnimationFrame(() => {
-        s.style.transition = 'opacity 0.7s ease-out, transform 0.7s ease-out';
-        s.style.opacity = '0';
-        s.style.transform = `translate(${x + jx}px, ${y + jy + 18}px) scale(0.2)`;
-      });
-      // сброс перехода для переиспользования
-      window.setTimeout(() => { s.style.transition = 'none'; }, 720);
-    }
-    function pseudo(n: number) { const x = Math.sin(n * 12.9898) * 43758.5453; return x - Math.floor(x); }
-
-    let frame = 0;
-
-    function render(progress: number) {
-      frame++;
-      const cur = px(progress);
-      const ahead = px(Math.min(1, progress + 0.015));
-      const behind = px(Math.max(0, progress - 0.012));
-
-      // направление полёта
-      const dx = ahead.x - cur.x;
-      const dy = ahead.y - cur.y;
-
-      // ── ПОКАЧИВАНИЕ: лёгкое колебание (живое парение) ──
-      const wobble = Math.sin(frame * 0.06) * 2.2 + Math.cos(frame * 0.09) * 1.2;
-
-      // depth → масштаб, z-index, яркость
-      // 1.0 = передний план (крупный, над блоками)
-      // 0.0 = задний план (в 1.5× меньше, за блоками)
-      const depth = Math.max(0, Math.min(1, cur.depth));
-      // BASE_SCALE × 1.5 = передний, BASE_SCALE × 1.0 = задний → ratio 1.5×
-      let scale = 0.78 + depth * 0.39;   // 0.78 (задний) ↔ 1.17 (передний) = ×1.5
-
-      // ── ВСАСЫВАНИЕ В КНОПКУ в самом конце спирали: scale→0 + fade ──
-      const suck = progress > 0.97 ? (progress - 0.97) / 0.03 : 0;
-      const suckEase = suck * suck;
-      scale *= (1 - suckEase);
-
-      // НОС по направлению полёта, в нижней полусфере (нос всегда вниз при полёте).
-      // SVG смотрит носом вправо (0°). angle = atan2(dy,dx).
-      let angle = Math.atan2(dy, dx) * (180 / Math.PI);
-      if (angle < 0) angle = -angle;            // вверх → отражаем вниз
-      angle = Math.max(25, Math.min(155, angle));
-
-      // СТАРТ ГОРИЗОНТАЛЬНО: на p<0.08 самолётик лежит ровно (нос вправо, 0°),
-      // затем плавно переходит к пикированию. На стопке (p≈0) — строго горизонтально.
-      const START_TILT = 0.08;
-      if (progress < START_TILT) {
-        const k = progress / START_TILT;            // 0→1
-        const ease = k * k * (3 - 2 * k);
-        angle = 0 + (angle - 0) * ease;             // от 0° (горизонт) к траекторному углу
-      }
-      // покачивание тоже гасим у старта, чтобы кадр был ровным
-      const startWobbleDamp = Math.min(1, progress / START_TILT);
-      const totalRot = angle + wobble * startWobbleDamp;
-
-      // Лёгкий blur нарастает по ходу полёта (ощущение скорости)
-      const dissolve = progress > 0.05 ? Math.min(1, (progress - 0.05) / 0.9) : 0;
-      const blurPx = dissolve * 1.2;
-
-      craft!.style.transform =
-        `translate(${cur.x}px, ${cur.y}px) rotate(${totalRot}deg) scale(${scale})`;
-      craft!.style.filter = `drop-shadow(0 4px 12px rgba(95,198,255,0.35)) blur(${blurPx.toFixed(2)}px)`;
-
-      // Глубина через opacity + scale (не z-index).
-      // Слой plane-layer z:500 всегда выше всего — backdrop-filter на .glass
-      // создаёт stacking context и ломает fixed z-index, поэтому z не используем.
-      // "Задний план" (depth=0): мелкий + тёмный → читается как "за блоком".
-      // "Передний план" (depth=1): крупный + яркий → читается как "над блоком".
-      const isFront = depth > 0.5;
-      let craftOpacity = isFront
-        ? (0.88 + depth * 0.12) * (1 - suckEase)           // спереди: яркий ~1.0
-        : (0.22 + depth * 0.35) * (1 - suckEase);          // сзади: приглушённый ~0.22–0.4
-      craft!.style.opacity = String(craftOpacity.toFixed(2));
-
-      // вспышка кнопки в момент попадания (suck→1)
-      if (targetBtn) {
-        if (suck > 0.5) {
-          const glow = 0.6 - (suck - 0.5) * 1.2;  // короткая вспышка и затухание
-          targetBtn.style.boxShadow = `0 0 ${30 * suck}px rgba(95,198,255,${Math.max(0, glow)})`;
-        } else {
-          targetBtn.style.boxShadow = '';
-        }
-      }
-
-      // искры за хвостом — пока летит (не в фазе всасывания)
-      if (!reduceMotion && progress > 0.02 && progress < 0.97) {
-        emitSpark(behind.x, behind.y, frame);
-      }
-    }
-
-    if (reduceMotion) {
-      render(0);  // лежит на «заций», без полёта/искр
-    } else {
-      let raf = 0;
-      // мягкое слежение прогресса (инерция → плавнее дуга)
-      let shown = 0, target = 0;
-      const loop = () => {
-        shown += (target - shown) * 0.12;
-        render(shown);
-        if (Math.abs(target - shown) > 0.0003) {
-          raf = requestAnimationFrame(loop);
-        } else {
-          raf = 0;
-        }
-      };
-      const recalc = () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        target = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-        if (!raf) raf = requestAnimationFrame(loop);
-      };
-      window.addEventListener('scroll', recalc, { passive: true });
-      window.addEventListener('resize', recalc, { passive: true });
-      // лёгкий «дыхательный» rAF на старте, чтобы покачивание жило даже без скролла
-      const idle = () => {
-        if (target < 0.01 && !raf) render(shown);
-        requestAnimationFrame(idle);
-      };
-      recalc();
-      idle();
+    for (let i = 0; i < TRAIL_LEN; i++) {
+      const age = ((trailHistIdx - 1 - i + TRAIL_LEN) % TRAIL_LEN);
+      const pos = trailHistory[(trailHistIdx - 1 - i + TRAIL_LEN) % TRAIL_LEN];
+      const d = trailEls[i];
+      const fade = (1 - age / TRAIL_LEN);
+      const depthScale = 0.4 + pos.z * 0.6;
+      const frontOpacity = pos.z > 0.5 ? 0.55 : 0.18;
+      d.style.transform = `translate(${pos.x}px, ${pos.y}px) scale(${depthScale * (1 - age/TRAIL_LEN * 0.5)})`;
+      d.style.opacity = String((fade * frontOpacity).toFixed(3));
     }
   }
+
+  // ── Искры пул ──────────────────────────────────────────────────────────
+  const SPARK_COUNT = isMobile ? 6 : 14;
+  const sparkEls: HTMLElement[] = [];
+  let sparkIdx = 0;
+  const SPARK_COLORS = ['#7ccfff','#ffffff','#b9ecff','#AEE2FF'];
+  for (let i = 0; i < SPARK_COUNT; i++) {
+    const s = document.createElement('div');
+    s.className = 'plane-spark';
+    const sz = 2 + Math.random() * 3;
+    s.style.cssText = `width:${sz}px;height:${sz}px;background:${SPARK_COLORS[i % SPARK_COLORS.length]}`;
+    sparksWrap.appendChild(s);
+    sparkEls.push(s);
+  }
+
+  // Псевдослучайное число детерминированное (не Math.random — не меняется между кадрами)
+  function pseudo(n: number): number {
+    const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  function burstSparks(cx: number, cy: number, count: number, seed: number) {
+    for (let i = 0; i < count; i++) {
+      const s = sparkEls[sparkIdx % SPARK_COUNT];
+      sparkIdx++;
+      const angle = pseudo(seed + i * 0.37) * Math.PI * 2;
+      const dist = 12 + pseudo(seed + i * 0.71) * 28;
+      const tx = cx + Math.cos(angle) * dist;
+      const ty = cy + Math.sin(angle) * dist;
+      s.style.transition = 'none';
+      s.style.transform = `translate(${cx}px, ${cy}px) scale(1)`;
+      s.style.opacity = '0.9';
+      requestAnimationFrame(() => {
+        s.style.transition = `transform ${500 + pseudo(seed+i)*400}ms cubic-bezier(.22,1,.36,1), opacity ${600 + pseudo(seed+i*1.3)*300}ms ease-out`;
+        s.style.transform = `translate(${tx}px, ${ty}px) scale(0.1)`;
+        s.style.opacity = '0';
+      });
+    }
+  }
+
+  // ── Caption ──────────────────────────────────────────────────────────────
+  let captionTimer = 0;
+  function showCaption(text: string, x: number, y: number) {
+    if (!captionEl || isMobile) return;
+    captionEl.textContent = text;
+    captionEl.style.left = `${x + 18}px`;
+    captionEl.style.top  = `${y - 14}px`;
+    captionEl.style.opacity = '1';
+    clearTimeout(captionTimer);
+    captionTimer = window.setTimeout(() => {
+      if (captionEl) captionEl.style.opacity = '0';
+    }, 900);
+  }
+
+  // ── Подсветка шагов FlowBlock ─────────────────────────────────────────
+  let lastLitStep = -1;
+  function lightFlowStep(idx: number) {
+    if (idx === lastLitStep) return;
+    flowSteps.forEach((s, i) => {
+      if (i === idx) {
+        s.style.borderColor = 'rgba(95,198,255,0.55)';
+        s.style.boxShadow = '0 0 18px rgba(95,198,255,0.18)';
+        s.style.transition = 'border-color 0.3s, box-shadow 0.3s';
+      } else {
+        s.style.borderColor = '';
+        s.style.boxShadow = '';
+      }
+    });
+    lastLitStep = idx;
+  }
+
+  // ── Подсветка кнопки при посадке ─────────────────────────────────────
+  function glowBtn(intensity: number) {
+    if (!targetBtn) return;
+    if (intensity > 0) {
+      targetBtn.style.boxShadow = `0 0 ${40*intensity}px rgba(95,198,255,${0.5*intensity}), 0 0 ${80*intensity}px rgba(95,198,255,${0.25*intensity})`;
+    } else {
+      targetBtn.style.boxShadow = '';
+    }
+  }
+
+  // ── Основная функция позиции ──────────────────────────────────────────
+  const START_END  = 0.07;
+  const LAND_START = 0.90;
+
+  function getPos(prog: number): { x: number; y: number; z: number } {
+    const s = sampleAt(prog);
+    let x = s.x * window.innerWidth;
+    let y = s.y * window.innerHeight;
+    let z = Math.max(0, Math.min(1.2, s.z));
+
+    // Привязка к якорю старта
+    const ac = startAnchor ? (() => {
+      const r = startAnchor.getBoundingClientRect();
+      return r.width ? { x: r.left + r.width/2, y: r.top + r.height/2 } : null;
+    })() : null;
+    if (prog < START_END && ac) {
+      const k = prog / START_END;
+      const e = k*k*(3-2*k);
+      x = ac.x + (x - ac.x) * e;
+      y = ac.y + (y - ac.y) * e;
+    }
+
+    // Мягкий подлёт к кнопке
+    if (prog > LAND_START && targetBtn) {
+      const r = targetBtn.getBoundingClientRect();
+      const bx = r.left + r.width/2;
+      const by = r.top + r.height/2;
+      const k = (prog - LAND_START) / (1 - LAND_START);
+      const e = k*k*(3-2*k);
+      x = x + (bx - x) * e;
+      y = y + (by - y) * e;
+      z = z + (1.1 - z) * e * 0.7;
+    }
+
+    // Клампинг — не выходить за края
+    const pad = isMobile ? 20 : 32;
+    x = Math.max(pad, Math.min(window.innerWidth - pad, x));
+    y = Math.max(pad, Math.min(window.innerHeight - pad, y));
+    return { x, y, z };
+  }
+
+  // ── Состояние ────────────────────────────────────────────────────────
+  let shown = 0, target = 0, prevShown = 0;
+  let rafId = 0;
+  let frame = 0;
+
+  // Пороги для искр и капшнов — отслеживаем пересечение
+  const sparkThresholds = TRACK
+    .filter(wp => wp.spark)
+    .map(wp => ({ p: wp.p, fired: false }));
+  const captionThresholds = TRACK
+    .filter(wp => wp.caption)
+    .map(wp => ({ p: wp.p, caption: wp.caption!, fired: false, cooldown: 0 }));
+
+  function checkThresholds(prev: number, cur: number, x: number, y: number) {
+    sparkThresholds.forEach(t => {
+      const crossed = (prev < t.p && cur >= t.p) || (prev > t.p && cur <= t.p);
+      if (crossed) {
+        burstSparks(x, y, isMobile ? 3 : 6, t.p * 100 + frame);
+        t.fired = true;
+      }
+    });
+    captionThresholds.forEach(t => {
+      const crossed = Math.abs(cur - t.p) < 0.012 && frame > t.cooldown;
+      if (crossed) {
+        showCaption(t.caption, x, y);
+        t.cooldown = frame + 60;
+      }
+    });
+  }
+
+  // Подсветка шагов FlowBlock по прогрессу
+  function handleFlowHighlight(prog: number, cx: number, cy: number) {
+    if (!flowSection || flowSteps.length === 0) return;
+    const scrollY = window.scrollY;
+    const fRect = flowSection.getBoundingClientRect();
+    const fTop = fRect.top + scrollY;
+    const fBot = fRect.bottom + scrollY;
+    const inFlow = scrollY + window.innerHeight * 0.5 > fTop &&
+                   scrollY + window.innerHeight * 0.5 < fBot;
+    if (!inFlow) { lightFlowStep(-1); return; }
+    const localP = (scrollY + window.innerHeight*0.5 - fTop) / Math.max(1, fBot - fTop);
+    const idx = Math.min(flowSteps.length - 1, Math.floor(localP * flowSteps.length));
+    lightFlowStep(idx);
+  }
+
+  // ── Главный render ────────────────────────────────────────────────────
+  function render(prog: number) {
+    frame++;
+    const pos = getPos(prog);
+    const posAhead = getPos(Math.min(1, prog + 0.014));
+    const z = Math.max(0, Math.min(1.2, pos.z));
+
+    // Скорость (для motion blur)
+    const spd = Math.hypot(pos.x - getPos(Math.max(0, prog - 0.01)).x,
+                           pos.y - getPos(Math.max(0, prog - 0.01)).y);
+    const motionBlur = Math.min(1.8, spd * 0.08);
+
+    // Угол по направлению
+    const dx = posAhead.x - pos.x;
+    const dy = posAhead.y - pos.y;
+    let angle = Math.atan2(dy, dx) * 180 / Math.PI;
+    // Плавный старт горизонтально
+    if (prog < START_END) {
+      const e = (prog / START_END) ** 2;
+      angle = angle * e;
+    }
+    // Покачивание
+    const wobble = (Math.sin(frame * 0.055) * 2.5 + Math.cos(frame * 0.083) * 1.1)
+                   * Math.min(1, prog / START_END);
+    const bank = Math.atan2(dy, Math.abs(dx) + 0.01) * 8; // лёгкий крен в виражах
+
+    // Масштаб: спереди крупнее, сзади мельче
+    const suck = prog > 0.97 ? ((prog - 0.97) / 0.03) ** 2 : 0;
+    const depthScale = isMobile
+      ? (0.70 + z * 0.30) * (1 - suck)
+      : (0.55 + z * 0.60) * (1 - suck);
+
+    // Opacity
+    const opacity = z > 0.5
+      ? (0.88 + z * 0.12) * (1 - suck)
+      : (0.20 + z * 0.35) * (1 - suck);
+
+    // Glow / drop-shadow
+    const glowStr = z > 0.5
+      ? `drop-shadow(0 3px ${8 + z*14}px rgba(95,198,255,${0.3 + z*0.35}))`
+      : `drop-shadow(0 2px 6px rgba(95,198,255,0.12))`;
+    const blurStr = motionBlur > 0.15 ? ` blur(${motionBlur.toFixed(2)}px)` : '';
+
+    craft.style.transform = `translate(${pos.x}px,${pos.y}px) rotate(${angle + wobble}deg) rotateY(${bank}deg) scale(${depthScale})`;
+    craft.style.filter = `${glowStr}${blurStr}`;
+    craft.style.opacity = opacity.toFixed(3);
+
+    // Trail
+    updateTrail(pos.x, pos.y, z);
+
+    // Проверка порогов
+    checkThresholds(prevShown, prog, pos.x, pos.y);
+
+    // Подсветка FlowBlock
+    handleFlowHighlight(prog, pos.x, pos.y);
+
+    // Glow кнопки при посадке
+    if (prog > 0.88) {
+      const k = Math.max(0, (prog - 0.88) / 0.12);
+      glowBtn(k > 0.5 ? (1 - k) * 2 : k * 2);
+    } else {
+      glowBtn(0);
+    }
+
+    prevShown = prog;
+  }
+
+  // ── Цикл ─────────────────────────────────────────────────────────────
+  if (reduceMotion) {
+    // Статика у CTA
+    const pos = getPos(1);
+    craft.style.transform = `translate(${pos.x + 60}px,${pos.y - 20}px) rotate(-20deg) scale(0.6)`;
+    craft.style.opacity = '0.4';
+    craft.style.filter = 'drop-shadow(0 2px 6px rgba(95,198,255,0.2))';
+  } else {
+    const lerp = 0.10; // инерция прогресса
+    let idleRaf = 0;
+
+    const loop = () => {
+      shown += (target - shown) * lerp;
+      render(shown);
+      if (Math.abs(target - shown) > 0.0002) {
+        rafId = requestAnimationFrame(loop);
+      } else {
+        rafId = 0;
+      }
+    };
+
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      target = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      if (!rafId) rafId = requestAnimationFrame(loop);
+    };
+
+    // Idle: покачивание без скролла
+    const idleLoop = () => {
+      if (!rafId && Math.abs(target - shown) < 0.0002) render(shown);
+      idleRaf = requestAnimationFrame(idleLoop);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      cacheSections();
+      onScroll();
+    }, { passive: true });
+
+    onScroll();
+    idleRaf = requestAnimationFrame(idleLoop);
+  }
+
+  } // end if craft
 </script>
