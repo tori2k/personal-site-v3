@@ -1,0 +1,71 @@
+---
+// Превью лид-магнита на главной → CTA на /anti-sliv-zayavok/
+---
+<section class="lmp section-dark" id="lead-magnet">
+  <div class="container-x">
+    <div class="lmp__inner glass">
+      <!-- Мини PDF-stack -->
+      <div class="lmp__visual reveal-left" aria-hidden="true">
+        <div class="lmp__stack">
+          <span class="lmp__sheet lmp__sheet--2"></span>
+          <span class="lmp__sheet lmp__sheet--1">
+            <span class="lmp__tag">PDF</span>
+            <span class="lmp__title">Антислив<br/>заявок</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="lmp__text reveal-right">
+        <div class="sec-tag">Бесплатный гайд</div>
+        <h2 class="lmp__h2">25 ошибок, из-за которых заявки <em>умирают после клика</em></h2>
+        <ul class="lmp__list">
+          <li><span>✦</span> Карта слива заявки — от первого экрана до follow-up</li>
+          <li><span>✦</span> 25 ошибок по блокам: форма, мессенджеры, CRM, дожим</li>
+          <li><span>✦</span> Калькулятор потерь и план внедрения на 7 дней</li>
+        </ul>
+        <a href="/anti-sliv-zayavok" class="btn btn--filled" data-magnetic="0.4">
+          <span class="btn__plus">(+)</span>
+          Получить антислив-гайд
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lmp { padding: 60px 0 120px; }
+  .lmp__inner {
+    display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 48px; align-items: center;
+    padding: 48px 44px; border-radius: 22px;
+  }
+
+  .lmp__visual { display: flex; justify-content: center; }
+  .lmp__stack { position: relative; width: 160px; height: 210px; }
+  .lmp__sheet { position: absolute; inset: 0; border-radius: 12px; border: 1px solid var(--color-border); }
+  .lmp__sheet--2 { transform: rotate(-6deg) translate(-8px, 6px); background: var(--color-surface); opacity: 0.6; }
+  .lmp__sheet--1 {
+    background: linear-gradient(160deg, #0d1830, #08101f);
+    box-shadow: 0 24px 50px rgba(0,0,0,0.45), var(--glass-edge);
+    padding: 22px 20px; display: flex; flex-direction: column;
+    animation: lmp-float 6s ease-in-out infinite;
+  }
+  @keyframes lmp-float { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-8px) rotate(-1.5deg)} }
+  .lmp__tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-accent); margin-bottom: 14px; }
+  .lmp__title { font-family: 'Unbounded', sans-serif; font-size: 22px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; color: var(--color-text); }
+
+  .lmp__h2 { font-family: 'Unbounded', sans-serif; font-size: clamp(24px, 3vw, 38px); font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; margin: 14px 0 22px; }
+  .lmp__h2 em { font-style: italic; font-weight: 300; color: var(--aurora-cyan); }
+  .lmp__list { list-style: none; padding: 0; margin: 0 0 28px; display: flex; flex-direction: column; gap: 12px; }
+  .lmp__list li { display: flex; gap: 10px; font-size: 15px; color: var(--color-text); line-height: 1.5; }
+  .lmp__list span { color: var(--color-accent); flex-shrink: 0; }
+
+  @media (max-width: 900px) {
+    .lmp { padding: 40px 0 72px; }
+    .lmp__inner { grid-template-columns: 1fr; gap: 32px; padding: 36px 24px; }
+    .lmp__visual { order: -1; }
+  }
+  @media (max-width: 480px) {
+    .lmp .btn { width: 100%; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { .lmp__sheet--1 { animation: none; } }
+</style>

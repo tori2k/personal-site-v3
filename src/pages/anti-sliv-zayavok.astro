@@ -1,0 +1,265 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Антислив заявок: гайд — почему лиды умирают после клика';
+const description = 'Бесплатный PDF-гайд: карта слива заявки, 25 ошибок обработки лидов, калькулятор потерь и план на 7 дней. Заберите и перестаньте терять клиентов в переписках.';
+
+// Тот же webhook, что и на /razbor — заявки уходят в Google Sheets / Telegram.
+const SHEETS_WEBHOOK = 'https://script.google.com/macros/s/AKfycbyeXV7TI8klBfvtnrAMYKOLNi3jifjO9IhRnkLDBKd7UJ0_XJCG3BpVlXlxiuvv60QM/exec';
+
+const inside = [
+  { n: '01', t: 'Карта слива заявки', d: 'Где именно теряются лиды: от первого экрана до follow-up' },
+  { n: '02', t: '25 ошибок обработки', d: 'По блокам: экран, CTA, форма, мессенджеры, CRM, дожим, аналитика' },
+  { n: '03', t: 'Калькулятор потерь', d: 'Посчитать, сколько денег уходит после клика' },
+  { n: '04', t: 'План на 7 дней', d: 'Что внедрить по шагам, чтобы перестать терять заявки' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Offer',
+  name: 'PDF-гайд «Антислив заявок»',
+  description,
+  price: '0',
+  priceCurrency: 'RUB',
+  url: 'https://kirillbaryev.ru/anti-sliv-zayavok/',
+  category: 'Lead magnet',
+};
+---
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <Nav />
+  <main>
+    <section class="lm-hero section-dark">
+      <div class="container-x">
+        <div class="lm-hero__grid">
+          <!-- Левая: оффер + форма -->
+          <div class="lm-hero__left reveal-left">
+            <div class="sec-tag">Бесплатный гайд · PDF</div>
+            <h1 class="lm-hero__h1 text-glow">
+              Антислив <em>заявок</em>
+            </h1>
+            <p class="lm-hero__sub">
+              Почему лиды умирают после клика — и как собрать систему, которая
+              доводит заявку до продажи. Карта слива, 25 ошибок, калькулятор и план на 7 дней.
+            </p>
+
+            <form class="lm-form glass" id="lmForm" novalidate>
+              <div class="lm-form__row">
+                <div class="lm-form__field">
+                  <label for="lm-name">Имя <span class="req">*</span></label>
+                  <input type="text" id="lm-name" name="name" placeholder="Алексей" required autocomplete="given-name" />
+                </div>
+                <div class="lm-form__field">
+                  <label for="lm-contact">Telegram или WhatsApp <span class="req">*</span></label>
+                  <input type="text" id="lm-contact" name="contact" placeholder="@username / +7…" required />
+                </div>
+              </div>
+              <div class="lm-form__row">
+                <div class="lm-form__field">
+                  <label for="lm-niche">Ниша <span class="req">*</span></label>
+                  <input type="text" id="lm-niche" name="niche" placeholder="Стоматология, юрист, салон…" required />
+                </div>
+                <div class="lm-form__field">
+                  <label for="lm-check">Средний чек</label>
+                  <input type="text" id="lm-check" name="average_check" placeholder="необязательно" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn--filled lm-form__submit" data-magnetic="0.3">
+                <span class="btn__plus">(+)</span>
+                Получить гайд
+              </button>
+              <p class="lm-form__consent">
+                Нажимая кнопку, вы соглашаетесь на обработку указанных данных для отправки гайда.
+                Данные не передаются третьим лицам.
+              </p>
+            </form>
+
+            <!-- Thank-you -->
+            <div class="lm-done glass" id="lmDone" style="display:none" role="status" aria-live="polite">
+              <div class="lm-done__icon">◎</div>
+              <p class="lm-done__text">Спасибо! Гайд открывается ниже. Если что-то не так — напишите в Telegram.</p>
+              <div class="lm-done__row">
+                <a href="#" class="btn btn--filled" id="lmPdfLink" target="_blank" rel="noopener">
+                  <span class="btn__plus">(+)</span> Открыть PDF
+                </a>
+                <a href="/razbor" class="btn">Бесплатный разбор</a>
+              </div>
+            </div>
+
+            <!-- Error -->
+            <div class="lm-err glass" id="lmErr" style="display:none" role="alert">
+              <div class="lm-err__icon">△</div>
+              <p class="lm-err__text">Не отправилось. Напишите напрямую — пришлю гайд вручную.</p>
+              <a href="https://t.me/tori2k" target="_blank" rel="noopener" class="btn btn--filled">
+                <span class="btn__plus">(+)</span> Написать в Telegram
+              </a>
+            </div>
+          </div>
+
+          <!-- Правая: PDF-stack mockup -->
+          <div class="lm-hero__right reveal-right">
+            <div class="lm-stack" aria-hidden="true">
+              <div class="lm-stack__sheet lm-stack__sheet--3"></div>
+              <div class="lm-stack__sheet lm-stack__sheet--2"></div>
+              <div class="lm-stack__sheet lm-stack__sheet--1">
+                <div class="lm-cover">
+                  <div class="lm-cover__tag">PDF · гайд</div>
+                  <div class="lm-cover__title">Антислив<br/>заявок</div>
+                  <div class="lm-cover__lines">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="lm-cover__foot">
+                    <span class="lm-cover__dot"></span> kirillbaryev.ru
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Что внутри -->
+    <section class="lm-inside section-dark">
+      <div class="container-x">
+        <div class="lm-inside__head reveal">
+          <div class="sec-tag">Что внутри</div>
+          <h2 class="display-h">4 части <em>гайда.</em></h2>
+        </div>
+        <div class="lm-inside__grid">
+          {inside.map((b, i) => (
+            <div class="lm-card glass reveal" style={`transition-delay:${i * 0.07}s`}>
+              <div class="lm-card__n">{b.n}</div>
+              <div class="lm-card__t">{b.t}</div>
+              <p class="lm-card__d">{b.d}</p>
+            </div>
+          ))}
+        </div>
+        <p class="lm-inside__note">
+          Хотите сразу разбор под себя? —
+          <a href="/calculator">посчитайте потери</a> или
+          <a href="/razbor">получите бесплатный разбор</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .lm-hero { padding: 140px 0 80px; }
+  .lm-hero__grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+
+  .lm-hero__h1 { font-family: 'Unbounded', sans-serif; font-weight: 500; font-size: clamp(40px, 6vw, 84px); line-height: 0.97; letter-spacing: -0.03em; margin: 16px 0 18px; }
+  .lm-hero__h1 em { font-style: italic; font-weight: 300; color: #8FD8FF; }
+  .lm-hero__sub { font-size: clamp(15px, 1.4vw, 18px); color: var(--color-muted); line-height: 1.6; max-width: 520px; margin: 0 0 28px; }
+
+  /* Form */
+  .lm-form { padding: 28px 26px; border-radius: 18px; display: flex; flex-direction: column; gap: 16px; max-width: 560px; }
+  .lm-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .lm-form__field { display: flex; flex-direction: column; gap: 7px; }
+  .lm-form__field label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--color-muted); }
+  .req { color: var(--color-accent); }
+  .lm-form__field input {
+    background: rgba(244,246,251,0.05); border: 1px solid var(--color-border); border-radius: 10px;
+    color: var(--color-text); font-family: 'Inter', sans-serif; font-size: 15px; padding: 13px 15px; outline: none; transition: border-color 0.2s;
+  }
+  .lm-form__field input:focus { border-color: rgba(95,198,255,0.5); }
+  .lm-form__submit { align-self: flex-start; }
+  .lm-form__consent { font-size: 12px; line-height: 1.5; color: var(--color-muted-2); margin: 0; }
+
+  .lm-done, .lm-err { padding: 28px 26px; border-radius: 18px; max-width: 560px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+  .lm-done__icon { font-size: 32px; color: var(--color-accent); }
+  .lm-err__icon { font-size: 28px; color: #ff8a8a; }
+  .lm-done__text, .lm-err__text { font-size: 15px; line-height: 1.6; color: var(--color-muted); margin: 0; }
+  .lm-done__row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .lm-err { border-color: rgba(255,100,100,0.3); background: rgba(255,80,80,0.05); }
+
+  /* PDF stack mockup */
+  .lm-hero__right { display: flex; justify-content: center; }
+  .lm-stack { position: relative; width: 280px; height: 380px; }
+  .lm-stack__sheet { position: absolute; inset: 0; border-radius: 14px; border: 1px solid var(--color-border); background: var(--color-surface); }
+  .lm-stack__sheet--3 { transform: rotate(-7deg) translate(-14px, 10px); opacity: 0.5; }
+  .lm-stack__sheet--2 { transform: rotate(-3.5deg) translate(-7px, 5px); opacity: 0.75; }
+  .lm-stack__sheet--1 {
+    background: linear-gradient(160deg, #0d1830, #08101f);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.5), var(--glass-edge);
+    animation: lm-float 6s ease-in-out infinite;
+  }
+  @keyframes lm-float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-10px) rotate(-1deg); } }
+
+  .lm-cover { padding: 28px 26px; height: 100%; display: flex; flex-direction: column; }
+  .lm-cover__tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-accent); margin-bottom: 18px; }
+  .lm-cover__title { font-family: 'Unbounded', sans-serif; font-size: 34px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; color: var(--color-text); }
+  .lm-cover__lines { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+  .lm-cover__lines span { height: 6px; border-radius: 999px; background: var(--color-border); }
+  .lm-cover__lines span:nth-child(1) { width: 80%; }
+  .lm-cover__lines span:nth-child(2) { width: 95%; }
+  .lm-cover__lines span:nth-child(3) { width: 60%; }
+  .lm-cover__foot { margin-top: 20px; display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--color-muted); }
+  .lm-cover__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); box-shadow: 0 0 8px var(--color-accent); }
+
+  /* Inside */
+  .lm-inside { padding: 40px 0 120px; }
+  .lm-inside__head { max-width: 680px; margin-bottom: 40px; }
+  .lm-inside__head em { color: var(--aurora-cyan); }
+  .lm-inside__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .lm-card { padding: 26px 22px; border-radius: 16px; }
+  .lm-card__n { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: var(--color-accent); opacity: 0.6; margin-bottom: 14px; }
+  .lm-card__t { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 500; color: var(--color-text); margin-bottom: 10px; line-height: 1.25; }
+  .lm-card__d { font-size: 13px; color: var(--color-muted); line-height: 1.55; margin: 0; }
+  .lm-inside__note { margin-top: 28px; font-size: 14px; color: var(--color-muted); }
+  .lm-inside__note a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  @media (max-width: 900px) {
+    .lm-hero { padding: 100px 0 60px; }
+    .lm-hero__grid { grid-template-columns: 1fr; gap: 48px; }
+    .lm-hero__right { order: -1; }
+    .lm-inside__grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .lm-form { padding: 22px 18px; }
+    .lm-form__row { grid-template-columns: 1fr; }
+    .lm-form__submit { width: 100%; justify-content: center; }
+    .lm-inside__grid { grid-template-columns: 1fr; }
+    .lm-stack { width: 220px; height: 300px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lm-stack__sheet--1 { animation: none; }
+  }
+</style>
+
+<script define:vars={{ SHEETS_WEBHOOK }}>
+  const form = document.getElementById('lmForm');
+  const done = document.getElementById('lmDone');
+  const err = document.getElementById('lmErr');
+  const pdfLink = document.getElementById('lmPdfLink');
+  // TODO(подключить вручную): заменить на реальную ссылку на PDF, когда файл будет готов.
+  const PDF_URL = '/anti-sliv-zayavok.pdf';
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn) { btn.disabled = true; btn.textContent = 'Отправляем...'; }
+
+      const data = Object.fromEntries(new FormData(form));
+      data._source = 'anti-sliv-zayavok';
+
+      let ok = false;
+      try {
+        const res = await fetch(SHEETS_WEBHOOK, { method: 'POST', body: JSON.stringify(data) });
+        ok = res.ok;
+      } catch (_) { ok = false; }
+
+      form.style.display = 'none';
+      if (ok) {
+        if (pdfLink) pdfLink.setAttribute('href', PDF_URL);
+        if (done) done.style.display = 'flex';
+      } else {
+        if (err) err.style.display = 'flex';
+      }
+    });
+  }
+</script>

@@ -1,0 +1,310 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Калькулятор потерь заявок: сколько денег уходит после клика';
+const description = 'Посчитайте, сколько выручки теряет бизнес из-за медленного ответа, отсутствия Telegram-уведомлений, CRM и follow-up. Бесплатный расчёт потерь в месяц и год.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Калькулятор потерь заявок',
+  url: 'https://kirillbaryev.ru/calculator/',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'RUB' },
+};
+---
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <Nav />
+  <main>
+    <section class="calc-hero section-dark">
+      <div class="container-x">
+        <div class="calc-hero__inner reveal">
+          <div class="sec-tag">Калькулятор</div>
+          <h1 class="display-h calc-hero__h1">Сколько денег уходит <em>после клика?</em></h1>
+          <p class="calc-hero__sub">
+            Заявка пришла — и пропала: ответили через сутки, забыли в переписке, не дожали.
+            Посчитайте потери за минуту. Цифры приблизительные, но отрезвляющие.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="calc section-dark">
+      <div class="container-x">
+        <div class="calc__grid">
+          <!-- Левая колонка: поля -->
+          <form class="calc__form glass" id="calcForm">
+            <div class="calc__field">
+              <label for="c-check">Средний чек, ₽</label>
+              <input type="number" id="c-check" value="30000" min="0" step="1000" inputmode="numeric" />
+            </div>
+            <div class="calc__field">
+              <label for="c-leads">Заявок в месяц</label>
+              <input type="number" id="c-leads" value="60" min="0" step="1" inputmode="numeric" />
+            </div>
+            <div class="calc__field">
+              <label for="c-lost">Теряется заявок, %
+                <span class="calc__val" id="c-lost-val">25%</span>
+              </label>
+              <input type="range" id="c-lost" value="25" min="0" max="80" step="5" />
+            </div>
+            <div class="calc__field">
+              <label for="c-conv">Конверсия в продажу, %
+                <span class="calc__val" id="c-conv-val">30%</span>
+              </label>
+              <input type="range" id="c-conv" value="30" min="5" max="90" step="5" />
+            </div>
+
+            <div class="calc__field">
+              <label>Скорость ответа на заявку</label>
+              <div class="calc__seg" data-seg="speed">
+                <button type="button" data-v="fast">&lt; 5 мин</button>
+                <button type="button" data-v="hour" class="is-active">~ час</button>
+                <button type="button" data-v="day">~ день</button>
+                <button type="button" data-v="slow">&gt; суток</button>
+              </div>
+            </div>
+
+            <div class="calc__toggles">
+              <div class="calc__toggle">
+                <span>Telegram-уведомления о заявке</span>
+                <div class="calc__sw" data-sw="tg"><button type="button" data-v="no" class="is-active">Нет</button><button type="button" data-v="yes">Есть</button></div>
+              </div>
+              <div class="calc__toggle">
+                <span>CRM или таблица лидов</span>
+                <div class="calc__sw" data-sw="crm"><button type="button" data-v="no" class="is-active">Нет</button><button type="button" data-v="yes">Есть</button></div>
+              </div>
+              <div class="calc__toggle">
+                <span>Follow-up (дожим)</span>
+                <div class="calc__sw" data-sw="fu"><button type="button" data-v="no" class="is-active">Нет</button><button type="button" data-v="yes">Есть</button></div>
+              </div>
+            </div>
+          </form>
+
+          <!-- Правая колонка: результат -->
+          <div class="calc__out">
+            <div class="calc__loss glass">
+              <div class="calc__loss-label">Потери в месяц</div>
+              <div class="calc__loss-month"><span id="lossMonth">0</span> ₽</div>
+              <div class="calc__loss-year">в год: <span id="lossYear">0</span> ₽</div>
+              <div class="calc__risk" id="riskBadge">риск: —</div>
+            </div>
+
+            <div class="calc__leak glass">
+              <div class="calc__leak-label">Где течёт воронка</div>
+              <ul class="calc__leak-list" id="leakList"></ul>
+            </div>
+
+            <div class="calc__fix glass">
+              <div class="calc__fix-label">Автоматизировать первым</div>
+              <div class="calc__fix-val" id="fixFirst">—</div>
+              <a href="/razbor" class="btn btn--filled calc__cta" data-magnetic="0.3">
+                <span class="btn__plus">(+)</span>
+                Получить бесплатный разбор
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p class="calc__note">
+          Расчёт оценочный: учитывает прямые потери + штрафы за медленный ответ и отсутствие
+          Telegram-уведомлений, CRM и дожима. Точные цифры покажу на
+          <a href="/razbor">бесплатном разборе</a>. Полную методику — на странице
+          <a href="/method">метода</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .calc-hero { padding: 140px 0 40px; }
+  .calc-hero__h1 { margin: 16px 0 18px; }
+  .calc-hero__h1 em { color: var(--aurora-cyan); }
+  .calc-hero__sub { font-size: clamp(15px, 1.4vw, 18px); color: var(--color-muted); line-height: 1.6; max-width: 580px; margin: 0; }
+
+  .calc { padding: 20px 0 100px; }
+  .calc__grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; align-items: start; }
+
+  .calc__form { padding: 32px 28px; border-radius: 18px; display: flex; flex-direction: column; gap: 22px; }
+  .calc__field { display: flex; flex-direction: column; gap: 10px; }
+  .calc__field label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--color-muted);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .calc__val { color: var(--color-accent); font-size: 13px; }
+  .calc__field input[type="number"] {
+    background: rgba(244,246,251,0.05); border: 1px solid var(--color-border);
+    border-radius: 10px; color: var(--color-text); font-family: 'Inter', sans-serif;
+    font-size: 16px; padding: 13px 15px; outline: none; transition: border-color 0.2s;
+  }
+  .calc__field input[type="number"]:focus { border-color: rgba(95,198,255,0.5); }
+
+  /* Range */
+  .calc__field input[type="range"] {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 4px;
+    background: var(--color-border); border-radius: 999px; outline: none;
+  }
+  .calc__field input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--color-accent); cursor: pointer; box-shadow: 0 0 10px rgba(95,198,255,0.5);
+  }
+  .calc__field input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border: none; border-radius: 50%;
+    background: var(--color-accent); cursor: pointer;
+  }
+
+  /* Segmented control */
+  .calc__seg, .calc__sw { display: inline-flex; gap: 4px; background: rgba(244,246,251,0.04); padding: 4px; border-radius: 10px; border: 1px solid var(--color-border); }
+  .calc__seg { flex-wrap: wrap; }
+  .calc__seg button, .calc__sw button {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    padding: 8px 14px; border: none; border-radius: 7px; background: transparent;
+    color: var(--color-muted); cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .calc__seg button.is-active, .calc__sw button.is-active {
+    background: var(--color-accent); color: #06070D;
+  }
+
+  .calc__toggles { display: flex; flex-direction: column; gap: 14px; padding-top: 6px; border-top: 1px solid var(--color-border); }
+  .calc__toggle { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .calc__toggle span { font-size: 14px; color: var(--color-text); }
+
+  /* Output */
+  .calc__out { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 90px; }
+  .calc__loss { padding: 26px 24px; border-radius: 16px; background: linear-gradient(135deg, rgba(255,107,107,0.1), var(--glass-tint)); border-color: rgba(255,107,107,0.25); }
+  .calc__loss-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-muted); margin-bottom: 8px; }
+  .calc__loss-month { font-family: 'Unbounded', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 500; color: #ff8a8a; line-height: 1; letter-spacing: -0.02em; }
+  .calc__loss-year { font-size: 13px; color: var(--color-muted); margin-top: 10px; }
+  .calc__risk {
+    display: inline-block; margin-top: 14px; padding: 5px 12px; border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.5px;
+    background: rgba(244,246,251,0.06); color: var(--color-muted);
+  }
+  .calc__risk[data-level="low"]  { background: rgba(95,198,160,0.15); color: #6fd6ad; }
+  .calc__risk[data-level="mid"]  { background: rgba(255,209,102,0.15); color: #ffd166; }
+  .calc__risk[data-level="high"] { background: rgba(255,138,138,0.15); color: #ff8a8a; }
+  .calc__risk[data-level="crit"] { background: rgba(255,80,80,0.2); color: #ff6b6b; }
+
+  .calc__leak { padding: 22px 24px; border-radius: 16px; }
+  .calc__leak-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-accent); margin-bottom: 14px; }
+  .calc__leak-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 9px; }
+  .calc__leak-list li { display: flex; gap: 9px; font-size: 13.5px; color: var(--color-text); line-height: 1.5; }
+  .calc__leak-list li::before { content: '⚠'; color: #ffd166; flex-shrink: 0; }
+  .calc__leak-list li.ok::before { content: '✓'; color: #6fd6ad; }
+  .calc__leak-list li.ok { color: var(--color-muted); }
+
+  .calc__fix { padding: 22px 24px; border-radius: 16px; }
+  .calc__fix-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-accent); margin-bottom: 8px; }
+  .calc__fix-val { font-size: 15px; color: var(--color-text); line-height: 1.5; margin-bottom: 20px; }
+  .calc__cta { width: 100%; justify-content: center; }
+
+  .calc__note { margin-top: 28px; font-size: 13px; color: var(--color-muted-2); line-height: 1.6; max-width: 720px; }
+  .calc__note a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  @media (max-width: 900px) {
+    .calc-hero { padding: 100px 0 32px; }
+    .calc__grid { grid-template-columns: 1fr; }
+    .calc__out { position: static; }
+  }
+  @media (max-width: 480px) {
+    .calc__form { padding: 24px 18px; }
+    .calc__toggle { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+</style>
+
+<script>
+  const $ = (id: string) => document.getElementById(id) as HTMLElement;
+  const num = (id: string) => parseFloat((document.getElementById(id) as HTMLInputElement)?.value || '0') || 0;
+
+  // Состояние сегментов/переключателей
+  const state = { speed: 'hour', tg: 'no', crm: 'no', fu: 'no' };
+
+  function bindSeg(selector: string, key: 'speed' | 'tg' | 'crm' | 'fu') {
+    document.querySelectorAll(`[data-seg="${selector}"] button, [data-sw="${selector}"] button`).forEach((b) => {
+      b.addEventListener('click', () => {
+        const wrap = b.parentElement!;
+        wrap.querySelectorAll('button').forEach((x) => x.classList.remove('is-active'));
+        b.classList.add('is-active');
+        (state as any)[key] = (b as HTMLElement).dataset.v;
+        recalc();
+      });
+    });
+  }
+  bindSeg('speed', 'speed');
+  bindSeg('tg', 'tg');
+  bindSeg('crm', 'crm');
+  bindSeg('fu', 'fu');
+
+  ['c-check', 'c-leads', 'c-lost', 'c-conv'].forEach((id) => {
+    document.getElementById(id)?.addEventListener('input', recalc);
+  });
+
+  const fmt = (n: number) => Math.round(n).toLocaleString('ru-RU');
+
+  function recalc() {
+    const check = num('c-check');
+    const leads = num('c-leads');
+    const lostPct = num('c-lost');
+    const conv = num('c-conv');
+
+    $('c-lost-val').textContent = lostPct + '%';
+    $('c-conv-val').textContent = conv + '%';
+
+    // Штрафы за слабые места воронки (доп. % к потерям)
+    const speedPenalty = { fast: 0, hour: 3, day: 8, slow: 15 }[state.speed] ?? 0;
+    const tgPenalty = state.tg === 'no' ? 8 : 0;
+    const crmPenalty = state.crm === 'no' ? 7 : 0;
+    const fuPenalty = state.fu === 'no' ? 10 : 0;
+
+    const effective = Math.min(90, lostPct + speedPenalty + tgPenalty + crmPenalty + fuPenalty);
+    const lostLeads = leads * (effective / 100);
+    const monthLoss = lostLeads * check * (conv / 100);
+    const yearLoss = monthLoss * 12;
+
+    $('lossMonth').textContent = fmt(monthLoss);
+    $('lossYear').textContent = fmt(yearLoss);
+
+    // Уровень риска
+    const risk = $('riskBadge');
+    let level = 'low', label = 'низкий';
+    if (effective >= 60) { level = 'crit'; label = 'критический'; }
+    else if (effective >= 40) { level = 'high'; label = 'высокий'; }
+    else if (effective >= 22) { level = 'mid'; label = 'средний'; }
+    risk.setAttribute('data-level', level);
+    risk.textContent = `риск: ${label} · ${Math.round(effective)}% заявок мимо`;
+
+    // Где течёт воронка
+    const leaks: { txt: string; ok: boolean; weight: number }[] = [
+      { txt: 'Медленный ответ — клиент уходит к тому, кто ответил первым', ok: state.speed === 'fast', weight: speedPenalty },
+      { txt: 'Нет Telegram-уведомлений — заявку замечают не сразу', ok: state.tg === 'yes', weight: tgPenalty },
+      { txt: 'Нет CRM/таблицы — лиды забываются и теряются', ok: state.crm === 'yes', weight: crmPenalty },
+      { txt: 'Нет follow-up — недожатые заявки не возвращают', ok: state.fu === 'yes', weight: fuPenalty },
+    ];
+    const list = $('leakList');
+    list.innerHTML = '';
+    leaks.forEach((l) => {
+      const li = document.createElement('li');
+      if (l.ok) li.className = 'ok';
+      li.textContent = l.ok ? l.txt.split(' — ')[0] + ' — настроено' : l.txt;
+      list.appendChild(li);
+    });
+
+    // Что автоматизировать первым — пробоина с максимальным весом
+    const worst = leaks.filter((l) => !l.ok).sort((a, b) => b.weight - a.weight)[0];
+    const fixMap: Record<string, string> = {
+      'Медленный ответ — клиент уходит к тому, кто ответил первым': 'Telegram-уведомление о заявке + быстрый шаблон ответа',
+      'Нет Telegram-уведомлений — заявку замечают не сразу': 'Заявки с сайта и квиза прямо в Telegram',
+      'Нет CRM/таблицы — лиды забываются и теряются': 'Таблица лидов со статусом и источником',
+      'Нет follow-up — недожатые заявки не возвращают': 'Автоматический дожим: напоминания и серия сообщений',
+    };
+    $('fixFirst').textContent = worst ? fixMap[worst.txt] : 'Система уже собрана — можно усиливать оффер и трафик';
+  }
+
+  recalc();
+</script>

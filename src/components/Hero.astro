@@ -1,4 +1,5 @@
 ---
+import HeroMedia from './HeroMedia.astro';
 ---
 <section class="hero section-dark" id="hero">
   <div class="hero__cursor-glow" id="heroGlow"></div>
@@ -7,51 +8,38 @@
     <div class="hero__content">
       <div class="hero__badge">
         <span class="live-badge__dot"></span>
-        Для экспертов, юристов и сервисного бизнеса
+        Клиники, салоны, эксперты, малый бизнес
       </div>
 
       <h1 class="hero__title text-glow">
-        <span class="hero__line">Сайты и AI-воронки</span>
-        <span class="hero__line"><em>под заявки.</em></span>
+        <span class="hero__line">Собираю систему</span>
+        <span class="hero__line"><em>заявок</em> после клика.</span>
       </h1>
 
       <p class="hero__sub">
-        Оффер, лендинг, квиз, Telegram-заявки и CRM/таблица —
-        чтобы клиент понимал ценность, а заявки не терялись.
+        Сайт, квиз, Telegram-заявки, CRM/таблица и дожим —
+        без хаоса в переписках и потерянных лидов.
       </p>
 
       <div class="hero__actions">
         <a href="/razbor" class="btn btn--filled" data-magnetic="0.4">
           <span class="btn__plus">(+)</span>
-          <span class="btn-text-full">Получить бесплатный разбор</span>
-          <span class="btn-text-short">Получить разбор</span>
+          Найти 3 точки слива
         </a>
-        <a href="/cases" class="btn">
-          Посмотреть кейсы
+        <a href="/calculator" class="btn">
+          Посчитать потери
         </a>
       </div>
+
+      <ul class="hero__chips">
+        <li class="hero__chip"><span class="hero__chip-i">◎</span> Заявки в Telegram</li>
+        <li class="hero__chip"><span class="hero__chip-i">◎</span> Лиды в CRM / таблице</li>
+        <li class="hero__chip"><span class="hero__chip-i">◎</span> Запуск за 3–5 дней</li>
+      </ul>
     </div>
 
-    <div class="hero__facts glass">
-      <div class="hero__facts-label">Как это работает</div>
-      <ul class="hero__pillars">
-        <li class="pillar">
-          <span class="pillar__num">01</span>
-          <span class="pillar__text">Чистый код без конструкторов</span>
-        </li>
-        <li class="pillar">
-          <span class="pillar__num">02</span>
-          <span class="pillar__text">Первая версия за 3–5 дней</span>
-        </li>
-        <li class="pillar">
-          <span class="pillar__num">03</span>
-          <span class="pillar__text">Заявки приходят в Telegram</span>
-        </li>
-        <li class="pillar">
-          <span class="pillar__num">04</span>
-          <span class="pillar__text">Исходники остаются у вас</span>
-        </li>
-      </ul>
+    <div class="hero__visual">
+      <HeroMedia />
     </div>
   </div>
 
@@ -106,7 +94,7 @@
     z-index: 2;
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 360px;
+    grid-template-columns: 1fr 400px;
     gap: 48px;
     align-items: center;
     padding-top: 40px;
@@ -165,49 +153,31 @@
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+    margin-bottom: 28px;
   }
-  .btn-text-short { display: none; }
 
-  /* Facts card */
-  .hero__facts {
-    padding: 28px 26px;
-    border-radius: 18px;
-    align-self: center;
-  }
-  .hero__facts-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    margin-bottom: 20px;
-  }
-  .hero__pillars {
+  /* Proof-chips */
+  .hero__chips {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
-    flex-direction: column;
-    gap: 14px;
+    flex-wrap: wrap;
+    gap: 10px 18px;
   }
-  .pillar {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-  }
-  .pillar__num {
+  .hero__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    color: var(--color-accent);
-    flex-shrink: 0;
-    opacity: 0.7;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    color: var(--color-muted);
   }
-  .pillar__text {
-    font-size: 13px;
-    color: var(--color-text);
-    line-height: 1.4;
-  }
+  .hero__chip-i { color: var(--color-accent); font-size: 11px; }
+
+  /* Visual (HeroMedia) */
+  .hero__visual { align-self: center; width: 100%; }
 
   /* Marquee */
   .hero__marquee {
@@ -236,24 +206,22 @@
   }
 
   @media (max-width: 1100px) {
-    .hero__inner { grid-template-columns: 1fr 300px; gap: 32px; }
+    .hero__inner { grid-template-columns: 1fr 340px; gap: 32px; }
   }
   @media (max-width: 900px) {
     .hero { padding: 100px 0 0; min-height: auto; }
-    .hero__inner { grid-template-columns: 1fr; gap: 32px; padding-bottom: 40px; }
-    .hero__facts { max-width: 100%; }
+    .hero__inner { grid-template-columns: 1fr; gap: 36px; padding-bottom: 40px; }
+    .hero__visual { max-width: 440px; }
     .marquee-track { font-size: 14px; gap: 20px; }
   }
   @media (max-width: 480px) {
-    .hero__inner { gap: 24px; padding-top: 28px; padding-bottom: 28px; }
+    .hero__inner { gap: 28px; padding-top: 28px; padding-bottom: 28px; }
     .hero__badge { font-size: 10px; padding: 5px 12px; }
-    .hero__title { font-size: clamp(36px, 9vw, 52px); margin-bottom: 20px; }
+    .hero__title { font-size: clamp(34px, 8.5vw, 50px); margin-bottom: 20px; }
     .hero__sub { font-size: 15px; margin-bottom: 24px; }
     .hero__actions { flex-direction: column; gap: 10px; }
     .hero__actions .btn { width: 100%; justify-content: center; }
-    .btn-text-full { display: none; }
-    .btn-text-short { display: inline; }
-    .hero__facts { padding: 20px 18px; }
+    .hero__chips { gap: 8px 14px; }
     .marquee-track { font-size: 12px; gap: 16px; }
   }
   @media (max-height: 800px) {
