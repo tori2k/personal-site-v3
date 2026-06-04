@@ -5,11 +5,12 @@ const isHome = Astro.url.pathname === base || Astro.url.pathname === '/' || Astr
 const anchor = (a: string) => isHome ? a : `${base}${a}`;
 
 const items = [
-  { href: `${base}services/`,    label: 'Услуги' },
-  { href: `${base}cases/`,       label: 'Кейсы' },
-  { href: `${base}calculator/`,  label: 'Калькулятор' },
-  { href: `${base}method/`,      label: 'Метод' },
-  { href: `${base}razbor/`,      label: 'Разбор' },
+  { href: `${base}services/`,         label: 'Услуги' },
+  { href: `${base}cases/`,            label: 'Кейсы' },
+  { href: `${base}calculator/`,       label: 'Калькулятор' },
+  { href: `${base}method/`,           label: 'Метод' },
+  { href: `${base}anti-sliv-zayavok/`, label: 'Бесплатно', accent: true },
+  { href: `${base}razbor/`,           label: 'Разбор' },
 ];
 ---
 <nav class="nav">
@@ -22,7 +23,7 @@ const items = [
     </a>
 
     <ul class="nav__links">
-      {items.map((i) => <li><a href={i.href}>{i.label}</a></li>)}
+      {items.map((i) => <li><a href={i.href} class:list={[i.accent && 'nav__link--free']}>{i.label}</a></li>)}
     </ul>
 
     <div class="nav__right">
@@ -38,7 +39,7 @@ const items = [
   </div>
 
   <div class="nav__mobile" id="navMobile">
-    {items.map((i) => <a href={i.href}>{i.label}</a>)}
+    {items.map((i) => <a href={i.href} class:list={[i.accent && 'nav__link--free']}>{i.label}</a>)}
   </div>
 </nav>
 
@@ -95,6 +96,8 @@ const items = [
     transition: color 0.2s;
   }
   .nav__links a:hover { color: var(--color-text); }
+  .nav__link--free { color: var(--color-accent) !important; }
+  .nav__link--free::before { content: '✦ '; opacity: 0.8; }
 
   .nav__right {
     display: flex;

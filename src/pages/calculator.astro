@@ -37,31 +37,37 @@ const jsonLd = {
         <div class="calc__grid">
           <!-- Левая колонка: поля -->
           <form class="calc__form glass" id="calcForm">
+            <div class="calc__money-mark">Считаем деньги</div>
+
             <div class="calc__field">
               <label for="c-check">Средний чек, ₽</label>
-              <input type="number" id="c-check" value="30000" min="0" step="1000" inputmode="numeric" />
+              <input type="number" id="c-check" value="25000" min="0" step="1000" inputmode="numeric" />
             </div>
             <div class="calc__field">
               <label for="c-leads">Заявок в месяц</label>
-              <input type="number" id="c-leads" value="60" min="0" step="1" inputmode="numeric" />
+              <input type="number" id="c-leads" value="80" min="0" step="1" inputmode="numeric" />
             </div>
             <div class="calc__field">
-              <label for="c-lost">Теряется заявок, %
+              <label for="c-lost">Доля заявок, которые не доходят до обработки
                 <span class="calc__val" id="c-lost-val">25%</span>
               </label>
               <input type="range" id="c-lost" value="25" min="0" max="80" step="5" />
+              <span class="calc__hint">Не все заявки, а те, кто оставил интерес, но завис из-за формы, ответа, CRM или дожима.</span>
             </div>
             <div class="calc__field">
-              <label for="c-conv">Конверсия в продажу, %
+              <label for="c-conv">Сколько потерянных лидов могли бы купить
                 <span class="calc__val" id="c-conv-val">30%</span>
               </label>
               <input type="range" id="c-conv" value="30" min="5" max="90" step="5" />
+              <span class="calc__hint">Этот процент нужен, чтобы оценить не просто лиды, а возможные продажи.</span>
             </div>
+
+            <div class="calc__risk-mark">Считаем риск системы</div>
 
             <div class="calc__field">
               <label>Скорость ответа на заявку</label>
               <div class="calc__seg" data-seg="speed">
-                <button type="button" data-v="fast">&lt; 5 мин</button>
+                <button type="button" data-v="fast">&lt; 15 мин</button>
                 <button type="button" data-v="hour" class="is-active">~ час</button>
                 <button type="button" data-v="day">~ день</button>
                 <button type="button" data-v="slow">&gt; суток</button>
@@ -82,15 +88,34 @@ const jsonLd = {
                 <div class="calc__sw" data-sw="fu"><button type="button" data-v="no" class="is-active">Нет</button><button type="button" data-v="yes">Есть</button></div>
               </div>
             </div>
+            <p class="calc__form-note">
+              Скорость ответа и тумблеры <b>не меняют сумму потерь</b> — они показывают,
+              насколько надёжно система удерживает заявку, и что чинить первым.
+            </p>
           </form>
 
           <!-- Правая колонка: результат -->
           <div class="calc__out">
+            <!-- Деньги -->
             <div class="calc__loss glass">
-              <div class="calc__loss-label">Потери в месяц</div>
+              <div class="calc__loss-label">💸 Потери в месяц</div>
               <div class="calc__loss-month"><span id="lossMonth">0</span> ₽</div>
               <div class="calc__loss-year">в год: <span id="lossYear">0</span> ₽</div>
-              <div class="calc__risk" id="riskBadge">риск: —</div>
+
+              <div class="calc__steps">
+                <div class="calc__step" id="step1">—</div>
+                <div class="calc__step" id="step2">—</div>
+                <div class="calc__step calc__step--final" id="step3">—</div>
+              </div>
+            </div>
+
+            <!-- Риск (отдельно) -->
+            <div class="calc__riskbox glass">
+              <div class="calc__riskbox-head">
+                <span class="calc__riskbox-label">🛡 Риск обработки</span>
+                <span class="calc__risk" id="riskBadge" data-level="mid">средний · 50/100</span>
+              </div>
+              <div class="calc__risk-bar"><span id="riskFill"></span></div>
             </div>
 
             <div class="calc__leak glass">
@@ -110,9 +135,9 @@ const jsonLd = {
         </div>
 
         <p class="calc__note">
-          Расчёт оценочный: учитывает прямые потери + штрафы за медленный ответ и отсутствие
-          Telegram-уведомлений, CRM и дожима. Точные цифры покажу на
-          <a href="/razbor">бесплатном разборе</a>. Полную методику — на странице
+          <b>Как считаем деньги:</b> заявки × доля потерянных × потенциальная конверсия × средний чек.
+          Тумблеры и скорость ответа влияют только на <b>риск</b> и рекомендации, не на сумму.
+          Точные цифры покажу на <a href="/razbor">бесплатном разборе</a>, методику — на странице
           <a href="/method">метода</a>.
         </p>
       </div>
@@ -181,8 +206,31 @@ const jsonLd = {
   .calc__loss-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-muted); margin-bottom: 8px; }
   .calc__loss-month { font-family: 'Unbounded', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 500; color: #ff8a8a; line-height: 1; letter-spacing: -0.02em; }
   .calc__loss-year { font-size: 13px; color: var(--color-muted); margin-top: 10px; }
+
+  /* Маркеры секций формы: деньги / риск */
+  .calc__money-mark, .calc__risk-mark {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px;
+    text-transform: uppercase; padding-bottom: 4px;
+  }
+  .calc__money-mark { color: #ff8a8a; }
+  .calc__risk-mark { color: var(--color-accent); padding-top: 8px; border-top: 1px solid var(--color-border); }
+
+  /* Подсказки к полям */
+  .calc__hint { font-size: 11.5px; line-height: 1.5; color: var(--color-muted-2); }
+  .calc__form-note { font-size: 12px; line-height: 1.55; color: var(--color-muted-2); margin: 0; padding-top: 4px; }
+  .calc__form-note b { color: var(--color-muted); }
+
+  /* Расшифровка денег */
+  .calc__steps { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--color-border); display: flex; flex-direction: column; gap: 7px; }
+  .calc__step { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--color-muted); line-height: 1.5; }
+  .calc__step--final { color: #ff8a8a; font-weight: 500; }
+
+  /* Риск-бокс (отдельно от денег) */
+  .calc__riskbox { padding: 20px 22px; border-radius: 16px; }
+  .calc__riskbox-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .calc__riskbox-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-muted); }
   .calc__risk {
-    display: inline-block; margin-top: 14px; padding: 5px 12px; border-radius: 999px;
+    padding: 4px 11px; border-radius: 999px;
     font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.5px;
     background: rgba(244,246,251,0.06); color: var(--color-muted);
   }
@@ -190,6 +238,12 @@ const jsonLd = {
   .calc__risk[data-level="mid"]  { background: rgba(255,209,102,0.15); color: #ffd166; }
   .calc__risk[data-level="high"] { background: rgba(255,138,138,0.15); color: #ff8a8a; }
   .calc__risk[data-level="crit"] { background: rgba(255,80,80,0.2); color: #ff6b6b; }
+  .calc__risk-bar { height: 6px; border-radius: 999px; background: rgba(244,246,251,0.07); overflow: hidden; }
+  .calc__risk-bar span { display: block; height: 100%; width: 50%; border-radius: 999px; background: #ffd166; transition: width 0.4s cubic-bezier(.22,1,.36,1), background 0.3s; }
+  .calc__risk-bar span[data-level="low"]  { background: #6fd6ad; }
+  .calc__risk-bar span[data-level="mid"]  { background: #ffd166; }
+  .calc__risk-bar span[data-level="high"] { background: #ff8a8a; }
+  .calc__risk-bar span[data-level="crit"] { background: #ff6b6b; }
 
   .calc__leak { padding: 22px 24px; border-radius: 16px; }
   .calc__leak-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-accent); margin-bottom: 14px; }
@@ -256,35 +310,44 @@ const jsonLd = {
     $('c-lost-val').textContent = lostPct + '%';
     $('c-conv-val').textContent = conv + '%';
 
-    // Штрафы за слабые места воронки (доп. % к потерям)
-    const speedPenalty = { fast: 0, hour: 3, day: 8, slow: 15 }[state.speed] ?? 0;
-    const tgPenalty = state.tg === 'no' ? 8 : 0;
-    const crmPenalty = state.crm === 'no' ? 7 : 0;
-    const fuPenalty = state.fu === 'no' ? 10 : 0;
-
-    const effective = Math.min(90, lostPct + speedPenalty + tgPenalty + crmPenalty + fuPenalty);
-    const lostLeads = leads * (effective / 100);
-    const monthLoss = lostLeads * check * (conv / 100);
+    // ── ДЕНЬГИ (прозрачно, без влияния тумблеров) ──
+    // заявки × доля потерянных × потенциальная конверсия × средний чек
+    const lostLeads = leads * (lostPct / 100);
+    const possibleSales = lostLeads * (conv / 100);
+    const monthLoss = possibleSales * check;
     const yearLoss = monthLoss * 12;
 
     $('lossMonth').textContent = fmt(monthLoss);
     $('lossYear').textContent = fmt(yearLoss);
 
-    // Уровень риска
+    // Расшифровка по шагам
+    $('step1').textContent = `${fmt(leads)} заявок × ${lostPct}% = ${fmt(lostLeads)} потерянных лидов`;
+    $('step2').textContent = `${fmt(lostLeads)} × ${conv}% = ${fmt(possibleSales)} возможных продаж`;
+    $('step3').textContent = `${fmt(possibleSales)} × ${fmt(check)} ₽ = ${fmt(monthLoss)} ₽`;
+
+    // ── РИСК СИСТЕМЫ (отдельный score 0–100, НЕ влияет на деньги) ──
+    const speedRisk = { fast: 0, hour: 15, day: 30, slow: 40 }[state.speed] ?? 0;
+    const tgRisk = state.tg === 'no' ? 22 : 0;
+    const crmRisk = state.crm === 'no' ? 20 : 0;
+    const fuRisk = state.fu === 'no' ? 18 : 0;
+    const riskScore = Math.min(100, speedRisk + tgRisk + crmRisk + fuRisk);
+
     const risk = $('riskBadge');
     let level = 'low', label = 'низкий';
-    if (effective >= 60) { level = 'crit'; label = 'критический'; }
-    else if (effective >= 40) { level = 'high'; label = 'высокий'; }
-    else if (effective >= 22) { level = 'mid'; label = 'средний'; }
+    if (riskScore >= 75) { level = 'crit'; label = 'критический'; }
+    else if (riskScore >= 50) { level = 'high'; label = 'высокий'; }
+    else if (riskScore >= 25) { level = 'mid'; label = 'средний'; }
     risk.setAttribute('data-level', level);
-    risk.textContent = `риск: ${label} · ${Math.round(effective)}% заявок мимо`;
+    risk.textContent = `${label} · ${riskScore}/100`;
+    const fill = $('riskFill');
+    if (fill) { fill.style.width = riskScore + '%'; fill.setAttribute('data-level', level); }
 
-    // Где течёт воронка
+    // ── Где течёт воронка ──
     const leaks: { txt: string; ok: boolean; weight: number }[] = [
-      { txt: 'Медленный ответ — клиент уходит к тому, кто ответил первым', ok: state.speed === 'fast', weight: speedPenalty },
-      { txt: 'Нет Telegram-уведомлений — заявку замечают не сразу', ok: state.tg === 'yes', weight: tgPenalty },
-      { txt: 'Нет CRM/таблицы — лиды забываются и теряются', ok: state.crm === 'yes', weight: crmPenalty },
-      { txt: 'Нет follow-up — недожатые заявки не возвращают', ok: state.fu === 'yes', weight: fuPenalty },
+      { txt: 'Медленный ответ — лид успевает остыть', ok: state.speed === 'fast', weight: speedRisk },
+      { txt: 'Нет Telegram-уведомлений — заявку замечают не сразу', ok: state.tg === 'yes', weight: tgRisk },
+      { txt: 'Нет CRM/таблицы — лиды забываются и теряются', ok: state.crm === 'yes', weight: crmRisk },
+      { txt: 'Нет follow-up — недожатые заявки не возвращают', ok: state.fu === 'yes', weight: fuRisk },
     ];
     const list = $('leakList');
     list.innerHTML = '';
@@ -295,13 +358,13 @@ const jsonLd = {
       list.appendChild(li);
     });
 
-    // Что автоматизировать первым — пробоина с максимальным весом
+    // ── Что автоматизировать первым — пробоина с максимальным весом ──
     const worst = leaks.filter((l) => !l.ok).sort((a, b) => b.weight - a.weight)[0];
     const fixMap: Record<string, string> = {
-      'Медленный ответ — клиент уходит к тому, кто ответил первым': 'Telegram-уведомление о заявке + быстрый шаблон ответа',
-      'Нет Telegram-уведомлений — заявку замечают не сразу': 'Заявки с сайта и квиза прямо в Telegram',
-      'Нет CRM/таблицы — лиды забываются и теряются': 'Таблица лидов со статусом и источником',
-      'Нет follow-up — недожатые заявки не возвращают': 'Автоматический дожим: напоминания и серия сообщений',
+      'Медленный ответ — лид успевает остыть': 'Напоминание менеджеру через 10–15 минут после заявки',
+      'Нет Telegram-уведомлений — заявку замечают не сразу': 'Telegram-уведомление о заявке',
+      'Нет CRM/таблицы — лиды забываются и теряются': 'Таблица / CRM со статусами',
+      'Нет follow-up — недожатые заявки не возвращают': 'Автоматический дожим',
     };
     $('fixFirst').textContent = worst ? fixMap[worst.txt] : 'Система уже собрана — можно усиливать оффер и трафик';
   }

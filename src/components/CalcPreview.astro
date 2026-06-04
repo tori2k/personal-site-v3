@@ -9,8 +9,8 @@
         <div class="sec-tag">Калькулятор потерь</div>
         <h2 class="display-h calcp__h2">Сколько денег уходит <em>после клика?</em></h2>
         <p class="calcp__sub">
-          60 заявок в месяц, чек 30 000 ₽, медленный ответ и нет CRM —
-          и бизнес незаметно теряет сотни тысяч в месяц. Посчитайте свои цифры.
+          Заявка пришла — и зависла из-за формы, медленного ответа или отсутствия CRM.
+          Деньги считаем прозрачно: заявки × потери × конверсия × чек.
         </p>
         <a href="/calculator" class="btn btn--filled" data-magnetic="0.4">
           <span class="btn__plus">(+)</span>
@@ -22,14 +22,19 @@
       <div class="calcp__card glass reveal-right">
         <div class="calcp__card-label">Пример расчёта</div>
         <div class="calcp__rows">
-          <div class="calcp__row"><span>Заявок в месяц</span><b>60</b></div>
-          <div class="calcp__row"><span>Средний чек</span><b>30 000 ₽</b></div>
-          <div class="calcp__row"><span>Теряется</span><b class="calcp__bad">~40%</b></div>
+          <div class="calcp__row"><span>Заявок в месяц</span><b>80</b></div>
+          <div class="calcp__row"><span>Средний чек</span><b>25 000 ₽</b></div>
+          <div class="calcp__row"><span>Теряется до обработки</span><b class="calcp__bad">25%</b></div>
+          <div class="calcp__row"><span>Из них могли купить</span><b>30%</b></div>
+        </div>
+        <div class="calcp__steps">
+          <span>80 × 25% = 20 потерянных лидов</span>
+          <span>20 × 30% = 6 возможных продаж</span>
         </div>
         <div class="calcp__result">
           <div class="calcp__result-label">Потери в месяц</div>
-          <div class="calcp__result-val">216 000 ₽</div>
-          <div class="calcp__result-year">2,6 млн ₽ в год</div>
+          <div class="calcp__result-val">150 000 ₽</div>
+          <div class="calcp__result-year">1,8 млн ₽ в год</div>
         </div>
       </div>
     </div>
@@ -50,7 +55,9 @@
   .calcp__row { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; color: var(--color-muted); }
   .calcp__row b { color: var(--color-text); font-weight: 500; }
   .calcp__bad { color: #ff8a8a !important; }
-  .calcp__result { padding-top: 18px; }
+  .calcp__steps { display: flex; flex-direction: column; gap: 6px; padding: 14px 0; }
+  .calcp__steps span { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--color-muted-2); line-height: 1.5; }
+  .calcp__result { padding-top: 14px; border-top: 1px solid var(--color-border); }
   .calcp__result-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-muted); margin-bottom: 8px; }
   .calcp__result-val { font-family: 'Unbounded', sans-serif; font-size: clamp(28px, 3.5vw, 40px); font-weight: 500; color: #ff8a8a; line-height: 1; letter-spacing: -0.02em; }
   .calcp__result-year { font-size: 13px; color: var(--color-muted); margin-top: 8px; }
