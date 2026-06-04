@@ -30,10 +30,6 @@ const items = [
         <span class="live-badge__dot"></span>
         доступен
       </span>
-      <a href="/razbor" class="nav__cta">
-        <span class="btn__plus">(+)</span>
-        Разбор бесплатно
-      </a>
     </div>
 
     <button class="nav__burger" id="navBurger" aria-label="Меню">
@@ -43,10 +39,6 @@ const items = [
 
   <div class="nav__mobile" id="navMobile">
     {items.map((i) => <a href={i.href}>{i.label}</a>)}
-    <a href="https://t.me/tori2k" target="_blank" rel="noopener" class="nav__cta">
-      <span class="btn__plus">(+)</span>
-      Написать в Telegram
-    </a>
   </div>
 </nav>
 
