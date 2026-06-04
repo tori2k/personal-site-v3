@@ -52,7 +52,7 @@ const tiers = [
   },
 ];
 ---
-<section class="pricing section-dark" id="pricing" data-plane-occluder="pricing">
+<section class="pricing section-dark" id="pricing">
   <div class="container-x">
     <div class="pricing__head reveal">
       <div class="sec-tag">Продукты</div>
@@ -70,6 +70,7 @@ const tiers = [
         <article
           class:list={['tier', t.featured && 'tier--featured', t.premium && 'tier--premium', 'reveal']}
           style={`transition-delay: ${i * 0.08}s`}
+          data-plane-occluder="hard"
         >
           <div class="tier__head">
             <div class="tier__name">{t.name}</div>

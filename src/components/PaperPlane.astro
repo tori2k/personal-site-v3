@@ -1,81 +1,115 @@
 ---
 ---
 <!--
-  PaperPlane — signature motion сайта kirillbaryev.ru
-  Нос ВСЕГДА в нижней полусфере: угол [30°..150°], никакой горизонтали.
-  Траектория: крутые пикирования (y меняется на 30–45% vh).
-  Слои: front (z>0.5) / back (z<0.15→opacity=0).
-  Финал: collision burst на CTA-кнопке.
-  Без текстовых подписей.
+  PaperPlane — physical occlusion через два синхронных fixed-слоя.
+
+  АРХИТЕКТУРА:
+  #planeBack  z-index: 8   ← под occluder-элементами (z:10)
+  occluders   z-index: 10  ← перекрывают back-самолётик
+  #planeFront z-index: 400 ← над всем контентом
+
+  JS синхронно двигает оба SVG по одинаковой траектории.
+  В зонах back: front opacity=0, back opacity=computed.
+  В зонах front: back opacity=0, front opacity=computed.
+  Переключение происходит когда суммарная opacity минимальна.
+
+  Это настоящая физическая окклюзия: карточка с z:10 перекрывает
+  fixed элемент с z:8 — самолётик реально исчезает за её прямоугольником.
 -->
 
-<!-- shockwave-кольцо для финального взрыва -->
-<div class="plane-shockwave" id="planeShockwave"></div>
+<!-- Shockwave для финального burst -->
+<div class="plane-sw" id="planeSW"></div>
 
-<div class="plane-layer" id="planeLayer" aria-hidden="true">
-  <div id="planeSparks"></div>
-  <div id="planeTrail"></div>
-
-  <div class="plane-craft" id="planeCraft">
-    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- BACK слой: самолётик за контентом (z:8, под occluders z:10) -->
+<div class="plane-layer plane-layer--back" id="planeLayerBack" aria-hidden="true">
+  <div id="planeSparksBack"></div>
+  <div id="planeTrailBack"></div>
+  <div class="plane-craft" id="planeCraftBack">
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
       <defs>
-        <linearGradient id="wt" x1="57" y1="12" x2="6" y2="30" gradientUnits="userSpaceOnUse">
+        <linearGradient id="wt2" x1="57" y1="12" x2="6" y2="30" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stop-color="#E8F6FF"/>
           <stop offset="50%"  stop-color="#AEE2FF"/>
           <stop offset="100%" stop-color="#7CC3F0" stop-opacity="0.65"/>
         </linearGradient>
-        <linearGradient id="wb" x1="57" y1="48" x2="6" y2="30" gradientUnits="userSpaceOnUse">
+        <linearGradient id="wb2" x1="57" y1="48" x2="6" y2="30" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stop-color="#5BAEDE"/>
           <stop offset="100%" stop-color="#2E6EA8" stop-opacity="0.55"/>
         </linearGradient>
-        <radialGradient id="nt" cx="82%" cy="50%" r="22%">
+      </defs>
+      <path d="M57 30 L6 11 L30 30 Z" fill="url(#wt2)"/>
+      <path d="M57 30 L6 49 L30 30 Z" fill="url(#wb2)"/>
+      <path d="M30 30 L6 11 L10 30 Z" fill="#B8DFF5" opacity="0.9"/>
+      <path d="M30 30 L6 49 L10 30 Z" fill="#3270A8" opacity="0.75"/>
+      <path d="M57 30 L9 30" stroke="#EBF8FF" stroke-width="0.7" opacity="0.45" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<!-- FRONT слой: самолётик над контентом (z:400) -->
+<div class="plane-layer plane-layer--front" id="planeLayerFront" aria-hidden="true">
+  <div id="planeSparksFront"></div>
+  <div id="planeTrailFront"></div>
+  <div class="plane-craft" id="planeCraftFront">
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+      <defs>
+        <linearGradient id="wt1" x1="57" y1="12" x2="6" y2="30" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#E8F6FF"/>
+          <stop offset="50%"  stop-color="#AEE2FF"/>
+          <stop offset="100%" stop-color="#7CC3F0" stop-opacity="0.65"/>
+        </linearGradient>
+        <linearGradient id="wb1" x1="57" y1="48" x2="6" y2="30" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#5BAEDE"/>
+          <stop offset="100%" stop-color="#2E6EA8" stop-opacity="0.55"/>
+        </linearGradient>
+        <radialGradient id="nt1" cx="82%" cy="50%" r="22%">
           <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.85"/>
           <stop offset="100%" stop-color="#AEE2FF" stop-opacity="0"/>
         </radialGradient>
       </defs>
-      <!-- верхнее крыло -->
-      <path d="M57 30 L6 11 L30 30 Z"         fill="url(#wt)"/>
-      <!-- нижнее крыло -->
-      <path d="M57 30 L6 49 L30 30 Z"         fill="url(#wb)"/>
-      <!-- объём верхней фаски -->
-      <path d="M30 30 L6 11 L10 30 Z"         fill="#B8DFF5" opacity="0.9"/>
-      <!-- объём нижней фаски -->
-      <path d="M30 30 L6 49 L10 30 Z"         fill="#3270A8" opacity="0.75"/>
-      <!-- сгиб-блик -->
+      <path d="M57 30 L6 11 L30 30 Z" fill="url(#wt1)"/>
+      <path d="M57 30 L6 49 L30 30 Z" fill="url(#wb1)"/>
+      <path d="M30 30 L6 11 L10 30 Z" fill="#B8DFF5" opacity="0.9"/>
+      <path d="M30 30 L6 49 L10 30 Z" fill="#3270A8" opacity="0.75"/>
       <path d="M57 30 L9 30" stroke="#EBF8FF" stroke-width="0.7" opacity="0.45" stroke-linecap="round"/>
-      <!-- блик у носа -->
-      <ellipse cx="49" cy="27" rx="5" ry="2.5" fill="url(#nt)" opacity="0.55" transform="rotate(-10 49 27)"/>
+      <ellipse cx="49" cy="27" rx="5" ry="2.5" fill="url(#nt1)" opacity="0.55" transform="rotate(-10 49 27)"/>
     </svg>
   </div>
 </div>
 
 <style>
-  /* Shockwave-кольцо — расширяется из центра кнопки при посадке */
-  .plane-shockwave {
+  /* ── BACK слой: z:8 — под occluder-блоками (z:10) ── */
+  .plane-layer--back {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 8;
+  }
+
+  /* ── FRONT слой: z:400 — над всем контентом ── */
+  .plane-layer--front {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 400;
+  }
+
+  /* Shockwave */
+  .plane-sw {
     position: fixed;
     pointer-events: none;
     border-radius: 50%;
-    border: 1.5px solid rgba(95,198,255,0.7);
-    box-shadow: 0 0 12px rgba(95,198,255,0.4), inset 0 0 8px rgba(95,198,255,0.15);
+    border: 1.5px solid rgba(95,198,255,0.75);
+    box-shadow: 0 0 14px rgba(95,198,255,0.45);
     opacity: 0;
     width: 60px; height: 60px;
     margin: -30px 0 0 -30px;
     top: 0; left: 0;
-    transform-origin: 50% 50%;
     will-change: transform, opacity;
     z-index: 600;
   }
 
-  /* Основной слой — всегда поверх всего благодаря z:500
-     .glass/backdrop-filter создаёт stacking ctx, но т.к. plane-layer fixed и
-     находится в body после main, он выигрывает stacking order при front. */
-  .plane-layer {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 500;
-  }
-
+  /* Craft: одинаково для обоих слоёв */
   .plane-craft {
     position: absolute;
     top: 0; left: 0;
@@ -89,12 +123,12 @@
   }
   .plane-craft svg { width: 100%; height: 100%; display: block; }
 
-  @media (min-width: 1600px) { .plane-craft { --ps: 76px; } }
+  @media (min-width: 1600px) { .plane-craft { --ps: 74px; } }
   @media (max-width: 1024px) { .plane-craft { --ps: 50px; } }
   @media (max-width: 700px)  { .plane-craft { --ps: 38px; } }
-  @media (max-width: 440px)  { .plane-craft { --ps: 30px; } }
+  @media (max-width: 440px)  { .plane-craft { --ps: 32px; } }
 
-  .plane-trail-dot {
+  .plane-trail-dot, .plane-spark {
     position: absolute;
     border-radius: 50%;
     pointer-events: none;
@@ -102,160 +136,116 @@
     opacity: 0;
     top: 0; left: 0;
   }
-  .plane-spark {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    will-change: transform, opacity;
-    opacity: 0;
-    top: 0; left: 0;
+
+  /* ── OCCLUDERS: z:10 — перекрывают back-слой (z:8) ──
+     Добавляется к любому элементу с data-plane-occluder="hard".
+     isolation:isolate важен: создаёт stacking context чтобы
+     z-index:10 сравнивался корректно с fixed-слоями. */
+  [data-plane-occluder="hard"] {
+    position: relative;
+    z-index: 10;
+    isolation: isolate;
   }
 </style>
 
 <script>
-  const craft      = document.getElementById('planeCraft')     as HTMLElement | null;
-  const sparksEl   = document.getElementById('planeSparks')    as HTMLElement | null;
-  const trailEl    = document.getElementById('planeTrail')     as HTMLElement | null;
-  const shockwave  = document.getElementById('planeShockwave') as HTMLElement | null;
+  const craftBack  = document.getElementById('planeCraftBack')  as HTMLElement|null;
+  const craftFront = document.getElementById('planeCraftFront') as HTMLElement|null;
+  const swEl       = document.getElementById('planeSW')          as HTMLElement|null;
 
-  if (!craft || !sparksEl || !trailEl) { /* guard */ } else {
+  const sparksBackEl  = document.getElementById('planeSparksBack')  as HTMLElement|null;
+  const sparksFrontEl = document.getElementById('planeSparksFront') as HTMLElement|null;
+  const trailBackEl   = document.getElementById('planeTrailBack')   as HTMLElement|null;
+  const trailFrontEl  = document.getElementById('planeTrailFront')  as HTMLElement|null;
+
+  if (!craftBack || !craftFront) { /* guard */ } else {
 
   const mob = () => window.innerWidth <= 768;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
   // ТРАЕКТОРИЯ
-  // x,y — доли vw/vh. Каждый сегмент меняет y на 30–45%.
-  // z: 0=за блоком (невидим), 1=спереди (ярко).
-  // spark: взрыв искр в этой точке.
-  // ════════════════════════════════════════════════════════════════
-  type WP = { p: number; x: number; y: number; z: number; spark?: true };
+  // mode: "front" | "back"  — какой слой активен
+  // Переключение в момент минимальной видимости (transition zone)
+  // ══════════════════════════════════════════════════════════════
+  type WP = {
+    p: number; x: number; y: number; z: number;
+    mode: 'front'|'back';
+    spark?: true;
+  };
 
-  // DESKTOP: крутые пикирования, y [0.18..0.78], разброс ~60% vh
+  // Desktop: крутые пикирования, y [0.18..0.78]
   const DT: WP[] = [
-    { p: 0.00, x: 0.78, y: 0.22, z: 1.00 },           // hero — верх-справа
-    { p: 0.09, x: 0.35, y: 0.68, z: 0.75 },            // approach — пике вниз-влево
-    { p: 0.18, x: 0.72, y: 0.24, z: 0.90 },            // forwhom — вынырнул вверх-вправо
-    { p: 0.27, x: 0.20, y: 0.75, z: 0.04 },            // flowblock — ныряет за блок (невидим)
-    { p: 0.36, x: 0.80, y: 0.20, z: 1.00, spark: true }, // portfolio — вылет вперёд вверх
-    { p: 0.44, x: 0.18, y: 0.72, z: 0.04 },            // portfolio кейс — за карточкой (невидим)
-    { p: 0.52, x: 0.78, y: 0.18, z: 1.00, spark: true }, // вылет из кейса — вспышка
-    { p: 0.60, x: 0.25, y: 0.70, z: 0.60 },            // method — пике влево
-    { p: 0.69, x: 0.75, y: 0.22, z: 0.85 },            // pricing — вираж вверх-вправо
-    { p: 0.78, x: 0.22, y: 0.68, z: 0.38 },            // faq — уходит вниз-влево
-    { p: 0.87, x: 0.68, y: 0.30, z: 0.92 },            // подлёт — вверх-вправо
-    { p: 1.00, x: 0.50, y: 0.55, z: 1.10, spark: true }, // посадка в CTA
+    { p: 0.00, x: 0.78, y: 0.22, z: 1.0,  mode:'front' },
+    { p: 0.09, x: 0.35, y: 0.68, z: 0.8,  mode:'front' },
+    { p: 0.18, x: 0.72, y: 0.24, z: 0.9,  mode:'front' },
+    // → переход в back (flowblock)
+    { p: 0.24, x: 0.44, y: 0.56, z: 0.05, mode:'back'  },  // точка перехода: почти невидим
+    { p: 0.30, x: 0.18, y: 0.78, z: 0.0,  mode:'back'  },  // глубоко за блоком
+    // → вылет вперёд
+    { p: 0.36, x: 0.78, y: 0.22, z: 1.0,  mode:'front', spark: true },
+    // → за кейсом 1
+    { p: 0.41, x: 0.48, y: 0.52, z: 0.05, mode:'back'  },  // точка перехода
+    { p: 0.46, x: 0.20, y: 0.76, z: 0.0,  mode:'back'  },  // за карточкой
+    // → вылет из кейса
+    { p: 0.52, x: 0.76, y: 0.20, z: 1.0,  mode:'front', spark: true },
+    { p: 0.60, x: 0.26, y: 0.72, z: 0.65, mode:'front' },
+    { p: 0.69, x: 0.74, y: 0.24, z: 0.85, mode:'front' },
+    { p: 0.78, x: 0.24, y: 0.70, z: 0.40, mode:'front' },
+    { p: 0.87, x: 0.66, y: 0.30, z: 0.92, mode:'front' },
+    { p: 1.00, x: 0.50, y: 0.55, z: 1.1,  mode:'front', spark: true },
   ];
 
-  // MOBILE: 5 точек, только вертикальные волны, без агрессивных пересечений
+  // Mobile: упрощённая, только front
   const MT: WP[] = [
-    { p: 0.00, x: 0.70, y: 0.20, z: 0.85 },
-    { p: 0.25, x: 0.28, y: 0.60, z: 0.30 },
-    { p: 0.50, x: 0.65, y: 0.22, z: 0.80 },
-    { p: 0.75, x: 0.30, y: 0.65, z: 0.35 },
-    { p: 1.00, x: 0.50, y: 0.52, z: 1.00 },
+    { p: 0.00, x: 0.72, y: 0.20, z: 0.9,  mode:'front' },
+    { p: 0.25, x: 0.28, y: 0.62, z: 0.35, mode:'back'  },
+    { p: 0.50, x: 0.66, y: 0.22, z: 0.85, mode:'front' },
+    { p: 0.75, x: 0.30, y: 0.65, z: 0.35, mode:'back'  },
+    { p: 1.00, x: 0.50, y: 0.52, z: 1.0,  mode:'front' },
   ];
 
   let TRACK: WP[] = mob() ? MT : DT;
 
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
   // CATMULL-ROM
-  // ════════════════════════════════════════════════════════════════
-  function cr(p0: number, p1: number, p2: number, p3: number, t: number): number {
-    const t2=t*t, t3=t2*t;
+  // ══════════════════════════════════════════════════════════════
+  function cr(p0:number,p1:number,p2:number,p3:number,t:number):number{
+    const t2=t*t,t3=t2*t;
     return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t2+(-p0+3*p1-3*p2+p3)*t3);
   }
-  function spline(prog: number): {x:number;y:number;z:number} {
-    const T=TRACK, N=T.length;
+  function spline(prog:number):{x:number;y:number;z:number;mode:'front'|'back'}{
+    const T=TRACK,N=T.length;
     const c=Math.max(0,Math.min(1,prog));
     let seg=N-2;
     for(let i=0;i<N-1;i++){if(c<=T[i+1].p){seg=i;break;}}
-    const a=T[seg], b=T[seg+1];
+    const a=T[seg],b=T[seg+1];
     const t=(c-a.p)/Math.max(1e-5,b.p-a.p);
-    const p0=T[Math.max(0,seg-1)], p3=T[Math.min(N-1,seg+2)];
+    const p0=T[Math.max(0,seg-1)],p3=T[Math.min(N-1,seg+2)];
+    // Интерполируем z, mode берём из ближайшей точки
+    const mode = t < 0.5 ? a.mode : b.mode;
     return {
-      x: cr(p0.x,a.x,b.x,p3.x,t),
-      y: cr(p0.y,a.y,b.y,p3.y,t),
-      z: cr(p0.z,a.z,b.z,p3.z,t),
+      x:cr(p0.x,a.x,b.x,p3.x,t),
+      y:cr(p0.y,a.y,b.y,p3.y,t),
+      z:cr(p0.z,a.z,b.z,p3.z,t),
+      mode,
     };
   }
 
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
   // DOM-кэш
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
   const anchorEl  = document.getElementById('planeAnchor') as HTMLElement|null;
   const targetBtn = document.getElementById('planeTarget')  as HTMLElement|null;
   const START_END  = 0.06;
   const LAND_START = 0.87;
 
-  // ════════════════════════════════════════════════════════════════
-  // OCCLUSION ZONES — зоны где самолётик уходит ЗА контент
-  // Используем data-plane-occluder атрибуты на секциях.
-  // occlusionDepth: 0=полностью скрыт, 1=без влияния (передний план)
-  // ════════════════════════════════════════════════════════════════
-  type OccZone = { el: HTMLElement; type: string; top: number; bottom: number };
-  let occZones: OccZone[] = [];
-
-  function buildOccZones() {
-    const els = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-plane-occluder]')
-    );
-    const scrollY = window.scrollY;
-    occZones = els.map(el => {
-      const r = el.getBoundingClientRect();
-      return {
-        el,
-        type: el.dataset.planeOccluder || '',
-        top:    r.top  + scrollY,
-        bottom: r.bottom + scrollY,
-      };
-    });
-  }
-  buildOccZones();
-  window.addEventListener('resize', buildOccZones, { passive: true });
-
-  // Возвращает 0..1 — насколько точка (viewportX,viewportY) перекрыта зонами.
-  // 0 = самолётик ПОЛНОСТЬЮ в зоне перекрытия (за блоком)
-  // 1 = нет перекрытия (передний план)
-  function getOcclusionFactor(vx: number, vy: number): number {
-    const scrollY = window.scrollY;
-    const docY = vy + scrollY;
-    let minFactor = 1.0;
-
-    for (const z of occZones) {
-      // Проверяем: точка по Y внутри зоны?
-      const inY = docY > z.top + 40 && docY < z.bottom - 40;
-      if (!inY) continue;
-
-      // Для photo — проверяем rect в реальном времени (fixed-координаты)
-      if (z.type === 'photo') {
-        const r = z.el.getBoundingClientRect();
-        const inX = vx > r.left - 20 && vx < r.right + 20;
-        const inYv = vy > r.top - 20 && vy < r.bottom + 20;
-        if (inX && inYv) {
-          minFactor = Math.min(minFactor, 0.0);  // полностью за фото
-        }
-      }
-      // Для cases и pricing — весь блок является зоной перекрытия
-      else if (z.type === 'cases' || z.type === 'pricing') {
-        // Степень перекрытия зависит от глубины в блоке
-        const localP = (docY - z.top) / Math.max(1, z.bottom - z.top);
-        // Края блока — мягкое перекрытие, середина — полное
-        const edge = Math.min(localP, 1 - localP) * 4; // 0→1 на краях
-        const factor = Math.max(0, Math.min(1, 1 - edge * 0.85));
-        minFactor = Math.min(minFactor, factor);
-      }
-    }
-    return minFactor;
-  }
-
-  function getPos(p: number): {x:number;y:number;z:number} {
+  function getPos(p:number):{x:number;y:number;z:number;mode:'front'|'back'}{
     const s=spline(p);
     let x=s.x*window.innerWidth, y=s.y*window.innerHeight;
     let z=Math.max(0,Math.min(1.2,s.z));
 
-    // Якорь старта
-    if(p<START_END && anchorEl){
+    if(p<START_END&&anchorEl){
       const r=anchorEl.getBoundingClientRect();
       if(r.width){
         const e=(p/START_END)**2;
@@ -263,162 +253,206 @@
         y=(r.top+r.height/2)+(y-(r.top+r.height/2))*e;
       }
     }
-
-    // Подлёт к кнопке
-    if(p>LAND_START && targetBtn){
+    if(p>LAND_START&&targetBtn){
       const r=targetBtn.getBoundingClientRect();
-      const bx=r.left+r.width/2, by=r.top+r.height/2;
-      const k=(p-LAND_START)/(1-LAND_START);
-      const e=k*k*(3-2*k);
+      const bx=r.left+r.width/2,by=r.top+r.height/2;
+      const k=(p-LAND_START)/(1-LAND_START),e=k*k*(3-2*k);
       x=x+(bx-x)*e; y=y+(by-y)*e;
       z=z+(1.1-z)*e*0.9;
     }
-
     const pad=mob()?16:24;
     return {
-      x: Math.max(pad,Math.min(window.innerWidth-pad,x)),
-      y: Math.max(pad,Math.min(window.innerHeight-pad,y)),
-      z,
+      x:Math.max(pad,Math.min(window.innerWidth-pad,x)),
+      y:Math.max(pad,Math.min(window.innerHeight-pad,y)),
+      z, mode:s.mode,
     };
   }
 
-  // ════════════════════════════════════════════════════════════════
-  // TRAIL
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
+  // TRAIL — два независимых пула (back и front)
+  // ══════════════════════════════════════════════════════════════
   const TLEN=mob()?5:10;
-  const tDots: HTMLElement[]=[];
   type TPos={x:number;y:number;z:number};
-  const tHist: TPos[]=Array.from({length:TLEN},()=>({x:-999,y:-999,z:0}));
-  let tIdx=0;
-  for(let i=0;i<TLEN;i++){
-    const d=document.createElement('div');
-    d.className='plane-trail-dot';
-    const sz=2+i*0.25;
-    d.style.cssText=`width:${sz}px;height:${sz}px;`+
-      `background:radial-gradient(circle,#C8E8FF,rgba(95,198,255,0.2) 55%,transparent);`+
-      `margin:-${sz/2}px 0 0 -${sz/2}px`;
-    trailEl.appendChild(d);
-    tDots.push(d);
-  }
-  function tickTrail(cx:number,cy:number,cz:number){
-    tHist[tIdx]={x:cx,y:cy,z:cz};
-    tIdx=(tIdx+1)%TLEN;
+  const tHistB:TPos[]=Array.from({length:TLEN},()=>({x:-999,y:-999,z:0}));
+  const tHistF:TPos[]=Array.from({length:TLEN},()=>({x:-999,y:-999,z:0}));
+  let tIdxB=0,tIdxF=0;
+  const tDotsB:HTMLElement[]=[],tDotsF:HTMLElement[]=[];
+
+  function makeTrailDots(wrap:HTMLElement,out:HTMLElement[]){
     for(let i=0;i<TLEN;i++){
-      const age=(tIdx-1-i+TLEN)%TLEN;
-      const pos=tHist[(tIdx-1-i+TLEN)%TLEN];
-      const d=tDots[i];
+      const d=document.createElement('div');
+      d.className='plane-trail-dot';
+      const sz=2+i*0.22;
+      d.style.cssText=`width:${sz}px;height:${sz}px;`+
+        `background:radial-gradient(circle,#C8E8FF,rgba(95,198,255,0.18) 55%,transparent);`+
+        `margin:-${sz/2}px 0 0 -${sz/2}px`;
+      wrap.appendChild(d);out.push(d);
+    }
+  }
+  if(trailBackEl)  makeTrailDots(trailBackEl,tDotsB);
+  if(trailFrontEl) makeTrailDots(trailFrontEl,tDotsF);
+
+  function tickTrail(
+    hist:TPos[],dots:HTMLElement[],
+    idxRef:{v:number},cx:number,cy:number,cz:number,active:boolean
+  ){
+    hist[idxRef.v]={x:cx,y:cy,z:cz};
+    idxRef.v=(idxRef.v+1)%TLEN;
+    for(let i=0;i<TLEN;i++){
+      const age=(idxRef.v-1-i+TLEN)%TLEN;
+      const pos=hist[(idxRef.v-1-i+TLEN)%TLEN];
+      const d=dots[i];
+      if(!active){d.style.opacity='0';continue;}
       const fade=1-age/TLEN;
-      // на заднем плане trail тоже пропадает
-      const maxOp=pos.z<0.12 ? 0 : pos.z>0.5 ? 0.40 : 0.10;
-      d.style.transform=`translate(${pos.x}px,${pos.y}px) scale(${(0.3+pos.z*0.7)*(1-age/TLEN*0.45)})`;
+      const maxOp=cz>0.5?0.38:cz<0.1?0:0.10;
+      d.style.transform=`translate(${pos.x}px,${pos.y}px) scale(${(0.3+pos.z*0.7)*(1-age/TLEN*0.4)})`;
       d.style.opacity=(fade*maxOp).toFixed(3);
     }
   }
+  const idxRefB={v:tIdxB},idxRefF={v:tIdxF};
 
-  // ════════════════════════════════════════════════════════════════
-  // ИСКРЫ — пул
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
+  // ИСКРЫ — один пул, спавн из нужного контейнера
+  // ══════════════════════════════════════════════════════════════
   const SMAX=mob()?8:18;
-  const sEls: HTMLElement[]=[];
+  const sEls:HTMLElement[]=[],sElsB:HTMLElement[]=[];
   let sIdx=0;
   const SCOLS=['#8ED8FF','#FFFFFF','#B9ECFF','#C8E8FF','#AEE2FF'];
-  function prng(n:number):number{
-    const x=Math.sin(n*127.1+311.7)*43758.5453;
-    return x-Math.floor(x);
-  }
-  for(let i=0;i<SMAX;i++){
-    const s=document.createElement('div');
-    s.className='plane-spark';
-    const sz=1.5+prng(i*7.3)*2.8;
-    s.style.cssText=`width:${sz}px;height:${sz}px;`+
-      `background:${SCOLS[i%SCOLS.length]};`+
-      `margin:-${sz/2}px 0 0 -${sz/2}px;border-radius:50%`;
-    sparksEl.appendChild(s);
-    sEls.push(s);
-  }
+  function prng(n:number):number{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);}
 
-  // Обычный burst (несколько частиц)
-  function burst(cx:number,cy:number,count:number,seed:number,maxDist=38){
+  function makeSparks(wrap:HTMLElement,out:HTMLElement[]){
+    for(let i=0;i<SMAX;i++){
+      const s=document.createElement('div');s.className='plane-spark';
+      const sz=1.5+prng(i*7.3)*2.8;
+      s.style.cssText=`width:${sz}px;height:${sz}px;`+
+        `background:${SCOLS[i%SCOLS.length]};`+
+        `margin:-${sz/2}px 0 0 -${sz/2}px;border-radius:50%`;
+      wrap.appendChild(s);out.push(s);
+    }
+  }
+  if(sparksFrontEl) makeSparks(sparksFrontEl,sEls);
+  if(sparksBackEl)  makeSparks(sparksBackEl,sElsB);
+
+  function burst(cx:number,cy:number,count:number,seed:number,front=true){
+    const pool=front?sEls:sElsB;
     for(let i=0;i<count;i++){
-      const s=sEls[sIdx%SMAX]; sIdx++;
+      const s=pool[sIdx%SMAX];sIdx++;
       const a=prng(seed+i*0.37)*Math.PI*2;
-      const d=10+prng(seed+i*0.71)*maxDist;
-      const tx=cx+Math.cos(a)*d, ty=cy+Math.sin(a)*d;
+      const d=10+prng(seed+i*0.71)*38;
+      const tx=cx+Math.cos(a)*d,ty=cy+Math.sin(a)*d;
       const dur=450+prng(seed+i)*380;
       s.style.cssText+=`;transition:none;transform:translate(${cx}px,${cy}px) scale(1.2);opacity:0.9`;
       requestAnimationFrame(()=>{
         s.style.transition=`transform ${dur}ms cubic-bezier(.15,.8,.35,1),opacity ${dur+80}ms ease-out`;
-        s.style.transform=`translate(${tx}px,${ty}px) scale(0.06)`;
-        s.style.opacity='0';
+        s.style.transform=`translate(${tx}px,${ty}px) scale(0.06)`;s.style.opacity='0';
       });
     }
   }
 
-  // ════════════════════════════════════════════════════════════════
-  // ФИНАЛЬНЫЙ COLLISION BURST на кнопке
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
+  // COLLISION BURST
+  // ══════════════════════════════════════════════════════════════
   let collisionFired=false;
-
   function collisionBurst(cx:number,cy:number){
-    if(!targetBtn || collisionFired) return;
-    collisionFired=true;
-
-    // 1. Много искр большим разбросом
-    burst(cx,cy,mob()?8:14,cx+cy,60);
-
-    // 2. Shockwave-кольцо
-    if(shockwave){
-      shockwave.style.cssText+=`;transition:none;`+
-        `transform:translate(${cx}px,${cy}px) scale(0.3);opacity:0.9`;
+    if(collisionFired)return;collisionFired=true;
+    burst(cx,cy,mob()?7:14,cx+cy,true);
+    if(swEl){
+      swEl.style.cssText+=`;transition:none;transform:translate(${cx}px,${cy}px) scale(0.3);opacity:0.9`;
       requestAnimationFrame(()=>{
-        shockwave.style.transition=
-          'transform 700ms cubic-bezier(.05,.8,.3,1),opacity 700ms ease-out';
-        shockwave.style.transform=`translate(${cx}px,${cy}px) scale(6)`;
-        shockwave.style.opacity='0';
+        if(!swEl)return;
+        swEl.style.transition='transform 720ms cubic-bezier(.05,.8,.3,1),opacity 720ms ease-out';
+        swEl.style.transform=`translate(${cx}px,${cy}px) scale(6.5)`;
+        swEl.style.opacity='0';
       });
     }
-
-    // 3. Glow-вспышка кнопки + scale-pulse
     if(targetBtn){
-      targetBtn.style.transition='box-shadow 0.08s,transform 0.08s';
-      targetBtn.style.boxShadow=
-        '0 0 60px rgba(95,198,255,0.9),0 0 120px rgba(95,198,255,0.45)';
-      targetBtn.style.transform='scale(1.06)';
+      targetBtn.style.transition='box-shadow 0.07s,transform 0.07s';
+      targetBtn.style.boxShadow='0 0 55px rgba(95,198,255,0.9),0 0 110px rgba(95,198,255,0.4)';
+      targetBtn.style.transform='scale(1.07)';
       setTimeout(()=>{
-        if(!targetBtn) return;
-        targetBtn.style.transition='box-shadow 0.55s ease-out,transform 0.55s ease-out';
-        targetBtn.style.boxShadow='';
-        targetBtn.style.transform='scale(1)';
-      },90);
+        if(!targetBtn)return;
+        targetBtn.style.transition='box-shadow 0.6s ease-out,transform 0.6s ease-out';
+        targetBtn.style.boxShadow='';targetBtn.style.transform='scale(1)';
+      },85);
     }
   }
-
-  // ════════════════════════════════════════════════════════════════
-  // GLOW КНОПКИ (мягкий при подлёте)
-  // ════════════════════════════════════════════════════════════════
   function glowBtn(k:number){
-    if(!targetBtn||collisionFired) return;
+    if(!targetBtn||collisionFired)return;
     targetBtn.style.boxShadow=k>0
-      ?`0 0 ${32*k}px rgba(95,198,255,${(0.40*k).toFixed(2)}),`+
-        `0 0 ${64*k}px rgba(95,198,255,${(0.18*k).toFixed(2)})`
-      :'';
+      ?`0 0 ${30*k}px rgba(95,198,255,${(0.35*k).toFixed(2)})`:'';
   }
 
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
   // ПОРОГИ ИСКР
-  // ════════════════════════════════════════════════════════════════
-  const sparksTP=DT.filter(w=>w.spark).map(w=>({p:w.p,cd:0}));
-  function checkSparks(prev:number,cur:number,x:number,y:number,fr:number){
+  // ══════════════════════════════════════════════════════════════
+  const sparksTP=DT.filter(w=>w.spark).map(w=>({p:w.p,cd:0,mode:w.mode}));
+  function checkSparks(prev:number,cur:number,x:number,y:number,fr:number,isFront:boolean){
     sparksTP.forEach(t=>{
-      if(fr<t.cd) return;
+      if(fr<t.cd)return;
       const cross=(prev<t.p&&cur>=t.p)||(prev>t.p&&cur<=t.p);
-      if(cross){burst(x,y,mob()?4:7,t.p*1000+fr);t.cd=fr+50;}
+      if(cross){burst(x,y,mob()?4:7,t.p*1000+fr,t.mode==='front');t.cd=fr+50;}
     });
   }
 
-  // ════════════════════════════════════════════════════════════════
-  // RENDER
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
+  // ВЫЧИСЛЕНИЕ СТИЛЯ ДЛЯ CRAFT
+  // ══════════════════════════════════════════════════════════════
+  function craftStyle(
+    pos:{x:number;y:number;z:number},
+    fwd:{x:number;y:number;z:number},
+    bck:{x:number;y:number;z:number},
+    prog:number,
+    fr:number,
+  ):{transform:string;filter:string;opacity:string}{
+    const z=Math.max(0,Math.min(1.2,pos.z));
+
+    // Угол: нос всегда вниз [30°..150°]
+    const dx=fwd.x-pos.x,dy=fwd.y-pos.y;
+    let raw=Math.atan2(dy,dx)*180/Math.PI;
+    if(raw<0)raw=-raw;
+    let angle=Math.max(30,Math.min(150,raw));
+    if(prog<START_END){const e=(prog/START_END)**1.8;angle=45+(angle-45)*e;}
+
+    const wobble=(Math.sin(fr*0.051)*3+Math.cos(fr*0.077)*1.3)*Math.min(1,prog/START_END);
+    const bank=Math.atan2(dy,Math.abs(dx)+0.01)*12;
+
+    // Scale
+    const suck=prog>0.97?((prog-0.97)/0.03)**2:0;
+    const scaleBase=mob()?(0.60+z*0.38):(0.44+z*0.64);
+    const scale=scaleBase*(1-suck);
+
+    // Opacity: задний план тусклее но видим (физическое скрытие — за счёт z-index)
+    const suck1=(1-suck);
+    let op:number;
+    if(z<0.08)       op=0;
+    else if(z<0.45)  op=((z-0.08)/0.37)*0.50*suck1;
+    else             op=(0.82+(z-0.45)*0.25)*suck1;
+
+    // Depth blur
+    const depthBlur=z<0.5?((0.5-z)/0.5)*2.5:0;
+    const spd=Math.hypot(pos.x-bck.x,pos.y-bck.y);
+    const motionBlur=Math.min(1.8,spd*0.06);
+    const blurTotal=(depthBlur+motionBlur);
+
+    const gr=5+z*17,ga=z>0.5?0.24+z*0.33:0.06;
+    const glow=`drop-shadow(0 ${(2+z*4).toFixed(0)}px ${gr}px rgba(95,198,255,${ga.toFixed(2)}))`;
+    const blurF=blurTotal>0.1?` blur(${blurTotal.toFixed(2)}px)`:'';
+
+    return {
+      transform:[
+        `translate(${pos.x.toFixed(1)}px,${pos.y.toFixed(1)}px)`,
+        `rotate(${(angle+wobble).toFixed(2)}deg)`,
+        `rotateY(${bank.toFixed(1)}deg)`,
+        `scale(${scale.toFixed(3)})`,
+      ].join(' '),
+      filter:glow+blurF,
+      opacity:op.toFixed(3),
+    };
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // RENDER — главный цикл
+  // ══════════════════════════════════════════════════════════════
   let shown=0,target=0,prevP=0,rafId=0,fr=0;
 
   function render(prog:number){
@@ -426,138 +460,68 @@
     const pos=getPos(prog);
     const fwd=getPos(Math.min(1,prog+0.014));
     const bck=getPos(Math.max(0,prog-0.012));
-    const z=Math.max(0,Math.min(1.2,pos.z));
 
-    // ──────────────────────────────────────────────
-    // УГОЛ: нос ВСЕГДА в диапазоне [30°..150°]
-    // SVG-нос смотрит вправо = 0°. 90° = вниз.
-    // Мы ЗАПРЕЩАЕМ отрицательные углы (нос вверх).
-    // При движении вправо:   угол ~30–90°  (пикирование)
-    // При движении влево:    угол ~90–150° (пикирование зеркально)
-    // ──────────────────────────────────────────────
-    const dx=fwd.x-pos.x, dy=fwd.y-pos.y;
-    let raw=Math.atan2(dy,dx)*180/Math.PI;  // -180..180
-    // Зеркалим верхнюю полусферу в нижнюю (нос вниз)
-    if(raw<0) raw=-raw;
-    // Жёсткий зажим: никогда меньше 30° и больше 150°
-    let angle=Math.max(30,Math.min(150,raw));
-    // Плавный старт с 45° (лежит горизонтально → начинает пикировать)
-    if(prog<START_END){
-      const e=(prog/START_END)**1.8;
-      angle=45+(angle-45)*e;
-    }
+    const isFront=pos.mode==='front';
+    const s=craftStyle(pos,fwd,bck,prog,fr);
 
-    // Покачивание — живое дыхание
-    const wobble=(Math.sin(fr*0.051)*3+Math.cos(fr*0.077)*1.3)
-                  *Math.min(1,prog/START_END);
-    // Крен на поворотах
-    const bank=Math.atan2(dy,Math.abs(dx)+0.01)*12;
+    // Обновляем оба craft одинаковым transform/filter
+    // Но opacity: активный = s.opacity, неактивный = 0
+    craftFront.style.transform=s.transform;
+    craftFront.style.filter=s.filter;
+    craftFront.style.opacity=isFront?s.opacity:'0';
 
-    // ──────────────────────────────────────────────
-    // OCCLUSION: определяем, за каким контентом сейчас самолётик
-    // Смешиваем: z из траектории + реальная позиция в зонах перекрытия
-    // ──────────────────────────────────────────────
-    const occFactor = mob() ? 1.0 : getOcclusionFactor(pos.x, pos.y);
-    // Итоговая глубина = mininum из z-траектории и occlusion
-    // occFactor=0 → принудительно задний план даже если z=1
-    const effectiveZ = Math.min(z, 0.12 + occFactor * (z - 0.12 + 0.88));
-
-    // ──────────────────────────────────────────────
-    // ГЛУБИНА → scale / opacity / blur / glow
-    // ──────────────────────────────────────────────
-    // Всасывание в финале
-    const suck=prog>0.97?((prog-0.97)/0.03)**2:0;
-
-    // scale: back 0.44 ↔ front 1.08 (×2.5 разница) — по effectiveZ
-    const scaleBase=mob()?(0.62+effectiveZ*0.36):(0.44+effectiveZ*0.64);
-    const scale=scaleBase*(1-suck);
-
-    // opacity: effectiveZ<0.12→0, 0.12..0.50→нарастает 0→0.40, >0.50→ярко 0.85..1
-    let opacity:number;
-    if(effectiveZ<0.12)      opacity=0;
-    else if(effectiveZ<0.50) opacity=((effectiveZ-0.12)/0.38)*0.40;
-    else                     opacity=(0.85+(effectiveZ-0.50)*0.30)*(1-suck);
-    opacity*=(1-suck);
-
-    // Depth blur: на заднем плане размыто, спереди чётко
-    const depthBlur=effectiveZ<0.5?Math.max(0,(0.5-effectiveZ)/0.5)*3.5:0;
-
-    // Motion blur: скорость
-    const spd=Math.hypot(pos.x-bck.x,pos.y-bck.y);
-    const motionBlur=Math.min(2.0,spd*0.065);
-
-    const totalBlur=(depthBlur+motionBlur).toFixed(2);
-
-    // Glow: яркий спереди, нет сзади — по effectiveZ
-    const gr=5+effectiveZ*18;
-    const ga=effectiveZ>0.5?0.25+effectiveZ*0.35:0.05;
-    const glow=`drop-shadow(0 ${(2+effectiveZ*4).toFixed(0)}px ${gr}px rgba(95,198,255,${ga.toFixed(2)}))`;
-    const blurF=parseFloat(totalBlur)>0.1?` blur(${totalBlur}px)`:'';
-
-    craft.style.transform=[
-      `translate(${pos.x.toFixed(1)}px,${pos.y.toFixed(1)}px)`,
-      `rotate(${(angle+wobble).toFixed(2)}deg)`,
-      `rotateY(${bank.toFixed(1)}deg)`,
-      `scale(${scale.toFixed(3)})`,
-    ].join(' ');
-    craft.style.filter=glow+blurF;
-    craft.style.opacity=opacity.toFixed(3);
+    craftBack.style.transform=s.transform;
+    craftBack.style.filter=s.filter;
+    // back-слой немного тусклее + без glow (он же "за блоком")
+    craftBack.style.opacity=isFront?'0':(Math.max(0,parseFloat(s.opacity)*0.65)).toFixed(3);
 
     // Trail
-    tickTrail(pos.x,pos.y,z);
+    tickTrail(tHistB,tDotsB,idxRefB,pos.x,pos.y,pos.z,!isFront);
+    tickTrail(tHistF,tDotsF,idxRefF,pos.x,pos.y,pos.z,isFront);
 
-    // Искры на порогах
-    checkSparks(prevP,prog,pos.x,pos.y,fr);
+    // Искры
+    checkSparks(prevP,prog,pos.x,pos.y,fr,isFront);
 
-    // Glow кнопки при подлёте
+    // Glow кнопки
     if(prog>0.87&&!collisionFired){
-      const k=(prog-0.87)/0.10;
-      glowBtn(Math.min(k,1)*0.8);
-    } else if(!collisionFired){
-      glowBtn(0);
-    }
+      glowBtn(Math.min(1,(prog-0.87)/0.10)*0.8);
+    }else if(!collisionFired){glowBtn(0);}
 
-    // Финальный коллизионный взрыв — один раз при prog≥0.98
-    if(prog>=0.98) collisionBurst(pos.x,pos.y);
+    // Collision
+    if(prog>=0.98)collisionBurst(pos.x,pos.y);
 
     prevP=prog;
   }
 
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
   // ЦИКЛ
-  // ════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════
   if(reduceMotion){
-    craft.style.transform=`translate(${window.innerWidth*0.82}px,${window.innerHeight*0.3}px) rotate(35deg) scale(0.5)`;
-    craft.style.opacity='0.28';
-    craft.style.filter='drop-shadow(0 2px 6px rgba(95,198,255,0.15))';
-  } else {
+    craftFront.style.transform=`translate(${window.innerWidth*0.82}px,${window.innerHeight*0.3}px) rotate(35deg) scale(0.48)`;
+    craftFront.style.opacity='0.25';
+    craftBack.style.opacity='0';
+  }else{
     const LERP=0.09;
     let idleRaf=0;
-
     const loop=()=>{
       shown+=(target-shown)*LERP;
       render(shown);
       rafId=Math.abs(target-shown)>0.0002?requestAnimationFrame(loop):0;
     };
-
     const onScroll=()=>{
       const max=document.documentElement.scrollHeight-window.innerHeight;
       target=max>0?Math.min(1,Math.max(0,window.scrollY/max)):0;
-      // Сбрасываем collisionFired при скролле назад
-      if(target<0.95) collisionFired=false;
-      if(!rafId) rafId=requestAnimationFrame(loop);
+      if(target<0.95)collisionFired=false;
+      if(!rafId)rafId=requestAnimationFrame(loop);
     };
-
     const idle=()=>{
-      if(!rafId&&Math.abs(target-shown)<0.0002) render(shown);
+      if(!rafId&&Math.abs(target-shown)<0.0002)render(shown);
       idleRaf=requestAnimationFrame(idle);
     };
-
     window.addEventListener('scroll',onScroll,{passive:true});
     window.addEventListener('resize',()=>{TRACK=mob()?MT:DT;onScroll();},{passive:true});
-    onScroll();
-    idleRaf=requestAnimationFrame(idle);
+    onScroll();idleRaf=requestAnimationFrame(idle);
   }
 
-  } // end guard
+  }// end guard
 </script>
