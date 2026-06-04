@@ -63,7 +63,12 @@ const items = [
   }
 
   .faq__head { position: sticky; top: 100px; }
-  .faq__title { margin: 0; }
+  /* Заголовок в узкой колонке 280px — уменьшаем шрифт, чтобы не вылезал на вопросы */
+  .faq__title {
+    margin: 0;
+    font-size: clamp(32px, 3.2vw, 48px);
+    line-height: 1.0;
+  }
   .faq__title em { color: var(--aurora-cyan); }
 
   .faq__list {
