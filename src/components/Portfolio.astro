@@ -58,7 +58,7 @@ const featured = [
 
     <div class="featured">
       {featured.map((f, i) => (
-        <article class:list={['fcard', 'reveal']} style={`transition-delay: ${i * 0.1}s`} data-plane-occluder="hard">
+        <article class:list={['fcard', 'reveal']} style={`transition-delay: ${i * 0.1}s`}>
           <a href={f.url} target="_blank" rel="noopener" class="fcard__media">
             <img
               src={`${base}screenshots/${f.img}`}
