@@ -1,0 +1,180 @@
+---
+const steps = [
+  {
+    num: '01',
+    icon: '▶',
+    label: 'Видит видео или пост',
+    desc: 'Человек замечает вас в ленте',
+  },
+  {
+    num: '02',
+    icon: '→',
+    label: 'Переходит на сайт или в Telegram',
+    desc: 'Первый экран объясняет, кому вы и что даёте',
+  },
+  {
+    num: '03',
+    icon: '◻',
+    label: 'Заполняет форму или квиз',
+    desc: 'Квалификация: клиент описывает задачу',
+  },
+  {
+    num: '04',
+    icon: '✉',
+    label: 'Заявка приходит в Telegram',
+    desc: 'Форматированное сообщение с данными клиента',
+  },
+  {
+    num: '05',
+    icon: '⊞',
+    label: 'Лид в таблице или CRM',
+    desc: 'Статус, источник и данные — в одном месте',
+  },
+];
+---
+<section class="flow section-dark" id="flow">
+  <div class="container-x">
+    <div class="flow__head reveal">
+      <div class="sec-tag">Как это работает</div>
+      <h2 class="display-h">
+        Как заявка <em>проходит</em><br/>
+        систему.
+      </h2>
+    </div>
+
+    <div class="flow__steps">
+      {steps.map((s, i) => (
+        <div class:list={['flow__step', 'reveal']} style={`transition-delay: ${i * 0.08}s`}>
+          <div class="flow__step-num">{s.num}</div>
+          <div class="flow__step-icon" aria-hidden="true">{s.icon}</div>
+          <div class="flow__step-content">
+            <div class="flow__step-label">{s.label}</div>
+            <div class="flow__step-desc">{s.desc}</div>
+          </div>
+          {i < steps.length - 1 && <div class="flow__arrow" aria-hidden="true">↓</div>}
+        </div>
+      ))}
+    </div>
+
+    <div class="flow__note reveal">
+      <p>
+        Сайт не должен быть просто витриной. Он должен объяснять услугу,
+        квалифицировать человека и передавать заявку туда, где вы реально работаете.
+      </p>
+      <a href="/razbor" class="btn btn--filled flow__cta" data-magnetic="0.3">
+        <span class="btn__plus">(+)</span>
+        Разобрать мою систему заявок
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .flow { padding: 140px 0; }
+
+  .flow__head {
+    max-width: 780px;
+    margin-bottom: 60px;
+  }
+
+  .flow__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 720px;
+    margin: 0 auto 72px;
+  }
+
+  .flow__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 48px 48px 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 24px 28px;
+    background: var(--glass-tint);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    margin-bottom: 8px;
+    transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s cubic-bezier(.22,1,.36,1);
+  }
+  .flow__step:hover {
+    border-color: rgba(95,198,255,0.35);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 0 30px rgba(95,198,255,0.08);
+    transform: translateX(6px);
+  }
+
+  .flow__step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--color-accent);
+    opacity: 0.7;
+  }
+
+  .flow__step-icon {
+    font-size: 20px;
+    color: var(--color-accent);
+    text-align: center;
+    line-height: 1;
+  }
+
+  .flow__step-label {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--color-text);
+    margin-bottom: 4px;
+  }
+
+  .flow__step-desc {
+    font-size: 13px;
+    color: var(--color-muted);
+    line-height: 1.5;
+  }
+
+  .flow__arrow {
+    display: none;
+  }
+
+  .flow__note {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px;
+    background: var(--glass-tint);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .flow__note p {
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.65;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .flow__cta { align-self: flex-start; }
+
+  @media (max-width: 900px) {
+    .flow { padding: 80px 0; }
+    .flow__step {
+      grid-template-columns: 36px 36px 1fr;
+      gap: 10px;
+      padding: 18px 20px;
+    }
+    .flow__note { padding: 28px 24px; }
+  }
+
+  @media (max-width: 600px) {
+    .flow__step { grid-template-columns: 28px 1fr; }
+    .flow__step-icon { display: none; }
+  }
+</style>

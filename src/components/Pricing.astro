@@ -1,50 +1,73 @@
 ---
 const tiers = [
   {
-    name: 'Лендинг',
-    tag: 'Под заявки',
-    audience: 'Эксперт, мастер, частная практика',
-    price: '35 000 ₽',
-    time: '2–3 дня',
-    desc: 'Одна страница под заявку: оффер, услуги, доверие, контакты. Чтобы быстро выйти в рекламу и собирать обращения.',
+    name: 'Экспресс-лендинг под заявку',
+    tag: 'Быстрый старт',
+    audience: 'Эксперт, консультант, частная практика, мастер',
+    price: '49 000 ₽',
+    time: '3–5 дней',
+    desc: 'Одна страница, которая объясняет оффер и собирает заявки в Telegram. Для тех, кто хочет быстро выйти в рекламу.',
     includes: [
-      'Структура и тексты по вашим материалам',
+      'Оффер, услуги, доверие, контакты',
       'Заявки приходят в Telegram',
-      'Свой домен и адаптив под телефон',
-      'Чистый код, скорость, ваши исходники',
+      'Адаптив, домен, чистый код',
+      'Исходники остаются у вас',
       'Неделя правок после запуска',
     ],
+    excludes: ['Квиз и аналитика', 'Автоматизации и CRM'],
+    result: 'Человек понимает, что вы делаете, и отправляет заявку',
   },
   {
-    name: 'Лендинг+',
+    name: 'Лендинг эксперта под заявки',
     tag: 'Основной выбор',
-    audience: 'Салон, студия, агентство',
-    price: '55 000 ₽',
+    audience: 'Юрист, адвокат, консультант, онлайн-школа, студия',
+    price: '75 000–95 000 ₽',
     time: '1–2 недели',
-    desc: 'Продающий сайт с кейсами, ценами, FAQ, квизом и аналитикой. Для бизнеса, где клиент выбирает внимательно.',
+    desc: 'Продающий сайт с кейсами, ценами, FAQ, квизом и аналитикой. Для эксперта, которого клиент выбирает внимательно.',
     includes: [
-      'Всё из «Лендинга»',
-      'Кейсы, цены, FAQ, этапы',
-      'Квиз-опросник для квалификации заявок',
-      'SEO: разметка, мета, sitemap, OG',
+      'Всё из «Экспресс-лендинга»',
+      'Кейсы, цены, FAQ, этапы работы',
+      'Квиз для квалификации заявок',
+      'SEO: разметка, мета, sitemap',
       'Метрика + Google Analytics',
     ],
+    excludes: ['CRM и автоматизации', 'Telegram-бот'],
+    result: 'Клиент понимает, почему выбрать вас, квиз фильтрует нецелевые обращения',
     featured: true,
   },
   {
-    name: 'Система + автоматизация',
-    tag: 'Под ключ',
-    audience: 'Школа, сервис, магазин, бренд',
-    price: 'от 100 000 ₽',
-    time: '2–4 недели',
-    desc: 'Многостраничник с админкой, онлайн-оплатами и автоматизациями: боты, интеграции, уведомления, CRM. Сайт как часть операционки.',
+    name: 'Сайт + Telegram-заявки + аналитика',
+    tag: 'Система заявок',
+    audience: 'Агентство, сервис, студия с потоком заявок',
+    price: '120 000–160 000 ₽',
+    time: '2–3 недели',
+    desc: 'Многостраничник с квизом, Telegram-ботом под заявки и аналитикой источников. Каждая заявка трекается и не теряется.',
     includes: [
-      'Всё из «Лендинга+»',
-      'Несколько страниц + админка',
-      'Онлайн-оплаты (ЮKassa / CloudPayments / Т-Касса)',
-      'Автоматизации: боты, интеграции, уведомления',
-      'Запись клиентов, CRM, кастомный дизайн',
+      'Всё из «Лендинга эксперта»',
+      'Telegram-бот: принимает, форматирует, уведомляет',
+      'Несколько страниц + Admin-панель',
+      'UTM-аналитика: откуда пришла каждая заявка',
+      'Google Sheets или Notion как лёгкий CRM',
     ],
+    excludes: ['Полноценная CRM-интеграция', 'Онлайн-оплаты'],
+    result: 'Заявки идут в Telegram, вы видите источники и не теряете ни одну',
+  },
+  {
+    name: 'Сайт + бот + CRM + автоматизации',
+    tag: 'Под ключ',
+    audience: 'Школа, клиника, франшиза, сервисный бизнес с операционкой',
+    price: '180 000–300 000 ₽',
+    time: '3–5 недель',
+    desc: 'Полная система: сайт, Telegram-бот, CRM-интеграция, онлайн-оплаты, автоматизации. Сайт становится частью операционки.',
+    includes: [
+      'Всё из «Сайта + Telegram»',
+      'Интеграция с CRM (AmoCRM / Bitrix24)',
+      'Онлайн-оплаты (ЮKassa / Т-Касса)',
+      'Автоматизации: статусы, напоминания, воронки',
+      'Кастомный дизайн под бренд',
+    ],
+    excludes: [],
+    result: 'Сайт, бот и CRM работают как одна система — без ручного труда',
     premium: true,
   },
 ];
@@ -54,18 +77,18 @@ const tiers = [
     <div class="pricing__head reveal">
       <div class="sec-tag">Цены</div>
       <h2 class="display-h">
-        Сколько <em>стоит</em><br/>
-        запуск.
+        Не сайт, а <em>система</em><br/>
+        заявок.
       </h2>
       <p class="pricing__lead">
-        Первый разбор бесплатный: смотрю нишу, текущую страницу и конкурентов,
+        Первый разбор бесплатный: смотрю нишу, текущую страницу и путь заявки,
         потом называю точную цену и срок до начала работы.
       </p>
     </div>
 
     <div class="pricing__grid">
       {tiers.map((t, i) => (
-        <article class:list={['tier', t.featured && 'tier--featured', t.premium && 'tier--premium', 'reveal']} style={`transition-delay: ${i * 0.1}s`}>
+        <article class:list={['tier', t.featured && 'tier--featured', t.premium && 'tier--premium', 'reveal']} style={`transition-delay: ${i * 0.08}s`}>
           <div class="tier__head">
             <div class="tier__name">{t.name}</div>
             <div class="tier__tag">{t.tag}</div>
@@ -75,7 +98,9 @@ const tiers = [
             <div class="tier__time">{t.time}</div>
           </div>
           <p class="tier__desc">{t.desc}</p>
-          <div class="tier__audience">Например: {t.audience}</div>
+          <div class="tier__audience">
+            <span class="tier__audience-label">Кому подходит:</span> {t.audience}
+          </div>
           <ul class="tier__includes">
             {t.includes.map((inc) => (
               <li>
@@ -84,7 +109,20 @@ const tiers = [
               </li>
             ))}
           </ul>
-          <a href="https://t.me/tori2k" target="_blank" rel="noopener" class="btn tier__cta">
+          {t.excludes && t.excludes.length > 0 && (
+            <ul class="tier__excludes">
+              {t.excludes.map((exc) => (
+                <li>
+                  <span class="tier__minus">(–)</span>
+                  {exc}
+                </li>
+              ))}
+            </ul>
+          )}
+          <div class="tier__result">
+            <span class="tier__result-label">Результат:</span> {t.result}
+          </div>
+          <a href="/razbor" class="btn tier__cta">
             <span class="btn__plus">(+)</span>
             Получить оценку
           </a>
@@ -95,7 +133,7 @@ const tiers = [
     <div class="pricing__note reveal">
       <span>⊕</span>
       Можно начать без оплаты: напишите —
-      <a href="https://t.me/tori2k" target="_blank" rel="noopener">разберу вашу нишу и скажу, какой сайт нужен</a>.
+      <a href="https://t.me/tori2k" target="_blank" rel="noopener">разберу вашу нишу и скажу, какой пакет нужен</a>.
     </div>
   </div>
 </section>
@@ -122,12 +160,12 @@ const tiers = [
   @media (min-width: 720px) {
     .pricing__grid { grid-template-columns: 1fr 1fr; }
   }
-  @media (min-width: 1100px) {
-    .pricing__grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (min-width: 1200px) {
+    .pricing__grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
   }
 
   .tier {
-    padding: 36px 30px;
+    padding: 32px 26px;
     background: var(--glass-tint);
     backdrop-filter: blur(20px) saturate(1.4);
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
@@ -180,19 +218,20 @@ const tiers = [
 
   .tier__head {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 24px;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
     padding-bottom: 18px;
     border-bottom: 1px solid var(--color-border);
   }
   .tier__name {
     font-family: 'Unbounded', sans-serif;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--color-accent);
+    line-height: 1.35;
   }
   .tier__tag {
     font-family: 'JetBrains Mono', monospace;
@@ -205,57 +244,102 @@ const tiers = [
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .tier__price {
     font-family: 'Unbounded', sans-serif;
-    font-size: clamp(28px, 3vw, 40px);
+    font-size: clamp(18px, 2vw, 28px);
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1;
   }
   .tier__time {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--color-muted);
   }
   .tier__desc {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--color-muted);
     line-height: 1.6;
-    margin: 0 0 14px;
+    margin: 0 0 12px;
   }
   .tier__audience {
     font-size: 12px;
     line-height: 1.5;
     color: var(--color-muted-2);
-    margin: 0 0 22px;
-    padding-bottom: 20px;
+    margin: 0 0 18px;
+    padding-bottom: 16px;
     border-bottom: 1px solid var(--color-border);
   }
+  .tier__audience-label {
+    color: var(--color-muted);
+  }
+
   .tier__includes {
     list-style: none;
     padding: 0;
-    margin: 0 0 32px;
-    flex: 1;
+    margin: 0 0 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
   .tier__includes li {
     display: flex;
-    gap: 10px;
-    font-size: 13.5px;
+    gap: 8px;
+    font-size: 13px;
     color: var(--color-text);
     line-height: 1.5;
   }
   .tier__check {
     color: var(--color-accent);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 11px;
     flex-shrink: 0;
+  }
+
+  .tier__excludes {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tier__excludes li {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--color-muted-2);
+    line-height: 1.5;
+  }
+  .tier__minus {
+    color: var(--color-muted-2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .tier__result {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--color-muted);
+    margin: auto 0 22px;
+    padding: 12px 14px;
+    background: rgba(95,198,255,0.06);
+    border-left: 2px solid rgba(95,198,255,0.4);
+    border-radius: 0 8px 8px 0;
+  }
+  .tier__result-label {
+    color: var(--color-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
   }
 
   .tier__cta { align-self: flex-start; }

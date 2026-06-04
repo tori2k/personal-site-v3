@@ -1,0 +1,435 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const title = 'Бесплатный разбор · Кирилл Барыев';
+const description = 'Найду 3 места, где у вас теряются заявки. Разберу первый экран, оффер, CTA и путь заявки. Пришлю короткий вывод и план из 3 шагов.';
+
+const forWhom = [
+  'Юристы и адвокаты',
+  'Консультанты и эксперты',
+  'Онлайн-школы и студии',
+  'Сервисный бизнес',
+];
+
+const whatIncluded = [
+  { label: 'Первый экран', desc: 'Понятно ли за 5 секунд, что вы делаете и для кого' },
+  { label: 'Оффер', desc: 'Есть ли конкретика и причина выбрать вас, а не конкурента' },
+  { label: 'CTA', desc: 'Куда нажимать и что произойдёт — ясно ли это человеку' },
+  { label: 'Доверие', desc: 'Кейсы, отзывы, регалии — достаточно ли их для решения' },
+  { label: 'Путь до заявки', desc: 'Сколько шагов от интереса до заявки, где человек отваливается' },
+  { label: 'Telegram / CRM / автоматизация', desc: 'Куда идёт заявка и не теряется ли она в переписках' },
+];
+
+const whatYouGet = [
+  '3 конкретные правки с объяснением, что изменить',
+  'Понимание: нужен новый сайт или достаточно поправить вход',
+  'Рекомендацию подходящего пакета, если нужен проект',
+];
+
+const SHEETS_WEBHOOK = 'https://script.google.com/macros/s/AKfycbyeXV7TI8klBfvtnrAMYKOLNi3jifjO9IhRnkLDBKd7UJ0_XJCG3BpVlXlxiuvv60QM/exec';
+---
+<Layout title={title} description={description}>
+  <Nav />
+  <main>
+
+    <!-- Hero -->
+    <section class="rz-hero section-dark">
+      <div class="container-x rz-hero__inner">
+        <div class="rz-hero__content reveal">
+          <div class="sec-tag">Бесплатный разбор</div>
+          <h1 class="rz-hero__h1 text-glow">
+            Найду 3 места,<br/>
+            <em>где теряются</em><br/>
+            ваши заявки.
+          </h1>
+          <p class="rz-hero__sub">
+            Разберу первый экран, оффер, доверие, CTA и путь заявки.
+            Пришлю короткий вывод и план из 3 шагов.
+          </p>
+        </div>
+
+        <!-- Для кого -->
+        <div class="rz-for reveal">
+          <div class="rz-for__label">Подходит для</div>
+          <ul class="rz-for__list">
+            {forWhom.map((item) => (
+              <li>
+                <span class="rz-check">(+)</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Что входит -->
+    <section class="rz-scope section-dark">
+      <div class="container-x">
+        <div class="rz-scope__head reveal">
+          <div class="sec-tag">Что разбирается</div>
+          <h2 class="display-h">Что входит<br/><em>в разбор.</em></h2>
+        </div>
+        <div class="rz-scope__grid">
+          {whatIncluded.map((item, i) => (
+            <div class:list={['rz-scope__card', 'reveal']} style={`transition-delay: ${i * 0.07}s`}>
+              <div class="rz-scope__card-label">{item.label}</div>
+              <div class="rz-scope__card-desc">{item.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Что получит -->
+    <section class="rz-gets section-dark">
+      <div class="container-x">
+        <div class="rz-gets__inner reveal">
+          <div class="sec-tag">Результат</div>
+          <h2 class="display-h">Что вы<br/><em>получите.</em></h2>
+          <ul class="rz-gets__list">
+            {whatYouGet.map((item) => (
+              <li>
+                <span class="rz-check">(+)</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Форма -->
+    <section class="rz-form-section section-dark" id="razbor-form">
+      <div class="container-x">
+        <div class="rz-form__head reveal">
+          <div class="sec-tag">Заявка на разбор</div>
+          <h2 class="display-h">Оставьте данные —<br/><em>разберу и напишу.</em></h2>
+          <p class="rz-form__sub">
+            Смотрю ссылку, нахожу слабые места и возвращаюсь с коротким разбором в Telegram.
+          </p>
+        </div>
+
+        <form class="rz-form glass reveal" id="razborForm" novalidate>
+          <div class="rz-form__row">
+            <div class="rz-form__field">
+              <label for="rz-name">Имя <span class="req">*</span></label>
+              <input type="text" id="rz-name" name="name" placeholder="Алексей" required autocomplete="given-name" />
+            </div>
+            <div class="rz-form__field">
+              <label for="rz-tg">Telegram <span class="req">*</span></label>
+              <input type="text" id="rz-tg" name="telegram" placeholder="@username" required autocomplete="off" />
+            </div>
+          </div>
+
+          <div class="rz-form__row">
+            <div class="rz-form__field">
+              <label for="rz-niche">Ниша <span class="req">*</span></label>
+              <input type="text" id="rz-niche" name="niche" placeholder="Юрист по семейным делам" required />
+            </div>
+            <div class="rz-form__field">
+              <label for="rz-check">Средний чек</label>
+              <input type="text" id="rz-check" name="average_check" placeholder="20 000 ₽ / консультация" />
+            </div>
+          </div>
+
+          <div class="rz-form__field">
+            <label for="rz-url">Ссылка на сайт или профиль <span class="req">*</span></label>
+            <input type="url" id="rz-url" name="url" placeholder="https://..." required autocomplete="url" />
+          </div>
+
+          <div class="rz-form__field">
+            <label for="rz-product">Что продаёте</label>
+            <input type="text" id="rz-product" name="product" placeholder="Консультации по налогам для самозанятых" />
+          </div>
+
+          <div class="rz-form__field">
+            <label for="rz-source">Где сейчас приходят заявки</label>
+            <input type="text" id="rz-source" name="lead_source" placeholder="Директ инстаграм, сарафан, ВКонтакте" />
+          </div>
+
+          <div class="rz-form__field">
+            <label for="rz-goal">Что хотите улучшить</label>
+            <textarea id="rz-goal" name="goal" rows="3" placeholder="Хочу больше заявок с сайта, сейчас почти ничего не приходит..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--filled rz-form__submit" data-magnetic="0.3">
+            <span class="btn__plus">(+)</span>
+            Отправить на разбор
+          </button>
+        </form>
+
+        <div class="rz-success glass reveal" id="razborSuccess" style="display:none" role="status" aria-live="polite">
+          <div class="rz-success__icon">◎</div>
+          <p class="rz-success__text">
+            Спасибо. Я посмотрю ссылку и вернусь с коротким разбором в Telegram.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  /* Hero */
+  .rz-hero {
+    padding: 116px 0 80px;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+  .rz-hero__inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .rz-hero__h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500;
+    font-size: clamp(36px, 5vw, 80px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    margin: 24px 0 28px;
+    color: var(--color-text);
+  }
+  .rz-hero__h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: #8FD8FF;
+    text-shadow:
+      0 0 1px rgba(6,7,13,1),
+      0 2px 24px rgba(6,7,13,0.95),
+      0 0 50px rgba(95,198,255,0.4);
+  }
+  .rz-hero__sub {
+    font-size: clamp(15px, 1.3vw, 18px);
+    line-height: 1.6;
+    color: var(--color-muted);
+    max-width: 480px;
+    margin: 0;
+  }
+  .rz-for {
+    padding: 36px 32px;
+    background: var(--glass-tint);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    align-self: center;
+  }
+  .rz-for__label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 20px;
+  }
+  .rz-for__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .rz-for__list li {
+    display: flex;
+    gap: 10px;
+    font-size: 15px;
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+  .rz-check {
+    color: var(--color-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  /* Scope */
+  .rz-scope { padding: 100px 0; }
+  .rz-scope__head { max-width: 680px; margin-bottom: 52px; }
+  .rz-scope__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .rz-scope__card {
+    padding: 28px 24px;
+    background: var(--glass-tint);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    transition: border-color 0.35s, transform 0.35s cubic-bezier(.22,1,.36,1);
+  }
+  .rz-scope__card:hover {
+    border-color: rgba(95,198,255,0.35);
+    transform: translateY(-4px);
+  }
+  .rz-scope__card-label {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-accent);
+    margin-bottom: 10px;
+    letter-spacing: 0;
+  }
+  .rz-scope__card-desc {
+    font-size: 13px;
+    color: var(--color-muted);
+    line-height: 1.55;
+  }
+
+  /* Gets */
+  .rz-gets { padding: 0 0 100px; }
+  .rz-gets__inner {
+    max-width: 720px;
+  }
+  .rz-gets__list {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .rz-gets__list li {
+    display: flex;
+    gap: 12px;
+    font-size: 16px;
+    color: var(--color-text);
+    line-height: 1.55;
+  }
+
+  /* Form */
+  .rz-form-section { padding: 0 0 140px; }
+  .rz-form__head { max-width: 720px; margin-bottom: 48px; }
+  .rz-form__sub {
+    font-size: 16px;
+    color: var(--color-muted);
+    line-height: 1.6;
+    margin: 20px 0 0;
+    max-width: 480px;
+  }
+
+  .rz-form {
+    max-width: 720px;
+    padding: 48px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .rz-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .rz-form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rz-form__field label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .req { color: var(--color-accent); }
+  .rz-form__field input,
+  .rz-form__field textarea {
+    background: rgba(244,246,251,0.05);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    color: var(--color-text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.25s, background 0.25s;
+    resize: vertical;
+    min-height: 48px;
+  }
+  .rz-form__field input::placeholder,
+  .rz-form__field textarea::placeholder {
+    color: var(--color-muted-2);
+  }
+  .rz-form__field input:focus,
+  .rz-form__field textarea:focus {
+    border-color: rgba(95,198,255,0.5);
+    background: rgba(95,198,255,0.04);
+  }
+  .rz-form__submit { align-self: flex-start; }
+
+  .rz-success {
+    max-width: 720px;
+    padding: 48px 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+  .rz-success__icon {
+    font-size: 40px;
+    color: var(--color-accent);
+    line-height: 1;
+  }
+  .rz-success__text {
+    font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1.6;
+    color: var(--color-muted);
+    max-width: 440px;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .rz-hero { padding: 100px 0 60px; min-height: auto; }
+    .rz-hero__inner { grid-template-columns: 1fr; gap: 36px; }
+    .rz-scope__grid { grid-template-columns: 1fr 1fr; }
+    .rz-form { padding: 32px 28px; }
+    .rz-form__row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .rz-scope { padding: 60px 0; }
+    .rz-scope__grid { grid-template-columns: 1fr; }
+    .rz-form-section { padding: 0 0 80px; }
+  }
+</style>
+
+<script define:vars={{ SHEETS_WEBHOOK }}>
+  const form = document.getElementById('razborForm');
+  const success = document.getElementById('razborSuccess');
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn) { btn.disabled = true; btn.textContent = 'Отправляем...'; }
+
+      const data = Object.fromEntries(new FormData(form));
+      data._source = 'razbor';
+
+      try {
+        await fetch(SHEETS_WEBHOOK, {
+          method: 'POST',
+          body: JSON.stringify(data),
+        });
+      } catch (_) {
+        // silent — telegram webhook может не ответить CORS
+      }
+
+      form.style.display = 'none';
+      if (success) success.style.display = 'flex';
+    });
+  }
+</script>

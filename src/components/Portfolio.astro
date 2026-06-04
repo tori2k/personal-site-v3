@@ -9,13 +9,15 @@ const featured = [
     niche: 'Школа вокала',
     url: 'https://manifik-school.ru',
     status: 'В продакшене',
-    lede: 'Школе нужен был сайт, через который родители находят педагогов, записываются на занятия и сразу оплачивают их онлайн.',
+    task: 'Школе нужен был сайт, через который родители находят педагогов и сразу записываются и оплачивают занятие — без звонков и переписок.',
+    built: 'Многостраничный сайт: каталог педагогов и направлений, онлайн-оплата, форма записи, интеграции.',
     points: [
-      'Многостраничный сайт с каталогом педагогов и направлений',
-      'Онлайн-оплата занятий и абонементов',
-      'Запись на пробный урок — заявка приходит в Telegram',
-      'Администратор сам редактирует цены и расписание',
+      'Запись на пробный урок приходит в Telegram — администратор видит заявку сразу',
+      'Оплата занятий и абонементов прямо на сайте — деньги не ждут звонка',
+      'Цены и расписание редактируются без разработчика',
+      'Путь от «нашёл» до «записался» — три клика',
     ],
+    automated: 'Заявка → Telegram-уведомление → запись в таблицу со статусом',
   },
   {
     slug: 'znamya-truda',
@@ -24,13 +26,15 @@ const featured = [
     niche: 'Футбольный клуб · Орехово-Зуево',
     url: 'https://fczt1909.ru',
     status: 'Запущен',
-    lede: 'Собрал официальный сайт для старейшего действующего футбольного клуба России: матчи, новости, история, команда и контакты в одной системе.',
+    task: 'Старейший действующий клуб России жил в соцсетях. Нужен был официальный сайт, где болельщик за 10 секунд найдёт матч, состав и новости.',
+    built: 'Многостраничник: расписание, новости, история клуба, команда, партнёры.',
     points: [
-      'Расписание матчей и результаты',
-      'Новости, история клуба и состав команды',
-      'Страницы партнёров и контактные блоки',
-      'Контент редактируется без программиста',
+      'Пользователь быстрее понимает, куда нажать — навигация выстроена под сценарий болельщика',
+      'Контент редактируется без программиста — редактор клуба сам публикует новости',
+      'Страница партнёров превращает присутствие в структурированное предложение',
+      'Сайт стал официальным источником информации вместо разрозненных пабликов',
     ],
+    automated: 'Публикация новостей через CMS без участия разработчика',
   },
 ];
 
@@ -63,7 +67,10 @@ const featured = [
           <div class="fcard__body">
             <div class="fcard__niche">{f.niche}</div>
             <h3 class="fcard__title">{f.title}</h3>
-            <p class="fcard__lede">{f.lede}</p>
+            <div class="fcard__task-label">Задача</div>
+            <p class="fcard__lede">{f.task}</p>
+            <div class="fcard__task-label">Что собрано</div>
+            <p class="fcard__built">{f.built}</p>
             <ul class="fcard__points">
               {f.points.map((p) => (
                 <li>
@@ -72,6 +79,9 @@ const featured = [
                 </li>
               ))}
             </ul>
+            <div class="fcard__automated">
+              <span class="fcard__auto-label">Автоматизировано:</span> {f.automated}
+            </div>
             <a href={f.url} target="_blank" rel="noopener" class="btn btn--filled fcard__cta">
               <span class="btn__plus">(+)</span>
               Открыть сайт
@@ -211,11 +221,42 @@ const featured = [
     margin: 0 0 18px;
     color: var(--color-text);
   }
+  .fcard__task-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 6px;
+  }
   .fcard__lede {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.6;
     color: var(--color-muted);
+    margin: 0 0 18px;
+  }
+  .fcard__built {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--color-muted);
+    margin: 0 0 18px;
+  }
+  .fcard__automated {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--color-muted);
     margin: 0 0 24px;
+    padding: 10px 14px;
+    background: rgba(95,198,255,0.06);
+    border-left: 2px solid rgba(95,198,255,0.4);
+    border-radius: 0 8px 8px 0;
+  }
+  .fcard__auto-label {
+    color: var(--color-accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
   .fcard__points {
     list-style: none;
