@@ -1,0 +1,254 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const levels = [
+  {
+    n: '01',
+    label: 'Ссылка / визитка',
+    desc: 'Имя, телефон, иногда фото. Нет оффера, нет причины написать прямо сейчас.',
+    status: 'dim',
+  },
+  {
+    n: '02',
+    label: 'Шаблонный лендинг',
+    desc: 'Страница есть, но она выглядит как тысяча других. Клиент не понимает чем вы отличаетесь.',
+    status: 'dim',
+  },
+  {
+    n: '03',
+    label: 'Лендинг с оффером',
+    desc: 'Конкретная услуга, для кого, что получит. Клиент наконец понимает ценность и следующий шаг.',
+    status: 'active',
+  },
+  {
+    n: '04',
+    label: 'Сайт с доверием',
+    desc: 'Кейсы практики, отзывы, специализация. Клиент видит доказательства до звонка.',
+    status: 'active',
+  },
+  {
+    n: '05',
+    label: 'Сайт с квизом',
+    desc: 'Квиз квалифицирует клиента: приходят те, кто понимает цену и готов к диалогу.',
+    status: 'active',
+  },
+  {
+    n: '06',
+    label: 'Сайт + Telegram / CRM',
+    desc: 'Каждая заявка фиксируется, вы не теряете обращения в переписках. Сайт — часть операционки.',
+    status: 'highlight',
+  },
+  {
+    n: '07',
+    label: 'Бренд-платформа',
+    desc: 'Авторитет, экосистема контента, узнаваемость. Долгосрочная цель — для тех, кто строит бренд.',
+    status: 'dim',
+  },
+];
+
+const principles = [
+  {
+    title: 'Один экран — одна мысль',
+    body: 'Каждый блок решает один вопрос посетителя: кто вы, что даёте, почему верить, что делать дальше.',
+  },
+  {
+    title: 'Заявка как маршрут',
+    body: 'Сайт — не визитка, а маршрут. Человек должен понять оффер, убедиться в экспертности и знать, куда нажать.',
+  },
+  {
+    title: 'Квиз квалифицирует',
+    body: 'Квиз — не украшение. Он задаёт 3–5 вопросов и отсеивает нецелевые заявки до вашего участия.',
+  },
+  {
+    title: 'Telegram — не «дополнительно»',
+    body: 'Заявка должна приходить туда, где вы работаете. Если вы в Telegram — значит именно туда, в нужном формате.',
+  },
+];
+---
+<Layout
+  title="Метод · Кирилл Барыев"
+  description="7 уровней сайта эксперта: от ссылки-визитки до системы заявок. Принципы сборки сайтов и AI-воронок под заявки."
+>
+  <Nav />
+  <main>
+    <!-- Hero -->
+    <section class="mth-hero section-dark">
+      <div class="container-x">
+        <div class="mth-hero__inner reveal">
+          <div class="sec-tag">Метод</div>
+          <h1 class="display-h mth-hero__h1">
+            7 уровней сайта <em>эксперта.</em>
+          </h1>
+          <p class="mth-hero__sub">
+            Большинство экспертов застряли на уровне 1–2 и удивляются, почему заявок нет.
+            Я помогаю дойти до 5–6 — системы, которая работает.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Лестница -->
+    <section class="mth-ladder section-dark">
+      <div class="container-x">
+        <div class="mth-ladder__grid">
+          {levels.map((l) => (
+            <div class:list={['mth-level', `mth-level--${l.status}`, 'reveal']}>
+              <div class="mth-level__head">
+                <span class="mth-level__n">{l.n}</span>
+                <h2 class="mth-level__label">{l.label}</h2>
+                {l.status === 'highlight' && <span class="mth-level__here">← вы здесь нужны</span>}
+              </div>
+              <p class="mth-level__desc">{l.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Принципы -->
+    <section class="mth-principles section-dark">
+      <div class="container-x">
+        <div class="mth-principles__head reveal">
+          <div class="sec-tag">Принципы</div>
+          <h2 class="display-h">Как я строю <em>воронки.</em></h2>
+        </div>
+        <div class="mth-principles__grid">
+          {principles.map((p, i) => (
+            <div class:list={['mth-principle', 'glass', 'reveal']} style={`transition-delay: ${i * 0.08}s`}>
+              <h3 class="mth-principle__title">{p.title}</h3>
+              <p class="mth-principle__body">{p.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="mth-cta section-dark">
+      <div class="container-x">
+        <div class="mth-cta__inner glass reveal">
+          <div class="mth-cta__text">
+            <div class="sec-tag">Следующий шаг</div>
+            <h2 class="display-h mth-cta__h2">Узнайте, <em>на каком уровне вы.</em></h2>
+            <p class="mth-cta__sub">
+              Разберу ваш сайт и скажу, что мешает заявкам.
+              Бесплатно, в Telegram, без звонков.
+            </p>
+          </div>
+          <a href="/razbor" class="btn btn--filled mth-cta__btn" data-magnetic="0.3">
+            <span class="btn__plus">(+)</span>
+            Получить бесплатный разбор
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .mth-hero { padding: 140px 0 60px; }
+  .mth-hero__h1 { margin: 0 0 20px; }
+  .mth-hero__h1 em { color: var(--aurora-cyan); }
+  .mth-hero__sub { font-size: clamp(15px, 1.3vw, 18px); color: var(--color-muted); max-width: 520px; line-height: 1.65; margin: 0; }
+
+  /* Лестница */
+  .mth-ladder { padding: 40px 0 100px; }
+  .mth-ladder__grid { display: flex; flex-direction: column; gap: 3px; max-width: 800px; }
+
+  .mth-level {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 20px 24px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    opacity: 0.4;
+    transition: opacity 0.25s, border-color 0.25s;
+  }
+  .mth-level:hover { opacity: 0.85; }
+  .mth-level--active {
+    opacity: 0.8;
+    border-color: var(--color-border);
+    background: var(--glass-tint);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .mth-level--highlight {
+    opacity: 1;
+    border-color: rgba(95,198,255,0.45);
+    background: linear-gradient(135deg, rgba(95,198,255,0.1), var(--glass-tint));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 0 40px rgba(95,198,255,0.08);
+  }
+  .mth-level--dim { opacity: 0.3; }
+
+  .mth-level__head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .mth-level__n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; color: var(--color-accent); opacity: 0.7;
+    flex-shrink: 0;
+  }
+  .mth-level__label {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 15px; font-weight: 500; color: var(--color-text);
+    margin: 0; letter-spacing: 0;
+  }
+  .mth-level__here {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 1px;
+    color: var(--aurora-cyan); opacity: 0.9;
+    margin-left: auto;
+  }
+  .mth-level__desc {
+    font-size: 13px; color: var(--color-muted); line-height: 1.55; margin: 0;
+    padding-left: 44px;
+  }
+
+  /* Принципы */
+  .mth-principles { padding: 0 0 100px; }
+  .mth-principles__head { max-width: 680px; margin-bottom: 48px; }
+  .mth-principles__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .mth-principle { padding: 28px 26px; border-radius: 16px; }
+  .mth-principle__title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px; font-weight: 500;
+    color: var(--color-accent); margin: 0 0 12px; letter-spacing: 0;
+  }
+  .mth-principle__body { font-size: 14px; color: var(--color-muted); line-height: 1.65; margin: 0; }
+
+  /* CTA */
+  .mth-cta { padding: 0 0 120px; }
+  .mth-cta__inner {
+    padding: 56px 52px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  .mth-cta__h2 { margin: 16px 0 16px; }
+  .mth-cta__h2 em { color: var(--aurora-cyan); }
+  .mth-cta__sub { font-size: 16px; color: var(--color-muted); line-height: 1.6; margin: 0; max-width: 380px; }
+  .mth-cta__btn { flex-shrink: 0; align-self: center; }
+
+  @media (max-width: 900px) {
+    .mth-hero { padding: 100px 0 40px; }
+    .mth-ladder { padding: 20px 0 60px; }
+    .mth-level__here { display: none; }
+    .mth-level__desc { padding-left: 0; }
+    .mth-principles__grid { grid-template-columns: 1fr; }
+    .mth-cta__inner { flex-direction: column; padding: 36px 28px; align-items: flex-start; }
+  }
+</style>

@@ -42,14 +42,18 @@ const featured = [
 <section class="work section-dark" id="work">
   <div class="container-x">
     <div class="work__head reveal">
-      <div class="sec-tag">Портфолио</div>
+      <div class="sec-tag">Кейсы</div>
       <h2 class="display-h work__title">
-        Главные <em>проекты</em>
+        Как работает <em>система.</em>
       </h2>
-      <p class="work__lead">
-        Два проекта, которые лучше всего показывают подход: понятная структура,
-        живые интеграции и запуск без тяжёлых конструкторов.
-      </p>
+      <div class="work__head-row">
+        <p class="work__lead">
+          Не просто «сделал сайт» — а как заявка теперь проходит путь.
+        </p>
+        <a href="/cases" class="btn work__all-link">
+          Все кейсы →
+        </a>
+      </div>
     </div>
 
     <div class="featured">
@@ -128,12 +132,26 @@ const featured = [
     max-width: 860px;
     margin-bottom: 60px;
   }
-  .work__title { margin: 0 0 24px; }
+  .work__title { margin: 0 0 20px; }
+  .work__head-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
   .work__lead {
     font-size: 16px;
     color: var(--color-muted);
     line-height: 1.65;
-    max-width: 560px;
+    max-width: 460px;
+    margin: 0;
+  }
+  .work__all-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
   }
 
   /* Featured — два флагмана */

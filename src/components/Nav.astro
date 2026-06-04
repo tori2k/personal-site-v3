@@ -5,10 +5,10 @@ const isHome = Astro.url.pathname === base || Astro.url.pathname === '/' || Astr
 const anchor = (a: string) => isHome ? a : `${base}${a}`;
 
 const items = [
-  { href: anchor('#work'),     label: 'Работы' },
+  { href: `${base}cases/`,     label: 'Кейсы' },
+  { href: `${base}services/`,  label: 'Услуги' },
   { href: anchor('#pricing'),  label: 'Цены' },
   { href: `${base}razbor/`,    label: 'Разбор' },
-  { href: `${base}brief/`,     label: 'Бриф' },
   { href: anchor('#faq'),      label: 'FAQ' },
 ];
 ---

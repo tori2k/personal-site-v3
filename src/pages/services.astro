@@ -1,0 +1,309 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const services = [
+  {
+    tag: 'Бесплатно',
+    name: 'Бесплатный разбор',
+    for: 'Эксперты, юристы, сервисный бизнес с сайтом или профилем',
+    pain: 'Не понятно, почему заявок нет или почему они нецелевые',
+    includes: ['Разбор первого экрана и оффера', 'Оценка CTA и пути до заявки', 'Анализ доверия', 'Разбор Telegram/CRM-связки', 'План из 3 шагов в Telegram'],
+    excludes: ['Макет или правки'],
+    time: '1–2 дня',
+    result: '3 конкретные правки и понимание, нужен ли новый сайт',
+    cta: '/razbor',
+    ctaLabel: 'Получить разбор',
+  },
+  {
+    tag: 'Быстрый старт',
+    name: 'Экспресс-лендинг под заявку',
+    price: 'от 49 000 ₽',
+    for: 'Эксперт, консультант, частная практика, мастер',
+    pain: 'Нет сайта или текущий не объясняет оффер',
+    includes: ['Оффер, услуги, доверие, контакты', 'Заявки в Telegram', 'Адаптив и домен', 'Чистый код', 'Исходники у вас', 'Неделя правок'],
+    excludes: ['Квиз', 'Аналитика', 'CRM'],
+    time: '3–5 дней',
+    result: 'Клиент понимает ценность и отправляет заявку',
+    cta: '/razbor',
+    ctaLabel: 'Обсудить проект',
+  },
+  {
+    tag: 'Основной выбор',
+    name: 'Лендинг эксперта под заявки',
+    price: '75 000–95 000 ₽',
+    for: 'Юрист, адвокат, консультант, онлайн-школа',
+    pain: 'Клиент не понимает специализацию и почему именно вы',
+    includes: ['Всё из Экспресс-лендинга', 'Кейсы, цены, FAQ', 'Квиз для квалификации', 'SEO-разметка', 'Метрика + Google Analytics'],
+    excludes: ['CRM и автоматизации', 'Telegram-бот'],
+    time: '1–2 недели',
+    result: 'Целевые заявки — клиент квалифицируется квизом',
+    cta: '/razbor',
+    ctaLabel: 'Обсудить проект',
+    featured: true,
+  },
+  {
+    tag: 'Система заявок',
+    name: 'Сайт + Telegram-заявки + аналитика',
+    price: '120 000–160 000 ₽',
+    for: 'Агентство, студия, сервис с потоком заявок',
+    pain: 'Заявки теряются, нет понимания откуда приходят',
+    includes: ['Всё из Лендинга эксперта', 'Telegram-бот с форматированием', 'UTM-аналитика источников', 'Таблица лидов (Google Sheets)', 'Несколько страниц'],
+    excludes: ['CRM-интеграция', 'Онлайн-оплаты'],
+    time: '2–3 недели',
+    result: 'Каждая заявка фиксируется с источником — ничего не теряется',
+    cta: '/razbor',
+    ctaLabel: 'Обсудить проект',
+  },
+  {
+    tag: 'Под ключ',
+    name: 'Сайт + бот + CRM + автоматизации',
+    price: '180 000–300 000 ₽',
+    for: 'Школа, клиника, агентство с операционкой',
+    pain: 'Сайт, CRM и Telegram живут отдельно — данные теряются',
+    includes: ['Всё из Системы заявок', 'Интеграция с CRM (AmoCRM / Bitrix24)', 'Онлайн-оплаты', 'Автоматизации: статусы, follow-up', 'Кастомный дизайн'],
+    excludes: [],
+    time: '3–5 недель',
+    result: 'Сайт становится частью операционки: заявка сразу в CRM со статусом',
+    cta: '/razbor',
+    ctaLabel: 'Обсудить проект',
+    premium: true,
+  },
+  {
+    tag: 'Поддержка',
+    name: 'Сопровождение',
+    price: 'от 15 000 ₽/мес',
+    for: 'Клиенты с готовым проектом',
+    pain: 'Нужно обновлять сайт, но нет времени и знаний',
+    includes: ['Правки и обновления', 'Мониторинг форм и интеграций', 'Добавление новых разделов', 'Консультации в Telegram'],
+    excludes: ['Новые крупные функции'],
+    time: 'Договорная',
+    result: 'Сайт всегда актуален и работает без вашего участия',
+    cta: 'https://t.me/tori2k',
+    ctaLabel: 'Написать в Telegram',
+    external: true,
+  },
+];
+---
+<Layout
+  title="Услуги · Кирилл Барыев"
+  description="Полная продуктовая линейка: бесплатный разбор, экспресс-лендинг, лендинг эксперта, система заявок, сайт + CRM + автоматизации."
+>
+  <Nav />
+  <main>
+    <section class="srv-hero section-dark">
+      <div class="container-x">
+        <div class="srv-hero__inner reveal">
+          <div class="sec-tag">Услуги</div>
+          <h1 class="display-h srv-hero__h1">
+            Полная <em>линейка.</em>
+          </h1>
+          <p class="srv-hero__sub">
+            От бесплатного разбора до полной системы заявок под ключ.
+            Выберите формат или начните с разбора — скажу, что нужно именно вам.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="srv-list section-dark">
+      <div class="container-x">
+        {services.map((s, i) => (
+          <article
+            class:list={['srv-card', 'reveal', s.featured && 'srv-card--featured', s.premium && 'srv-card--premium']}
+            style={`transition-delay: ${i * 0.06}s`}
+          >
+            {s.featured && <div class="srv-card__badge">Основной выбор</div>}
+            {s.premium && <div class="srv-card__badge srv-card__badge--premium">★ aurora</div>}
+
+            <div class="srv-card__header">
+              <div class="srv-card__meta">
+                <div class="srv-card__tag">{s.tag}</div>
+                <h2 class="srv-card__name">{s.name}</h2>
+                {s.price && <div class="srv-card__price">{s.price}</div>}
+              </div>
+              <div class="srv-card__time-wrap">
+                <div class="srv-card__time-label">Срок</div>
+                <div class="srv-card__time">{s.time}</div>
+              </div>
+            </div>
+
+            <div class="srv-card__body">
+              <div class="srv-card__col">
+                <div class="srv-card__col-label">Кому подходит</div>
+                <p class="srv-card__col-text">{s.for}</p>
+                <div class="srv-card__col-label">Боль</div>
+                <p class="srv-card__col-text">{s.pain}</p>
+              </div>
+
+              <div class="srv-card__col">
+                <div class="srv-card__col-label">Что входит</div>
+                <ul class="srv-card__list">
+                  {s.includes.map((inc) => (
+                    <li><span class="srv-card__check">(+)</span>{inc}</li>
+                  ))}
+                </ul>
+                {s.excludes.length > 0 && (
+                  <>
+                    <div class="srv-card__col-label" style="margin-top:12px">Что не входит</div>
+                    <ul class="srv-card__list srv-card__list--dim">
+                      {s.excludes.map((exc) => (
+                        <li><span class="srv-card__minus">(–)</span>{exc}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+
+              <div class="srv-card__col">
+                <div class="srv-card__result glass">
+                  <div class="srv-card__result-label">Результат</div>
+                  <p class="srv-card__result-text">{s.result}</p>
+                </div>
+                <a
+                  href={s.cta}
+                  class:list={['btn', 'btn--filled', 'srv-card__cta']}
+                  target={s.external ? '_blank' : undefined}
+                  rel={s.external ? 'noopener' : undefined}
+                  data-magnetic="0.3"
+                >
+                  <span class="btn__plus">(+)</span>
+                  {s.ctaLabel}
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .srv-hero { padding: 140px 0 60px; }
+  .srv-hero__h1 { margin: 0 0 20px; }
+  .srv-hero__h1 em { color: var(--aurora-cyan); }
+  .srv-hero__sub {
+    font-size: clamp(15px, 1.3vw, 18px);
+    color: var(--color-muted);
+    max-width: 520px;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .srv-list { padding: 40px 0 120px; }
+  .srv-list .container-x { display: flex; flex-direction: column; gap: 16px; }
+
+  .srv-card {
+    position: relative;
+    padding: 36px 32px;
+    background: var(--glass-tint);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    transition: border-color 0.35s;
+  }
+  .srv-card:hover { border-color: rgba(95,198,255,0.3); }
+  .srv-card--featured {
+    border-color: rgba(95,198,255,0.4);
+    background: linear-gradient(135deg, rgba(95,198,255,0.08), transparent), var(--glass-tint);
+  }
+  .srv-card--premium {
+    border-color: rgba(162,128,255,0.4);
+    background: linear-gradient(135deg, rgba(162,128,255,0.07), transparent), var(--glass-tint);
+  }
+
+  .srv-card__badge {
+    position: absolute; top: -10px; left: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 999px;
+    background: var(--aurora-cyan); color: #06070D;
+  }
+  .srv-card__badge--premium {
+    background: linear-gradient(120deg, #5fc6ff, #a280ff, #ff6ec7);
+  }
+
+  .srv-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .srv-card__tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--color-accent); margin-bottom: 8px;
+  }
+  .srv-card__name {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(18px, 1.8vw, 26px);
+    font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
+    color: var(--color-text); margin: 0 0 10px;
+  }
+  .srv-card__price {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(20px, 2vw, 30px);
+    font-weight: 500; letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+  .srv-card__time-wrap { text-align: right; flex-shrink: 0; }
+  .srv-card__time-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--color-muted-2); margin-bottom: 4px;
+  }
+  .srv-card__time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; color: var(--color-muted);
+  }
+
+  .srv-card__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
+  }
+  .srv-card__col-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--color-accent); margin-bottom: 8px;
+  }
+  .srv-card__col-text {
+    font-size: 14px; color: var(--color-muted); line-height: 1.55; margin: 0 0 16px;
+  }
+  .srv-card__list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .srv-card__list li { display: flex; gap: 8px; font-size: 13px; line-height: 1.5; color: var(--color-text); }
+  .srv-card__list--dim li { color: var(--color-muted-2); }
+  .srv-card__check { color: var(--color-accent); font-family: 'JetBrains Mono', monospace; font-size: 11px; flex-shrink: 0; }
+  .srv-card__minus { color: var(--color-muted-2); font-family: 'JetBrains Mono', monospace; font-size: 11px; flex-shrink: 0; }
+
+  .srv-card__result {
+    padding: 18px 18px; border-radius: 12px; margin-bottom: 20px;
+  }
+  .srv-card__result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--color-accent); margin-bottom: 6px;
+  }
+  .srv-card__result-text { font-size: 13px; color: var(--color-muted); line-height: 1.55; margin: 0; }
+  .srv-card__cta { align-self: flex-start; }
+
+  @media (max-width: 1100px) { .srv-card__body { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 900px) {
+    .srv-hero { padding: 100px 0 40px; }
+    .srv-list { padding: 20px 0 80px; }
+    .srv-card { padding: 28px 22px; }
+    .srv-card__body { grid-template-columns: 1fr; gap: 20px; }
+    .srv-card__header { flex-direction: column; gap: 12px; }
+    .srv-card__time-wrap { text-align: left; }
+  }
+</style>

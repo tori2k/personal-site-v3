@@ -1,130 +1,130 @@
 ---
 const items = [
   {
-    q: 'Что я получу бесплатно до оплаты?',
-    a: 'Короткий разбор: что продавать на первом экране, какие блоки нужны, где у конкурентов слабые места и какой формат сайта вам не переплачивать.',
+    q: 'Можно ли без нового сайта?',
+    a: 'Да. Иногда достаточно переработать первый экран, добавить квиз или настроить приём заявок в Telegram. Начните с бесплатного разбора — скажу честно, нужен ли новый сайт.',
   },
   {
-    q: 'Я не программист. Смогу ли сам вести сайт?',
-    a: 'Да. Стандартно подключаю Google Sheets как админку — тексты, цены, контент редактируются в таблице. Если хочется «как в Tilda» — подключу Decap CMS с веб-редактором.',
+    q: 'Чем лендинг отличается от системы заявок?',
+    a: 'Лендинг — это страница. Система заявок — лендинг + квиз + Telegram-бот + таблица лидов + аналитика. Лендинг объясняет, система — ещё и фиксирует каждое обращение.',
   },
   {
-    q: 'Можно онлайн-оплаты и автоматизации?',
-    a: 'Да. Подключаю Т-Кассу, ЮKassa, CloudPayments — деньги сразу на ваш счёт. Автоматизирую процессы: боты в Telegram, интеграции с CRM, уведомления о заявках, запись клиентов.',
+    q: 'Почему не конструктор?',
+    a: 'Конструкторы дают шаблон, который все видели. Чистый код — это ваш оффер, ваш дизайн, ваша скорость. Lighthouse 95+, без ежемесячной подписки, исходники остаются у вас.',
   },
   {
-    q: 'У меня уже есть сайт, хочу редизайн?',
-    a: 'Посмотрим вместе. Перенос контента со старого сайта на новый обычно занимает 1–2 дня и входит в стоимость выбранного формата.',
+    q: 'Что будет после заявки?',
+    a: 'Я посмотрю ваш сайт или профиль, найду слабые места в пути заявки и напишу в Telegram с коротким разбором. Без звонков без предупреждения.',
+  },
+  {
+    q: 'Можно ли начать с аудита?',
+    a: 'Да, это и есть бесплатный разбор. Заполните форму на странице /razbor — разберу первый экран, оффер, CTA и путь заявки. Пришлю конкретный план из 3 шагов.',
+  },
+  {
+    q: 'Сколько времени занимает запуск?',
+    a: 'Экспресс-лендинг — 3–5 дней. Лендинг эксперта — 1–2 недели. Полная система — 3–5 недель. Срок считается от момента, когда у нас есть все материалы.',
   },
 ];
 ---
 <section class="faq section-dark" id="faq">
   <div class="container-x">
-    <div class="faq__grid">
+    <div class="faq__inner">
       <div class="faq__head reveal-left">
         <div class="sec-tag">FAQ</div>
-        <h2 class="display-h">
-          Частые<br/>
-          <em>вопросы</em>
-        </h2>
-        <p class="faq__text">
-          Не нашли ответ? <a href="https://t.me/tori2k" target="_blank" rel="noopener">Напишите в Telegram</a> —
-          отвечу за 15 минут в рабочее время.
-        </p>
+        <h2 class="display-h faq__title">Частые <em>вопросы.</em></h2>
       </div>
 
-      <div class="faq__list reveal-right">
-        {items.map((i, idx) => (
-          <details class="faq__item" style={`transition-delay: ${idx * 0.04}s`}>
-            <summary class="faq__q">
-              <span class="faq__q-n">{String(idx + 1).padStart(2, '0')}</span>
-              <span class="faq__q-text">{i.q}</span>
-              <span class="faq__q-sign" aria-hidden="true">(+)</span>
-            </summary>
-            <div class="faq__a">{i.a}</div>
-          </details>
+      <dl class="faq__list reveal-right">
+        {items.map((item, i) => (
+          <div class="faq__item">
+            <details>
+              <summary class="faq__q">
+                <span class="faq__num">0{i + 1}</span>
+                <span class="faq__q-text">{item.q}</span>
+                <span class="faq__icon" aria-hidden="true">+</span>
+              </summary>
+              <dd class="faq__a">{item.a}</dd>
+            </details>
+          </div>
         ))}
-      </div>
+      </dl>
     </div>
   </div>
 </section>
 
 <style>
-  .faq { padding: 140px 0; }
-  .faq__grid {
+  .faq { padding: 120px 0; }
+
+  .faq__inner {
     display: grid;
-    grid-template-columns: 1fr 1.3fr;
-    gap: 80px;
+    grid-template-columns: 280px 1fr;
+    gap: 64px;
     align-items: start;
   }
-  .faq__head { position: sticky; top: 120px; }
-  .faq__text {
-    font-size: 14px;
-    color: var(--color-muted);
-    margin: 24px 0 0;
-    line-height: 1.6;
-  }
-  .faq__text a {
-    color: var(--color-accent);
-    text-decoration: none;
-    border-bottom: 1px solid currentColor;
-  }
+
+  .faq__head { position: sticky; top: 100px; }
+  .faq__title { margin: 0; }
+  .faq__title em { color: var(--aurora-cyan); }
 
   .faq__list {
-    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
   }
-  .faq__item {
-    border-bottom: 1px solid var(--color-border);
-    transition: background 0.3s;
-  }
-  .faq__item[open] .faq__q-sign {
-    transform: rotate(45deg);
-  }
-  .faq__item[open] .faq__q-text { color: var(--color-accent); }
+
+  .faq__item { border-bottom: 1px solid var(--color-border); }
+  .faq__item:first-child { border-top: 1px solid var(--color-border); }
 
   .faq__q {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 20px;
+    grid-template-columns: 32px 1fr 24px;
     align-items: center;
-    padding: 24px 0;
-    cursor: none;
+    gap: 12px;
+    padding: 20px 0;
+    cursor: pointer;
     list-style: none;
-  }
-  .faq__q::-webkit-details-marker { display: none; }
-  .faq__q-n {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    color: var(--color-muted-2);
-  }
-  .faq__q-text {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(15px, 1.4vw, 18px);
-    font-weight: 400;
-    color: var(--color-text);
-    letter-spacing: -0.01em;
+    user-select: none;
     transition: color 0.2s;
   }
-  .faq__q-sign {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 18px;
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q:hover .faq__q-text { color: var(--color-accent); }
+
+  .faq__num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
     color: var(--color-accent);
-    transition: transform 0.35s;
+    opacity: 0.6;
   }
+  .faq__q-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.4;
+    transition: color 0.2s;
+  }
+  .faq__icon {
+    font-size: 20px;
+    color: var(--color-accent);
+    justify-self: end;
+    transition: transform 0.25s cubic-bezier(.22,1,.36,1);
+    line-height: 1;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  details[open] .faq__icon { transform: rotate(45deg); }
+  details[open] .faq__q-text { color: var(--color-accent); }
 
   .faq__a {
-    padding: 0 40px 24px 52px;
-    font-size: 14.5px;
-    color: var(--color-muted);
+    font-size: 15px;
     line-height: 1.7;
-    max-width: 640px;
+    color: var(--color-muted);
+    padding: 0 0 20px 44px;
+    margin: 0;
   }
 
   @media (max-width: 900px) {
-    .faq { padding: 80px 0; }
-    .faq__grid { grid-template-columns: 1fr; gap: 50px; }
+    .faq { padding: 72px 0; }
+    .faq__inner { grid-template-columns: 1fr; gap: 36px; }
     .faq__head { position: static; }
-    .faq__a { padding: 0 0 24px 52px; }
+    .faq__a { padding-left: 40px; }
   }
 </style>

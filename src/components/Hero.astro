@@ -2,67 +2,57 @@
 ---
 <section class="hero section-dark" id="hero">
   <div class="hero__cursor-glow" id="heroGlow"></div>
-  <!-- Якорь старта самолётика — правый верхний угол hero, не перекрывает текст -->
   <span id="planeAnchor" class="plane-anchor-spot" aria-hidden="true"></span>
 
   <div class="container-x hero__inner">
-    <h1 class="hero__title text-glow">
-      <span class="hero__line">Сайты и AI-воронки</span>
-      <span class="hero__line"><em>для экспертов</em></span>
-      <span class="hero__line">под заявки.</span>
-    </h1>
-
-    <div class="hero__bottom">
-      <div class="hero__sub glass">
-        <p>
-          Собираю оффер, лендинг, квиз, Telegram-заявки, аналитику и автоматизации,
-          чтобы клиент понимал, почему выбрать вас, а вы не теряли обращения в переписках.
-        </p>
+    <div class="hero__content">
+      <div class="hero__badge">
+        <span class="live-badge__dot"></span>
+        Для экспертов, юристов и сервисного бизнеса
       </div>
+
+      <h1 class="hero__title text-glow">
+        <span class="hero__line">Сайты и AI-воронки</span>
+        <span class="hero__line"><em>под заявки.</em></span>
+      </h1>
+
+      <p class="hero__sub">
+        Собираю оффер, лендинг, квиз, Telegram-заявки, аналитику и CRM/таблицу,
+        чтобы клиент понимал, почему выбрать вас,
+        а вы не теряли обращения в переписках.
+      </p>
 
       <div class="hero__actions">
         <a href="/razbor" class="btn btn--filled" data-magnetic="0.4">
           <span class="btn__plus">(+)</span>
           Получить бесплатный разбор
         </a>
-        <a href="#work" class="btn">
+        <a href="/cases" class="btn">
           Посмотреть кейсы
         </a>
       </div>
+    </div>
 
-      <div class="hero__pillars">
-        <div class="pillar">
-          <span class="pillar__icon">◎</span>
-          <span>Первая версия за 3–5 дней</span>
-        </div>
-        <div class="pillar">
-          <span class="pillar__icon">◎</span>
-          <span>Заявки приходят в Telegram</span>
-        </div>
-        <div class="pillar">
-          <span class="pillar__icon">◎</span>
-          <span>Исходники и код остаются у вас</span>
-        </div>
-      </div>
-
-      <div class="hero__metrics">
-        <div class="metric">
-          <div class="metric__n"><span id="m-projects">0</span><small>+</small></div>
-          <div class="metric__l">запущенных сайтов</div>
-        </div>
-        <div class="metric">
-          <div class="metric__n"><span id="m-speed">0</span><small>д</small></div>
-          <div class="metric__l">до первой версии</div>
-        </div>
-        <div class="metric">
-          <div class="metric__n"><span id="m-lh">0</span></div>
-          <div class="metric__l">средний Lighthouse</div>
-        </div>
-        <div class="metric">
-          <div class="metric__n">0<small>₽</small></div>
-          <div class="metric__l">за хостинг</div>
-        </div>
-      </div>
+    <div class="hero__facts glass">
+      <div class="hero__facts-label">Как это работает</div>
+      <ul class="hero__pillars">
+        <li class="pillar">
+          <span class="pillar__num">01</span>
+          <span class="pillar__text">Чистый код без конструкторов</span>
+        </li>
+        <li class="pillar">
+          <span class="pillar__num">02</span>
+          <span class="pillar__text">Первая версия за 3–5 дней</span>
+        </li>
+        <li class="pillar">
+          <span class="pillar__num">03</span>
+          <span class="pillar__text">Заявки приходят в Telegram</span>
+        </li>
+        <li class="pillar">
+          <span class="pillar__num">04</span>
+          <span class="pillar__text">Исходники остаются у вас</span>
+        </li>
+      </ul>
     </div>
   </div>
 
@@ -70,20 +60,18 @@
   <div class="hero__marquee" aria-hidden="true">
     <div class="marquee-track">
       <span>ЛЕНДИНГИ ПОД ЗАЯВКИ</span><span>·</span>
-      <span>АВТОМАТИЗАЦИИ И БОТЫ</span><span>·</span>
-      <span>ОНЛАЙН-ОПЛАТЫ</span><span>·</span>
+      <span>AI-ВОРОНКИ</span><span>·</span>
       <span>ЗАЯВКИ В TELEGRAM</span><span>·</span>
+      <span>КВИЗ И АНАЛИТИКА</span><span>·</span>
       <span>ИНТЕГРАЦИИ И CRM</span><span>·</span>
       <span>ЧИСТЫЙ КОД БЕЗ TILDA</span><span>·</span>
-      <span>СВОЙ ДОМЕН</span><span>·</span>
       <span>ИСХОДНИКИ ВАШИ</span><span>·</span>
       <span>ЛЕНДИНГИ ПОД ЗАЯВКИ</span><span>·</span>
-      <span>АВТОМАТИЗАЦИИ И БОТЫ</span><span>·</span>
-      <span>ОНЛАЙН-ОПЛАТЫ</span><span>·</span>
+      <span>AI-ВОРОНКИ</span><span>·</span>
       <span>ЗАЯВКИ В TELEGRAM</span><span>·</span>
+      <span>КВИЗ И АНАЛИТИКА</span><span>·</span>
       <span>ИНТЕГРАЦИИ И CRM</span><span>·</span>
       <span>ЧИСТЫЙ КОД БЕЗ TILDA</span><span>·</span>
-      <span>СВОЙ ДОМЕН</span><span>·</span>
       <span>ИСХОДНИКИ ВАШИ</span><span>·</span>
     </div>
   </div>
@@ -101,15 +89,11 @@
   .hero {
     position: relative;
     min-height: 100vh;
-    padding: 116px 0 40px;
+    padding: 116px 0 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }
-  @media (max-height: 800px) {
-    .hero { min-height: auto; padding: 100px 0 48px; }
-    .hero__title { font-size: clamp(36px, 5.5vw, 80px); }
   }
 
   .hero__cursor-glow {
@@ -129,25 +113,43 @@
   .hero__inner {
     position: relative;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
     flex: 1;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 48px;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 60px;
   }
 
+  /* Badge */
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--color-muted);
+    margin-bottom: 24px;
+    padding: 6px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+
+  /* Title */
   .hero__title {
     font-family: 'Unbounded', sans-serif;
     font-weight: 500;
-    font-size: clamp(40px, 6.5vw, 104px);
-    line-height: 0.98;
+    font-size: clamp(44px, 6.5vw, 104px);
+    line-height: 0.97;
     letter-spacing: -0.03em;
-    margin: 0 0 28px;
+    margin: 0 0 32px;
     color: var(--color-text);
     display: flex;
     flex-direction: column;
   }
-  .hero__line { display: block; text-align: left; }
+  .hero__line { display: block; }
   .hero__line em {
     font-style: italic;
     font-weight: 300;
@@ -158,85 +160,68 @@
       0 0 50px rgba(95,198,255,0.4);
   }
 
-  .hero__bottom {
-    display: grid;
-    grid-template-columns: 1.1fr auto;
-    gap: 40px;
-    align-items: end;
-    padding-bottom: 36px;
-  }
-  .hero__sub { padding: 24px 28px; max-width: 560px; }
-  .hero__sub p {
+  /* Sub */
+  .hero__sub {
     font-size: clamp(15px, 1.3vw, 18px);
-    line-height: 1.55;
-    color: var(--color-text);
-    margin: 0;
+    line-height: 1.6;
+    color: var(--color-muted);
+    margin: 0 0 36px;
+    max-width: 520px;
   }
-  .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; justify-self: end; }
 
-  .hero__pillars {
-    grid-column: 1 / -1;
+  /* Actions */
+  .hero__actions {
     display: flex;
-    gap: 32px;
+    gap: 12px;
     flex-wrap: wrap;
-    padding-top: 20px;
+  }
+
+  /* Facts card */
+  .hero__facts {
+    padding: 28px 26px;
+    border-radius: 18px;
+    align-self: center;
+  }
+  .hero__facts-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 20px;
+  }
+  .hero__pillars {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
   .pillar {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    color: var(--color-muted);
-  }
-  .pillar__icon {
-    color: var(--color-accent);
-    font-size: 14px;
-    flex-shrink: 0;
-  }
-
-  .hero__metrics {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding-top: 28px;
-    padding-bottom: 16px;
-    border-top: 1px solid var(--color-border);
-  }
-  .metric { display: flex; flex-direction: column; gap: 6px; }
-  .metric__n {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    font-size: clamp(32px, 3.6vw, 56px);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--color-text);
-    display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 12px;
   }
-  .metric__n small {
-    font-size: 0.45em;
-    color: var(--color-accent);
-    align-self: flex-start;
-    padding-top: 0.3em;
-  }
-  .metric__l {
+  .pillar__num {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--color-muted-2);
+    color: var(--color-accent);
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  .pillar__text {
+    font-size: 13px;
+    color: var(--color-text);
     line-height: 1.4;
   }
 
+  /* Marquee */
   .hero__marquee {
     overflow: hidden;
     padding: 20px 0;
     border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
     mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
     position: relative;
     z-index: 2;
@@ -247,7 +232,7 @@
     white-space: nowrap;
     animation: marquee 38s linear infinite;
     font-family: 'Unbounded', sans-serif;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 400;
     letter-spacing: 0.02em;
     color: var(--color-muted);
@@ -258,25 +243,27 @@
     to { transform: translateX(-50%); }
   }
 
-  @media (max-width: 900px) {
-    .hero { padding: 110px 0 0; }
-    .hero__bottom { grid-template-columns: 1fr; gap: 28px; }
-    .hero__actions { justify-self: start; }
-    .hero__metrics { grid-template-columns: repeat(2, 1fr); }
-    .marquee-track { font-size: 16px; gap: 20px; }
-    .hero__sub { max-width: 100%; }
-    .hero__pillars { gap: 16px; flex-direction: column; }
+  @media (max-width: 1100px) {
+    .hero__inner { grid-template-columns: 1fr 300px; gap: 32px; }
   }
-
+  @media (max-width: 900px) {
+    .hero { padding: 100px 0 0; min-height: auto; }
+    .hero__inner { grid-template-columns: 1fr; gap: 32px; padding-bottom: 40px; }
+    .hero__facts { max-width: 100%; }
+    .marquee-track { font-size: 14px; gap: 20px; }
+  }
+  @media (max-height: 800px) {
+    .hero { min-height: auto; }
+    .hero__title { font-size: clamp(36px, 5.5vw, 80px); }
+  }
   @media (prefers-reduced-motion: reduce) {
     .hero__cursor-glow { display: none; }
+    .marquee-track { animation: none; }
   }
 </style>
 
 <script>
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Cursor glow follow
   const glow = document.getElementById('heroGlow');
   const hero = document.querySelector<HTMLElement>('.hero');
   if (glow && hero && !reduceMotion) {
@@ -285,23 +272,4 @@
       glow.style.transform = `translate(${e.clientX - rect.left}px, ${e.clientY - rect.top}px) translate(-50%, -50%)`;
     });
   }
-
-  // Counter animation
-  const counters: Array<{ id: string; to: number; duration: number }> = [
-    { id: 'm-projects', to: 7, duration: 1200 },
-    { id: 'm-speed',    to: 3, duration: 1200 },
-    { id: 'm-lh',       to: 98, duration: 1600 },
-  ];
-  counters.forEach(({ id, to, duration }) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const start = performance.now();
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - start) / duration);
-      const eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(to * eased).toString();
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  });
 </script>

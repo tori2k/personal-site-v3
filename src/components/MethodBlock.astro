@@ -1,0 +1,128 @@
+---
+const levels = [
+  { n: '01', label: 'Ссылка / визитка',       note: 'есть имя, нет оффера' },
+  { n: '02', label: 'Шаблонный лендинг',       note: 'есть страница, нет заявок' },
+  { n: '03', label: 'Лендинг с оффером',       note: 'клиент понимает ценность', accent: true },
+  { n: '04', label: 'Сайт с доверием',         note: 'кейсы, отзывы, специализация', accent: true },
+  { n: '05', label: 'Сайт с квизом',           note: 'квалификация + целевые заявки', accent: true },
+  { n: '06', label: 'Сайт + Telegram / CRM',   note: 'каждая заявка в системе', highlight: true },
+  { n: '07', label: 'Бренд-платформа',         note: 'авторитет + экосистема', dim: true },
+];
+---
+<section class="method-block section-dark" id="method">
+  <div class="container-x">
+    <div class="method-block__grid">
+      <div class="method-block__left reveal-left">
+        <div class="sec-tag">Метод</div>
+        <h2 class="display-h method-block__title">
+          7 уровней сайта <em>эксперта.</em>
+        </h2>
+        <p class="method-block__sub">
+          Большинство экспертов застряли на уровне 1–2. Я помогаю дойти до 5–6
+          — когда сайт не просто существует, а работает системой заявок.
+        </p>
+        <a href="/method" class="btn method-block__cta">
+          <span class="btn__plus">(+)</span>
+          Посмотреть метод
+        </a>
+      </div>
+
+      <div class="method-block__ladder reveal-right">
+        {levels.map((l) => (
+          <div class:list={[
+            'level',
+            l.accent && 'level--accent',
+            l.highlight && 'level--highlight',
+            l.dim && 'level--dim',
+          ]}>
+            <span class="level__n">{l.n}</span>
+            <span class="level__label">{l.label}</span>
+            <span class="level__note">{l.note}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .method-block { padding: 120px 0; }
+
+  .method-block__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+    align-items: center;
+  }
+
+  .method-block__title { margin: 0 0 20px; }
+  .method-block__title em { color: var(--aurora-cyan); }
+
+  .method-block__sub {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--color-muted);
+    margin: 0 0 32px;
+    max-width: 400px;
+  }
+
+  /* Лестница */
+  .method-block__ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .level {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: all 0.25s;
+    opacity: 0.45;
+  }
+  .level--accent  { opacity: 0.75; border-color: var(--color-border); background: var(--glass-tint); }
+  .level--highlight {
+    opacity: 1;
+    border-color: rgba(95,198,255,0.4);
+    background: linear-gradient(135deg, rgba(95,198,255,0.1), var(--glass-tint));
+    box-shadow: 0 0 30px rgba(95,198,255,0.08);
+  }
+  .level--dim { opacity: 0.3; }
+  .level:hover { opacity: 1; }
+
+  .level__n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    opacity: 0.7;
+  }
+  .level__label {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text);
+    letter-spacing: 0;
+  }
+  .level__note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    color: var(--color-muted-2);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .level--highlight .level__note { color: var(--color-accent); }
+
+  @media (max-width: 900px) {
+    .method-block { padding: 72px 0; }
+    .method-block__grid { grid-template-columns: 1fr; gap: 40px; }
+    .method-block__sub { max-width: 100%; }
+    .level__note { display: none; }
+    .level { grid-template-columns: 32px 1fr; }
+  }
+</style>
