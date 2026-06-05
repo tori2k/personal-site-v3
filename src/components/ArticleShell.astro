@@ -1,0 +1,206 @@
+---
+// Переиспользуемая оболочка статьи: каркас + стили + JSON-LD (Article+Breadcrumb+FAQPage).
+// Тело статьи передаётся через <slot />. Таблица, чек-лист и FAQ — через props,
+// чтобы вёрстка и микроразметка совпадали и не дублировались.
+import Layout from '../layouts/Layout.astro';
+import Nav from './Nav.astro';
+import Footer from './Footer.astro';
+
+interface Row { p: string; c: string; s: string; }
+interface QA { q: string; a: string; }
+
+interface Props {
+  title: string;
+  description: string;
+  h1: string;            // допускается <em>…</em>
+  slug: string;          // напр. 'google-sheets-kak-crm-dlya-malogo-biznesa'
+  crumb: string;         // короткое имя в хлебных крошках
+  date: string;          // ISO 'YYYY-MM-DD'
+  dateHuman: string;     // '5 июня 2026'
+  readMin?: number;
+  tldr: string;          // HTML короткого ответа (можно ссылки)
+  tableTitle?: string;
+  rows?: Row[];
+  checklistTitle?: string;
+  checklist?: string[];
+  checklistNote?: string; // HTML
+  faq: QA[];
+}
+
+const {
+  title, description, h1, slug, crumb, date, dateHuman,
+  readMin = 6, tldr, tableTitle = 'Проблема → причина → решение',
+  rows = [], checklistTitle = 'Что проверить у себя', checklist = [],
+  checklistNote, faq,
+} = Astro.props;
+
+const URL = `https://kirillbaryev.ru/articles/${slug}/`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org', '@type': 'Article',
+    headline: crumb, description, url: URL,
+    datePublished: date, dateModified: date, inLanguage: 'ru',
+    author: { '@type': 'Person', name: 'Кирилл Барыев', url: 'https://kirillbaryev.ru' },
+    publisher: { '@type': 'Person', name: 'Кирилл Барыев', url: 'https://kirillbaryev.ru' },
+    mainEntityOfPage: URL,
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://kirillbaryev.ru/' },
+      { '@type': 'ListItem', position: 2, name: 'Статьи', item: 'https://kirillbaryev.ru/articles/' },
+      { '@type': 'ListItem', position: 3, name: crumb, item: URL },
+    ],
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+<Layout title={title} description={description} jsonLd={jsonLd}>
+  <Nav />
+  <main>
+    <article class="art section-dark">
+      <div class="container-x art__wrap">
+        <nav class="art__crumbs" aria-label="Хлебные крошки">
+          <a href="/">Главная</a> <span>/</span>
+          <a href="/articles">Статьи</a> <span>/</span>
+          <span class="art__crumbs-cur">{crumb}</span>
+        </nav>
+
+        <header class="art__head">
+          <div class="sec-tag">Статья</div>
+          <h1 class="art__h1" set:html={h1} />
+          <div class="art__meta">Обновлено {dateHuman} · {readMin} минут чтения</div>
+        </header>
+
+        <div class="art__tldr glass">
+          <div class="art__tldr-label">Если коротко</div>
+          <p set:html={tldr} />
+        </div>
+
+        <div class="art__body">
+          <slot />
+
+          {rows.length > 0 && (
+            <>
+              <h2>{tableTitle}</h2>
+              <div class="art__table-wrap">
+                <table class="art__table">
+                  <thead><tr><th>Проблема</th><th>Причина</th><th>Решение</th></tr></thead>
+                  <tbody>
+                    {rows.map((r) => (<tr><td>{r.p}</td><td>{r.c}</td><td>{r.s}</td></tr>))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          <slot name="after-table" />
+
+          {checklist.length > 0 && (
+            <>
+              <h2>{checklistTitle}</h2>
+              <ul class="art__check">{checklist.map((c) => <li>{c}</li>)}</ul>
+              {checklistNote && <p set:html={checklistNote} />}
+            </>
+          )}
+
+          <div class="art__cta glass">
+            <div class="art__cta-text">
+              <div class="art__cta-title">Найдём, где у вас теряются заявки</div>
+              <p>Посмотрю сайт или профиль, путь заявки и обработку лида — пришлю 3 конкретные правки.</p>
+            </div>
+            <a href="/razbor" class="btn btn--filled" data-magnetic="0.3">
+              <span class="btn__plus">(+)</span> Получить бесплатный разбор
+            </a>
+          </div>
+
+          <h2>Частые вопросы</h2>
+          <dl class="art__faq">
+            {faq.map((item, i) => (
+              <div class="art__faq-item">
+                <details>
+                  <summary><span class="art__faq-n">0{i + 1}</span>{item.q}<span class="art__faq-ic">+</span></summary>
+                  <dd>{item.a}</dd>
+                </details>
+              </div>
+            ))}
+          </dl>
+
+          <p class="art__more">
+            Дальше: <a href="/ai-avtomatizaciya-zayavok">AI-автоматизация заявок</a> ·
+            <a href="/method">метод и карта слива</a> ·
+            <a href="/calculator">калькулятор потерь</a> ·
+            <a href="/anti-sliv-zayavok">PDF-гайд «Антислив заявок»</a> ·
+            <a href="/razbor">бесплатный разбор</a>.
+          </p>
+        </div>
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .art { padding: 130px 0 110px; }
+  .art__wrap { max-width: 760px; }
+  .art__crumbs { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--color-muted-2); margin-bottom: 28px; }
+  .art__crumbs a { color: var(--color-muted); text-decoration: none; }
+  .art__crumbs a:hover { color: var(--color-accent); }
+  .art__crumbs span { margin: 0 6px; }
+  .art__crumbs-cur { color: var(--color-muted-2); }
+
+  .art__h1 { font-family: 'Unbounded', sans-serif; font-size: clamp(28px, 4.2vw, 52px); font-weight: 500; line-height: 1.07; letter-spacing: -0.02em; margin: 14px 0 14px; overflow-wrap: break-word; }
+  .art__h1 :global(em) { font-style: italic; font-weight: 300; color: var(--aurora-cyan); }
+  .art__meta { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--color-muted-2); margin-bottom: 36px; }
+
+  .art__tldr { padding: 24px 26px; border-radius: 16px; margin-bottom: 40px; border-color: rgba(95,198,255,0.25); background: linear-gradient(135deg, rgba(95,198,255,0.07), var(--glass-tint)); }
+  .art__tldr-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-accent); margin-bottom: 10px; }
+  .art__tldr p { font-size: 16px; line-height: 1.65; color: var(--color-text); margin: 0; }
+  .art__tldr :global(b) { font-weight: 600; }
+  .art__tldr :global(a), .art__body :global(a), .art__more a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  .art__body { font-size: 16px; line-height: 1.75; color: var(--color-muted); }
+  .art__body :global(h2) { font-family: 'Unbounded', sans-serif; font-size: clamp(20px, 2.4vw, 28px); font-weight: 500; letter-spacing: -0.01em; color: var(--color-text); margin: 44px 0 16px; overflow-wrap: break-word; }
+  .art__body :global(p) { margin: 0 0 18px; }
+  .art__body :global(b) { color: var(--color-text); font-weight: 500; }
+  .art__body :global(ul):not(.art__check):not(.art__faq) { margin: 0 0 18px; padding-left: 22px; }
+  .art__body :global(li) { margin-bottom: 8px; }
+
+  .art__table-wrap { overflow-x: auto; margin: 8px 0 24px; border-radius: 14px; border: 1px solid var(--color-border); }
+  .art__table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+  .art__table th { text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--color-accent); padding: 14px 16px; border-bottom: 1px solid var(--color-border); background: rgba(95,198,255,0.04); }
+  .art__table td { padding: 14px 16px; border-bottom: 1px solid var(--color-border); color: var(--color-text); line-height: 1.5; vertical-align: top; }
+  .art__table tr:last-child td { border-bottom: none; }
+  .art__table td:nth-child(2) { color: var(--color-muted); }
+  .art__table td:nth-child(3) { color: var(--aurora-cyan); }
+
+  .art__check { list-style: none; padding: 0; margin: 0 0 22px; display: flex; flex-direction: column; gap: 11px; }
+  .art__check li { display: flex; gap: 11px; font-size: 15px; line-height: 1.5; color: var(--color-text); }
+  .art__check li::before { content: '✓'; color: #6fd6ad; flex-shrink: 0; font-weight: 600; }
+
+  .art__cta { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 28px 30px; border-radius: 18px; margin: 36px 0; flex-wrap: wrap; }
+  .art__cta-title { font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 500; color: var(--color-text); margin-bottom: 6px; }
+  .art__cta-text p { font-size: 14px; color: var(--color-muted); margin: 0; line-height: 1.5; }
+
+  .art__faq { margin: 0 0 28px; }
+  .art__faq-item { border-bottom: 1px solid var(--color-border); }
+  .art__faq-item:first-child { border-top: 1px solid var(--color-border); }
+  .art__faq summary { display: flex; align-items: center; gap: 12px; padding: 18px 0; cursor: pointer; list-style: none; font-size: 16px; font-weight: 500; color: var(--color-text); }
+  .art__faq summary::-webkit-details-marker { display: none; }
+  .art__faq-n { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--color-accent); opacity: 0.6; }
+  .art__faq-ic { margin-left: auto; color: var(--color-accent); font-size: 18px; transition: transform 0.25s; font-family: 'JetBrains Mono', monospace; }
+  details[open] .art__faq-ic { transform: rotate(45deg); }
+  .art__faq dd { margin: 0; padding: 0 0 18px 26px; font-size: 15px; line-height: 1.7; color: var(--color-muted); }
+
+  .art__more { font-size: 14px; padding-top: 24px; border-top: 1px solid var(--color-border); color: var(--color-muted-2); }
+
+  @media (max-width: 600px) {
+    .art { padding: 100px 0 72px; }
+    .art__cta { flex-direction: column; align-items: flex-start; padding: 24px 20px; }
+    .art__cta .btn { width: 100%; justify-content: center; }
+  }
+</style>
