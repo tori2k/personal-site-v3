@@ -121,7 +121,8 @@ const razborJsonLd = {
           <div class="sec-tag">Заявка на разбор</div>
           <h2 class="display-h">Оставьте данные —<br/><em>разберу и напишу.</em></h2>
           <p class="rz-form__sub">
-            Смотрю ссылку, нахожу слабые места и возвращаюсь с коротким разбором в Telegram.
+            Я смотрю не только сайт. Я смотрю путь заявки после клика: где лид появляется,
+            кто его видит, как быстро отвечает менеджер, где фиксируется статус и есть ли follow-up.
           </p>
         </div>
 
@@ -159,13 +160,70 @@ const razborJsonLd = {
           </div>
 
           <div class="rz-form__field">
-            <label for="rz-source">Где сейчас приходят заявки</label>
-            <input type="text" id="rz-source" name="lead_source" placeholder="Директ инстаграм, сарафан, ВКонтакте" />
+            <label for="rz-source">Из каких каналов приходят заявки</label>
+            <input type="text" id="rz-source" name="lead_source" placeholder="Сайт, Telegram, WhatsApp, Direct, звонки" />
+          </div>
+
+          <!-- Квалификация: путь заявки (опционально) -->
+          <div class="rz-qual">
+            <div class="rz-qual__label">Как сейчас обрабатываются заявки <span>(по желанию)</span></div>
+            <div class="rz-form__row">
+              <div class="rz-form__field">
+                <label for="rz-volume">Заявок в месяц</label>
+                <select id="rz-volume" name="lead_volume">
+                  <option value="">— выбрать —</option>
+                  <option>до 20</option>
+                  <option>20–50</option>
+                  <option>50–150</option>
+                  <option>150+</option>
+                </select>
+              </div>
+              <div class="rz-form__field">
+                <label for="rz-who">Кто отвечает на заявки</label>
+                <select id="rz-who" name="who_answers">
+                  <option value="">— выбрать —</option>
+                  <option>я сам(а)</option>
+                  <option>администратор</option>
+                  <option>менеджер / отдел продаж</option>
+                  <option>никто конкретно</option>
+                </select>
+              </div>
+            </div>
+            <div class="rz-form__row">
+              <div class="rz-form__field">
+                <label for="rz-speed">За сколько обычно отвечаете</label>
+                <select id="rz-speed" name="answer_speed">
+                  <option value="">— выбрать —</option>
+                  <option>до 15 минут</option>
+                  <option>в течение часа</option>
+                  <option>в течение дня</option>
+                  <option>дольше суток</option>
+                </select>
+              </div>
+              <div class="rz-form__field">
+                <label for="rz-store">Где фиксируются заявки</label>
+                <select id="rz-store" name="lead_store">
+                  <option value="">— выбрать —</option>
+                  <option>нигде / в переписках</option>
+                  <option>таблица / Google Sheets</option>
+                  <option>CRM</option>
+                </select>
+              </div>
+            </div>
+            <div class="rz-form__field">
+              <label for="rz-followup">Есть ли повторный дожим недозакрытых</label>
+              <select id="rz-followup" name="followup">
+                <option value="">— выбрать —</option>
+                <option>да, системно</option>
+                <option>иногда, вручную</option>
+                <option>нет</option>
+              </select>
+            </div>
           </div>
 
           <div class="rz-form__field">
-            <label for="rz-goal">Что хотите улучшить</label>
-            <textarea id="rz-goal" name="goal" rows="3" placeholder="Хочу больше заявок с сайта, сейчас почти ничего не приходит..."></textarea>
+            <label for="rz-goal">Что хотите улучшить и что будет, если не менять 2 месяца</label>
+            <textarea id="rz-goal" name="goal" rows="3" placeholder="Хочу, чтобы заявки не терялись и менеджер отвечал быстрее..."></textarea>
           </div>
 
           <label class="rz-consent">
@@ -376,7 +434,8 @@ const razborJsonLd = {
   }
   .req { color: var(--color-accent); }
   .rz-form__field input,
-  .rz-form__field textarea {
+  .rz-form__field textarea,
+  .rz-form__field select {
     background: rgba(244,246,251,0.05);
     border: 1px solid var(--color-border);
     border-radius: 10px;
@@ -389,6 +448,19 @@ const razborJsonLd = {
     resize: vertical;
     min-height: 48px;
   }
+  .rz-form__field select { cursor: pointer; appearance: none; -webkit-appearance: none; }
+  .rz-form__field select:focus { border-color: rgba(95,198,255,0.5); }
+  .rz-qual {
+    padding: 18px;
+    border: 1px dashed var(--color-border);
+    border-radius: 12px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .rz-qual__label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--color-accent);
+  }
+  .rz-qual__label span { color: var(--color-muted-2); text-transform: none; letter-spacing: 0; }
   .rz-form__field input::placeholder,
   .rz-form__field textarea::placeholder {
     color: var(--color-muted-2);

@@ -1,0 +1,45 @@
+---
+// Компактное превью основного продукта на главной → /ai-avtomatizaciya-zayavok/
+---
+<section class="pprev section-dark">
+  <div class="container-x">
+    <div class="pprev__inner glass reveal">
+      <div class="pprev__text">
+        <div class="sec-tag">Основной продукт</div>
+        <h2 class="pprev__h2">Антислив заявок</h2>
+        <p class="pprev__sub">
+          Система после клика: сайт/квиз, Telegram/CRM и AI-бот за 14–21 день.
+          Больше обработанных заявок без расширения штата.
+        </p>
+        <a href="/ai-avtomatizaciya-zayavok" class="btn btn--filled" data-magnetic="0.4">
+          <span class="btn__plus">(+)</span>
+          Смотреть продукт
+        </a>
+      </div>
+      <div class="pprev__meta">
+        <div class="pprev__cell"><span class="pprev__k">Внедрение</span><span class="pprev__v">от 150 000 ₽</span></div>
+        <div class="pprev__cell"><span class="pprev__k">Срок</span><span class="pprev__v">14–21 день</span></div>
+        <div class="pprev__cell"><span class="pprev__k">Сопровождение</span><span class="pprev__v">25–50k ₽/мес</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pprev { padding: 20px 0 60px; }
+  .pprev__inner { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 40px; align-items: center; padding: 40px 44px; border-radius: 20px; }
+  .pprev__h2 { font-family: 'Unbounded', sans-serif; font-size: clamp(26px, 3.2vw, 42px); font-weight: 500; letter-spacing: -0.02em; margin: 14px 0 14px; color: var(--color-text); }
+  .pprev__sub { font-size: 15px; line-height: 1.6; color: var(--color-muted); max-width: 460px; margin: 0 0 24px; }
+
+  .pprev__meta { display: flex; flex-direction: column; gap: 12px; }
+  .pprev__cell { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 16px; background: rgba(95,198,255,0.05); border: 1px solid var(--color-border); border-radius: 12px; }
+  .pprev__k { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--color-muted); }
+  .pprev__v { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 500; color: var(--color-text); }
+
+  @media (max-width: 900px) {
+    .pprev__inner { grid-template-columns: 1fr; gap: 28px; padding: 32px 24px; }
+  }
+  @media (max-width: 480px) {
+    .pprev .btn { width: 100%; justify-content: center; }
+  }
+</style>
