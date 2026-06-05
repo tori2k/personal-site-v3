@@ -12,7 +12,7 @@ import HeroMedia from './HeroMedia.astro';
       </div>
 
       <h1 class="hero__title text-glow">
-        Больше обработанных <em>заявок</em> без&nbsp;расширения&nbsp;штата
+        Больше обработанных <em>заявок</em> без расширения штата
       </h1>
 
       <p class="hero__sub">
@@ -130,7 +130,8 @@ import HeroMedia from './HeroMedia.astro';
     letter-spacing: -0.03em;
     margin: 0 0 28px;
     color: var(--color-text);
-    overflow-wrap: break-word;
+    overflow-wrap: normal;
+    word-break: keep-all;
     max-width: 14ch;
   }
   .hero__title em {
