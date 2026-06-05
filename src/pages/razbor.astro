@@ -507,6 +507,7 @@ const razborJsonLd = {
       form.style.display = 'none';
       if (ok) {
         if (success) success.style.display = 'flex';
+        if (typeof (window as any).track === 'function') (window as any).track('submit_razbor_form');
       } else {
         if (errorBlock) errorBlock.style.display = 'flex';
       }

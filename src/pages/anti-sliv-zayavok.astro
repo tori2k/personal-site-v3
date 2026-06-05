@@ -91,7 +91,7 @@ const jsonLd = {
             <div class="lm-err glass" id="lmErr" style="display:none" role="alert">
               <div class="lm-err__icon">△</div>
               <p class="lm-err__text">Не отправилось. Напишите напрямую — пришлю гайд вручную.</p>
-              <a href="https://t.me/tori2k" target="_blank" rel="noopener" class="btn btn--filled">
+              <a href="https://t.me/tori2k" target="_blank" rel="noopener" class="btn btn--filled" data-track="click_telegram">
                 <span class="btn__plus">(+)</span> Написать в Telegram
               </a>
             </div>
@@ -237,6 +237,7 @@ const jsonLd = {
       if (ok) {
         if (pdfLink) pdfLink.setAttribute('href', PDF_URL);
         if (done) done.style.display = 'flex';
+        if (typeof window.track === 'function') window.track('submit_pdf_form');
       } else {
         if (err) err.style.display = 'flex';
       }

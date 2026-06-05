@@ -126,7 +126,7 @@ const jsonLd = {
             <div class="calc__fix glass">
               <div class="calc__fix-label">Автоматизировать первым</div>
               <div class="calc__fix-val" id="fixFirst">—</div>
-              <a href="/razbor" class="btn btn--filled calc__cta" data-magnetic="0.3">
+              <a href="/razbor" class="btn btn--filled calc__cta" data-magnetic="0.3" data-track="click_razbor_cta">
                 <span class="btn__plus">(+)</span>
                 Получить бесплатный разбор
               </a>
@@ -279,6 +279,11 @@ const jsonLd = {
   // Состояние сегментов/переключателей
   const state = { speed: 'hour', tg: 'no', crm: 'no', fu: 'no' };
 
+  // Трекинг: «использовал» (первое действие) и «увидел результат» (один раз)
+  let usedFired = false, viewedFired = false;
+  const trk = (n: string) => { if (typeof (window as any).track === 'function') (window as any).track(n); };
+  const markUsed = () => { if (!usedFired) { usedFired = true; trk('calculator_used'); } };
+
   function bindSeg(selector: string, key: 'speed' | 'tg' | 'crm' | 'fu') {
     document.querySelectorAll(`[data-seg="${selector}"] button, [data-sw="${selector}"] button`).forEach((b) => {
       b.addEventListener('click', () => {
@@ -286,6 +291,7 @@ const jsonLd = {
         wrap.querySelectorAll('button').forEach((x) => x.classList.remove('is-active'));
         b.classList.add('is-active');
         (state as any)[key] = (b as HTMLElement).dataset.v;
+        markUsed();
         recalc();
       });
     });
@@ -296,7 +302,7 @@ const jsonLd = {
   bindSeg('fu', 'fu');
 
   ['c-check', 'c-leads', 'c-lost', 'c-conv'].forEach((id) => {
-    document.getElementById(id)?.addEventListener('input', recalc);
+    document.getElementById(id)?.addEventListener('input', () => { markUsed(); recalc(); });
   });
 
   const fmt = (n: number) => Math.round(n).toLocaleString('ru-RU');
@@ -367,6 +373,8 @@ const jsonLd = {
       'Нет follow-up — недожатые заявки не возвращают': 'Автоматический дожим',
     };
     $('fixFirst').textContent = worst ? fixMap[worst.txt] : 'Система уже собрана — можно усиливать оффер и трафик';
+
+    if (!viewedFired) { viewedFired = true; trk('calculator_result_viewed'); }
   }
 
   recalc();
