@@ -73,11 +73,23 @@ const services = [
   },
 ];
 
+// Корректный price для JSON-LD: одиночная цена → price, диапазон → PriceSpecification.
+// «10 000–25 000 ₽» больше не склеивается в «1000025000».
+function priceLd(priceStr) {
+  if (!priceStr) return {};
+  const nums = (priceStr.match(/\d[\d\s]*\d|\d/g) || []).map((n) => n.replace(/\s/g, ''));
+  if (nums.length >= 2) {
+    return { priceSpecification: { '@type': 'PriceSpecification', minPrice: nums[0], maxPrice: nums[1], priceCurrency: 'RUB' } };
+  }
+  if (nums.length === 1) return { price: nums[0], priceCurrency: 'RUB' };
+  return {};
+}
+
 // JSON-LD: каталог услуг (Service + OfferCatalog)
 const servicesJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
-  serviceType: 'Разработка сайтов и AI-воронок под заявки',
+  serviceType: 'AI-автоматизация обработки заявок',
   provider: { '@type': 'Person', name: 'Кирилл Барыев', url: 'https://kirillbaryev.ru' },
   areaServed: 'RU',
   hasOfferCatalog: {
@@ -87,7 +99,7 @@ const servicesJsonLd = {
       '@type': 'Offer',
       name: s.name,
       description: s.pain,
-      ...(s.price ? { price: s.price.replace(/[^\d]/g, '') || undefined, priceCurrency: 'RUB' } : {}),
+      ...priceLd(s.price),
     })),
   },
 };
