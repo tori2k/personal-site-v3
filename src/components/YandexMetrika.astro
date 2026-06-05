@@ -1,0 +1,112 @@
+---
+// Privacy-friendly Яндекс Метрика (152-ФЗ): счётчик грузится ТОЛЬКО после
+// согласия пользователя на аналитические cookies. Выбор хранится в localStorage.
+// window.track() — безопасный helper для целей (no-op, пока ym не загружен).
+// GA здесь нет намеренно: фактически не используется + трансграничная передача.
+const YM_ID = 109657352;
+---
+<!-- Cookie / analytics consent banner -->
+<div class="cc" id="cookieConsent" role="dialog" aria-label="Согласие на использование cookie" hidden>
+  <p class="cc__text">
+    Мы используем cookies и Яндекс Метрику, чтобы анализировать посещаемость,
+    улучшать сайт и понимать, какие материалы полезны. Подробнее —
+    в <a href="/privacy">Политике обработки персональных данных</a>.
+  </p>
+  <div class="cc__actions">
+    <button type="button" class="cc__btn cc__btn--accept" id="ccAccept">Принять</button>
+    <button type="button" class="cc__btn cc__btn--decline" id="ccDecline">Отклонить</button>
+  </div>
+</div>
+
+<style>
+  .cc {
+    position: fixed;
+    left: 16px; right: 16px; bottom: 16px;
+    z-index: 700;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 18px 20px;
+    background: rgba(8,16,32,0.92);
+    border: 1px solid rgba(95,198,255,0.3);
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+    display: flex; flex-direction: column; gap: 14px;
+    animation: cc-in 0.4s cubic-bezier(.22,1,.36,1);
+  }
+  @keyframes cc-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  .cc[hidden] { display: none; }
+  .cc__text { font-size: 13px; line-height: 1.55; color: var(--color-muted); margin: 0; }
+  .cc__text a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .cc__actions { display: flex; gap: 10px; }
+  .cc__btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.5px;
+    padding: 10px 18px; border-radius: 999px; cursor: pointer; border: 1px solid var(--color-border);
+    transition: all 0.2s;
+  }
+  .cc__btn--accept { background: var(--color-accent); border-color: var(--color-accent); color: #06070D; font-weight: 600; }
+  .cc__btn--accept:hover { box-shadow: 0 0 20px rgba(95,198,255,0.4); }
+  .cc__btn--decline { background: transparent; color: var(--color-muted); }
+  .cc__btn--decline:hover { color: var(--color-text); border-color: var(--color-border-2); }
+
+  @media (max-width: 480px) {
+    .cc { left: 10px; right: 10px; bottom: 10px; padding: 16px; }
+    .cc__actions { flex-direction: column; }
+    .cc__btn { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { .cc { animation: none; } }
+</style>
+
+<script is:inline define:vars={{ YM_ID }}>
+  (function () {
+    var KEY = 'analyticsConsent'; // 'granted' | 'denied'
+
+    // ── Безопасный трекер целей: работает и до загрузки Метрики ──
+    window.track = function (name, params) {
+      try { if (typeof window.ym === 'function') window.ym(YM_ID, 'reachGoal', name, params || {}); }
+      catch (e) { /* no-op */ }
+    };
+
+    // ── Делегирование: любой [data-track] шлёт цель по клику ──
+    document.addEventListener('click', function (e) {
+      var el = e.target && e.target.closest ? e.target.closest('[data-track]') : null;
+      if (el) window.track(el.getAttribute('data-track'));
+    }, { passive: true });
+
+    // ── Загрузка счётчика Метрики (вызывается только при согласии) ──
+    var loaded = false;
+    function loadMetrika() {
+      if (loaded) return; loaded = true;
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=' + YM_ID,'ym');
+      window.ym(YM_ID, 'init', { webvisor:true, clickmap:true, accurateTrackBounce:true, trackLinks:true });
+    }
+
+    // ── Consent-логика ──
+    var banner = document.getElementById('cookieConsent');
+    var consent = null;
+    try { consent = localStorage.getItem(KEY); } catch (e) {}
+
+    if (consent === 'granted') {
+      loadMetrika();
+    } else if (consent !== 'denied' && banner) {
+      banner.hidden = false; // нет выбора — показываем баннер
+    }
+
+    function setConsent(v) {
+      try { localStorage.setItem(KEY, v); } catch (e) {}
+      if (banner) banner.hidden = true;
+      if (v === 'granted') loadMetrika();
+    }
+
+    var accept = document.getElementById('ccAccept');
+    var decline = document.getElementById('ccDecline');
+    if (accept) accept.addEventListener('click', function () { setConsent('granted'); });
+    if (decline) decline.addEventListener('click', function () { setConsent('denied'); });
+  })();
+</script>
+
+<noscript><div><img src={`https://mc.yandex.ru/watch/${YM_ID}`} style="position:absolute;left:-9999px" alt="" /></div></noscript>

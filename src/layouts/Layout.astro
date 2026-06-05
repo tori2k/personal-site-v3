@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import Analytics from '../components/Analytics.astro';
+import YandexMetrika from '../components/YandexMetrika.astro';
 
 interface Props {
   title?: string;
@@ -138,8 +138,6 @@ const allJsonLd = [...baseJsonLd, ...pageJsonLd];
       #preloader .pl-mark { animation: none; }
     }
   </style>
-
-  <Analytics />
 </head>
 <body class="is-loading">
   <!-- Прелоадер: держит тёмный экран, пока грузятся шрифты + DOM. Снимается из скрипта. -->
@@ -162,6 +160,8 @@ const allJsonLd = [...baseJsonLd, ...pageJsonLd];
   </div>
 
   <slot />
+
+  <YandexMetrika />
 
   <style is:global>
     .cursor {

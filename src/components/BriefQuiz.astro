@@ -183,8 +183,8 @@ const contact = [
             <label class="bq-consent">
               <input type="checkbox" name="consent" required />
               <span>
-                Согласен на&nbsp;обработку персональных данных для связи по&nbsp;проекту.
-                Свои данные я&nbsp;не&nbsp;передаю третьим лицам.
+                Я&nbsp;согласен(на) на&nbsp;обработку персональных данных и&nbsp;принимаю
+                <a href="/privacy" target="_blank" rel="noopener">Политику обработки персональных данных</a>.
               </span>
             </label>
           </div>
@@ -626,6 +626,7 @@ const contact = [
     cursor: pointer;
   }
   .bq-consent input { margin-top: 3px; flex-shrink: 0; }
+  .bq-consent a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid currentColor; }
 
   /* success */
   .bq-success {

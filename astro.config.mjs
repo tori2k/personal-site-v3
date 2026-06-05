@@ -11,8 +11,8 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      // Демо-шаблоны не индексируем — исключаем из sitemap
-      filter: (page) => !page.includes('/templates'),
+      // Демо-шаблоны и технические страницы (privacy) не индексируем
+      filter: (page) => !page.includes('/templates') && !page.includes('/privacy'),
       lastmod: new Date(),
     }),
   ],
