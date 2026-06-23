@@ -32,9 +32,9 @@
     object-fit: cover;
     object-position: center;
     mix-blend-mode: screen;
-    opacity: 0.92;
-    /* тёмно-фиолетовое свечение: приглушаем яркость + тянем оттенок в глубокий violet */
-    filter: brightness(0.58) contrast(1.12) saturate(1.2) hue-rotate(-24deg);
+    opacity: 0.95;
+    /* цвет уже тёмно-фиолетовый из видео — только лёгкая насыщенность */
+    filter: saturate(1.12) contrast(1.04);
     /* одна вертикальная маска — как в ТЕПЛЕЕ: гаснет в ноль сверху и снизу */
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 80%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 80%, transparent 100%);
