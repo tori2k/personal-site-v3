@@ -1,5 +1,13 @@
 ---
-// Блок «Что я автоматизирую» — чёткие UI-микроанимации кодом (CSS), в стиле сайта.
+// Блок «Что я автоматизирую» — 6 карточек с наглядными видео (Veo3), в стиле сайта.
+const items = [
+  { v: 'auto-tg',      icon: '✈', title: 'Заявка → Telegram',  desc: 'Каждое обращение мгновенно прилетает в чат — ничего не теряется в формах.' },
+  { v: 'auto-crm',     icon: '⊞', title: 'CRM / таблица лидов', desc: 'Лиды сами падают в таблицу со статусом, источником и данными.' },
+  { v: 'auto-ai',      icon: '⚡', title: 'AI-дожим',           desc: 'Бот сам отвечает и доводит холодную заявку до записи.' },
+  { v: 'auto-pay',     icon: '◎', title: 'Онлайн-оплата',      desc: 'Клиент платит прямо на сайте — деньги не ждут звонка.' },
+  { v: 'auto-funnel',  icon: '⇥', title: 'Лид-воронка',        desc: 'Каждая заявка двигается по этапам — видно, кто на какой стадии.' },
+  { v: 'auto-content', icon: '◳', title: 'Контент-завод',      desc: 'Поток коротких видео для соцсетей — на конвейере, без съёмок.' },
+];
 ---
 <section class="autos section-dark" id="automations">
   <div class="container-x">
@@ -10,74 +18,20 @@
     </div>
 
     <div class="autos__grid">
-
-      <!-- 1. Заявка → Telegram -->
-      <article class="acard reveal">
-        <div class="acard__demo">
-          <div class="d-tg">
-            <span class="d-tg__ic">✈</span>
-            <div class="d-tg__body">
-              <div class="d-tg__head"><b>Новая заявка</b><span>сейчас</span></div>
-              <div class="d-tg__row">Ниша: стоматология</div>
-              <div class="d-tg__row">Контакт: @client</div>
-            </div>
+      {items.map((it) => (
+        <article class="acard reveal">
+          <div class="acard__demo">
+            <video class="acard__video" autoplay muted loop playsinline preload="metadata">
+              <source src={`/${it.v}.mp4`} type="video/mp4" />
+            </video>
           </div>
-        </div>
-        <div class="acard__meta">
-          <div class="acard__icon">✈</div>
-          <h3 class="acard__title">Заявка → Telegram</h3>
-          <p class="acard__desc">Каждое обращение мгновенно прилетает в чат — ничего не теряется в формах.</p>
-        </div>
-      </article>
-
-      <!-- 2. Квиз → CRM / таблица -->
-      <article class="acard reveal">
-        <div class="acard__demo">
-          <div class="d-tbl">
-            <div class="d-tbl__row"><span class="d-tbl__name">Анна К.</span><span class="d-tbl__src">сайт</span><span class="st st--new">новый</span></div>
-            <div class="d-tbl__row"><span class="d-tbl__name">Игорь П.</span><span class="d-tbl__src">квиз</span><span class="st st--work">в работе</span></div>
-            <div class="d-tbl__row"><span class="d-tbl__name">Мария В.</span><span class="d-tbl__src">реклама</span><span class="st st--won">продажа</span></div>
+          <div class="acard__meta">
+            <div class="acard__icon">{it.icon}</div>
+            <h3 class="acard__title">{it.title}</h3>
+            <p class="acard__desc">{it.desc}</p>
           </div>
-        </div>
-        <div class="acard__meta">
-          <div class="acard__icon">⊞</div>
-          <h3 class="acard__title">Квиз → CRM / таблица</h3>
-          <p class="acard__desc">Лиды сами падают в таблицу со статусом, источником и данными.</p>
-        </div>
-      </article>
-
-      <!-- 3. AI-дожим -->
-      <article class="acard reveal">
-        <div class="acard__demo">
-          <div class="d-chat">
-            <div class="d-bub d-bub--in">Здравствуйте! Ещё актуально?</div>
-            <div class="d-bub d-bub--type"><i></i><i></i><i></i></div>
-            <div class="d-bub d-bub--out">Да 🙌 Записать вас на консультацию?</div>
-          </div>
-        </div>
-        <div class="acard__meta">
-          <div class="acard__icon">⚡</div>
-          <h3 class="acard__title">AI-дожим</h3>
-          <p class="acard__desc">Бот сам отвечает и доводит холодную заявку до записи.</p>
-        </div>
-      </article>
-
-      <!-- 4. Оплата → подтверждение -->
-      <article class="acard reveal">
-        <div class="acard__demo">
-          <div class="d-pay">
-            <div class="d-pay__amount">12 900 ₽</div>
-            <div class="d-pay__btn">оплатить</div>
-            <div class="d-pay__done"><span class="d-pay__ring"></span><span class="d-pay__check">✓</span> оплачено</div>
-          </div>
-        </div>
-        <div class="acard__meta">
-          <div class="acard__icon">◎</div>
-          <h3 class="acard__title">Онлайн-оплата</h3>
-          <p class="acard__desc">Клиент платит прямо на сайте — деньги не ждут звонка.</p>
-        </div>
-      </article>
-
+        </article>
+      ))}
     </div>
   </div>
 </section>
@@ -91,7 +45,7 @@
 
   .autos__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
   }
 
@@ -113,18 +67,21 @@
     transform: translateY(-4px);
   }
 
-  /* «экран» демо */
   .acard__demo {
     position: relative;
-    height: 190px;
-    padding: 20px;
-    display: flex; align-items: center; justify-content: center;
-    background:
-      radial-gradient(120% 100% at 50% 0%, rgba(139,92,255,0.12), transparent 60%),
-      rgba(255,255,255,0.02);
-    border-bottom: 1px solid var(--color-border);
+    aspect-ratio: 16 / 10;
     overflow: hidden;
+    border-bottom: 1px solid var(--color-border);
+    background: #0A0712;
   }
+  .acard__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+  }
+  .acard:hover .acard__video { transform: scale(1.03); }
 
   .acard__meta { padding: 22px 24px 26px; }
   .acard__icon { font-size: 18px; color: var(--color-accent); margin-bottom: 10px; line-height: 1; }
@@ -136,149 +93,11 @@
   }
   .acard__desc { font-size: 13px; line-height: 1.55; color: var(--color-muted); margin: 0; }
 
-  /* mono базовый для демо */
-  .acard__demo, .acard__demo * { font-family: 'JetBrains Mono', monospace; }
-
-  /* ── 1. Telegram-нотификация ── */
-  .d-tg {
-    display: flex; gap: 10px;
-    width: 100%;
-    padding: 12px;
-    background: rgba(139,92,255,0.08);
-    border: 1px solid rgba(139,92,255,0.28);
-    border-radius: 12px;
-    animation: d-tg-in 4.5s cubic-bezier(.22,1,.36,1) infinite;
+  @media (max-width: 1100px) {
+    .autos__grid { grid-template-columns: repeat(2, 1fr); }
   }
-  @keyframes d-tg-in {
-    0% { opacity: 0; transform: translateX(28px) scale(0.96); }
-    12%, 82% { opacity: 1; transform: none; }
-    96%, 100% { opacity: 0; transform: translateX(28px) scale(0.96); }
-  }
-  .d-tg__ic {
-    width: 30px; height: 30px; flex-shrink: 0;
-    display: grid; place-items: center;
-    background: var(--color-accent); color: #0A0712;
-    border-radius: 8px; font-size: 15px;
-  }
-  .d-tg__body { flex: 1; min-width: 0; }
-  .d-tg__head { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; }
-  .d-tg__head b { color: var(--color-text); font-weight: 600; }
-  .d-tg__head span { color: var(--color-muted-2); font-size: 10px; }
-  .d-tg__row { font-size: 11px; color: var(--color-muted); line-height: 1.6; }
-
-  /* ── 2. Таблица лидов ── */
-  .d-tbl { width: 100%; display: flex; flex-direction: column; gap: 7px; }
-  .d-tbl__row {
-    display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center;
-    padding: 8px 11px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--color-border);
-    border-radius: 9px;
-    opacity: 0;
-    animation: d-row-in 4.5s ease infinite;
-  }
-  .d-tbl__row:nth-child(1) { animation-delay: 0.1s; }
-  .d-tbl__row:nth-child(2) { animation-delay: 0.45s; }
-  .d-tbl__row:nth-child(3) { animation-delay: 0.8s; }
-  @keyframes d-row-in {
-    0% { opacity: 0; transform: translateY(8px); }
-    14%, 86% { opacity: 1; transform: none; }
-    98%, 100% { opacity: 0; }
-  }
-  .d-tbl__name { font-size: 12px; color: var(--color-text); }
-  .d-tbl__src { font-size: 10px; color: var(--color-muted-2); }
-  .st { font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; }
-  .st--new  { color: #b69cff; background: rgba(139,92,255,0.14); }
-  .st--work { color: #ffd166; background: rgba(255,209,102,0.12); }
-  .st--won  { color: #5fc6a0; background: rgba(95,198,160,0.14); }
-
-  /* ── 3. Чат-дожим ── */
-  .d-chat { width: 100%; display: flex; flex-direction: column; gap: 8px; }
-  .d-bub {
-    max-width: 80%;
-    padding: 8px 12px; font-size: 11.5px; line-height: 1.4;
-    border-radius: 12px;
-  }
-  .d-bub--in {
-    align-self: flex-start;
-    background: rgba(255,255,255,0.05); color: var(--color-text);
-    border: 1px solid var(--color-border);
-    opacity: 0; animation: d-bub-in 5s ease infinite; animation-delay: 0.2s;
-  }
-  .d-bub--type {
-    align-self: flex-end;
-    display: inline-flex; gap: 4px; align-items: center;
-    background: var(--color-accent);
-    opacity: 0; animation: d-type 5s ease infinite; animation-delay: 1.2s;
-  }
-  .d-bub--type i { width: 5px; height: 5px; border-radius: 50%; background: #0A0712; animation: d-dot 1s ease-in-out infinite; }
-  .d-bub--type i:nth-child(2) { animation-delay: 0.15s; }
-  .d-bub--type i:nth-child(3) { animation-delay: 0.3s; }
-  .d-bub--out {
-    align-self: flex-end;
-    background: var(--color-accent); color: #0A0712; font-weight: 500;
-    opacity: 0; animation: d-bub-in 5s ease infinite; animation-delay: 2.4s;
-  }
-  @keyframes d-bub-in {
-    0%, 4% { opacity: 0; transform: translateY(8px); }
-    10%, 90% { opacity: 1; transform: none; }
-    98%, 100% { opacity: 0; }
-  }
-  @keyframes d-type {
-    0%, 22% { opacity: 0; }
-    26%, 46% { opacity: 1; }
-    50%, 100% { opacity: 0; }
-  }
-  @keyframes d-dot { 0%,100% { opacity: 0.4; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
-
-  /* ── 4. Оплата ── */
-  .d-pay { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; position: relative; }
-  .d-pay__amount {
-    font-family: 'Unbounded', sans-serif; font-size: 26px; font-weight: 500; color: var(--color-text);
-  }
-  .d-pay__btn {
-    padding: 9px 22px; border-radius: 999px;
-    background: var(--color-accent); color: #0A0712; font-size: 11px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.5px;
-    animation: d-pay-btn 4.5s ease infinite;
-  }
-  @keyframes d-pay-btn {
-    0%, 30% { opacity: 1; transform: scale(1); }
-    38% { transform: scale(0.92); }
-    46%, 100% { opacity: 0; transform: scale(0.96); height: 0; }
-  }
-  .d-pay__done {
-    position: absolute; bottom: 6px;
-    display: inline-flex; align-items: center; gap: 7px;
-    font-size: 12px; color: #5fc6a0;
-    opacity: 0; animation: d-pay-done 4.5s ease infinite;
-  }
-  @keyframes d-pay-done {
-    0%, 48% { opacity: 0; }
-    56%, 92% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-  .d-pay__check {
-    width: 18px; height: 18px; border-radius: 50%;
-    display: grid; place-items: center;
-    background: rgba(95,198,160,0.18); color: #5fc6a0; font-size: 11px;
-  }
-  .d-pay__ring {
-    position: absolute; left: 50%; bottom: 4px; width: 18px; height: 18px;
-    border-radius: 50%; border: 1.5px solid #5fc6a0; transform: translateX(-50%);
-    opacity: 0; animation: d-pay-ring 4.5s ease infinite;
-  }
-  @keyframes d-pay-ring {
-    0%, 48% { opacity: 0; transform: translateX(-50%) scale(1); }
-    52% { opacity: 0.8; }
-    72%, 100% { opacity: 0; transform: translateX(-50%) scale(4); }
-  }
-
-  @media (max-width: 760px) {
+  @media (max-width: 700px) {
     .autos { padding: 72px 0; }
     .autos__grid { grid-template-columns: 1fr; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .acard__demo * { animation: none !important; opacity: 1 !important; }
   }
 </style>
