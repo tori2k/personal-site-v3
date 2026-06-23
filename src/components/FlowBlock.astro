@@ -1,181 +1,161 @@
 ---
 const steps = [
-  {
-    num: '01',
-    icon: '▶',
-    label: 'Видит видео или пост',
-    desc: 'Человек замечает вас в ленте',
-  },
-  {
-    num: '02',
-    icon: '→',
-    label: 'Переходит на сайт или в Telegram',
-    desc: 'Первый экран объясняет, кому вы и что даёте',
-  },
-  {
-    num: '03',
-    icon: '◻',
-    label: 'Заполняет форму или квиз',
-    desc: 'Квалификация: клиент описывает задачу',
-  },
-  {
-    num: '04',
-    icon: '✉',
-    label: 'Заявка приходит в Telegram',
-    desc: 'Форматированное сообщение с данными клиента',
-  },
-  {
-    num: '05',
-    icon: '⊞',
-    label: 'Лид в таблице или CRM',
-    desc: 'Статус, источник и данные — в одном месте',
-  },
+  { num: '01', icon: '▶', label: 'Видит видео или пост', desc: 'Человек замечает вас в ленте' },
+  { num: '02', icon: '→', label: 'Переходит на сайт или в Telegram', desc: 'Первый экран объясняет, кому вы и что даёте' },
+  { num: '03', icon: '◻', label: 'Заполняет форму или квиз', desc: 'Квалификация: клиент описывает задачу' },
+  { num: '04', icon: '✉', label: 'Заявка приходит в Telegram', desc: 'Форматированное сообщение с данными клиента' },
+  { num: '05', icon: '⊞', label: 'Лид в таблице или CRM', desc: 'Статус, источник и данные — в одном месте' },
 ];
 ---
-<section class="flow section-dark" id="flow">
-  <div class="container-x">
-    <div class="flow__head reveal">
+<section class="flowx section-dark" id="flow">
+  <div class="flowx__sticky">
+    <div class="container-x flowx__head">
       <div class="sec-tag">Как это работает</div>
-      <h2 class="display-h">
-        Как заявка <em>проходит</em><br/>
-        систему.
-      </h2>
+      <h2 class="display-h flowx__title">Как заявка <em>проходит</em> систему.</h2>
+      <div class="flowx__hint" aria-hidden="true">скролльте вниз <span>→</span></div>
     </div>
 
-    <div class="flow__steps">
-      {steps.map((s, i) => (
-        <div class:list={['flow__step', 'reveal']} style={`transition-delay: ${i * 0.08}s`}>
-          <div class="flow__step-num">{s.num}</div>
-          <div class="flow__step-icon" aria-hidden="true">{s.icon}</div>
-          <div class="flow__step-content">
-            <div class="flow__step-label">{s.label}</div>
-            <div class="flow__step-desc">{s.desc}</div>
+    <div class="flowx__viewport">
+      <div class="flowx__track" id="flowTrack">
+        {steps.map((s) => (
+          <div class="fxcard">
+            <div class="fxcard__top">
+              <span class="fxcard__num">{s.num}</span>
+              <span class="fxcard__icon" aria-hidden="true">{s.icon}</span>
+            </div>
+            <div class="fxcard__label">{s.label}</div>
+            <div class="fxcard__desc">{s.desc}</div>
           </div>
-          {i < steps.length - 1 && <div class="flow__arrow" aria-hidden="true">↓</div>}
+        ))}
+        <div class="fxcard fxcard--note">
+          <p>Сайт не должен быть просто витриной. Он объясняет услугу, квалифицирует человека и передаёт заявку туда, где вы реально работаете.</p>
+          <a href="/razbor" class="btn btn--filled fxcard__cta"><span class="btn__plus">(+)</span> Найти 3 точки слива</a>
         </div>
-      ))}
-    </div>
-
-    <div class="flow__note reveal">
-      <p>
-        Сайт не должен быть просто витриной. Он должен объяснять услугу,
-        квалифицировать человека и передавать заявку туда, где вы реально работаете.
-      </p>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .flow { padding: 140px 0; }
-
-  .flow__head {
-    max-width: 780px;
-    margin-bottom: 60px;
-  }
-
-  .flow__steps {
+  .flowx { position: relative; height: 340vh; }
+  .flowx__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    max-width: 720px;
-    margin: 0 auto 72px;
+    justify-content: center;
+    gap: 40px;
   }
-
-  .flow__step {
-    position: relative;
-    display: grid;
-    grid-template-columns: 48px 48px 1fr;
-    gap: 16px;
-    align-items: center;
-    padding: 24px 28px;
-    background: var(--glass-tint);
-    backdrop-filter: blur(16px) saturate(1.3);
-    -webkit-backdrop-filter: blur(16px) saturate(1.3);
-    border: 1px solid var(--color-border);
-    border-radius: 14px;
-    margin-bottom: 8px;
-    transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s cubic-bezier(.22,1,.36,1);
-  }
-  .flow__step:hover {
-    border-color: rgba(139,92,255,0.35);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 0 30px rgba(139,92,255,0.08);
-    transform: translateX(6px);
-  }
-
-  .flow__step-num {
+  .flowx__head { width: 100%; }
+  .flowx__title { margin: 0; }
+  .flowx__hint {
+    margin-top: 18px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--color-accent);
-    opacity: 0.7;
-  }
-
-  .flow__step-icon {
-    font-size: 20px;
-    color: var(--color-accent);
-    text-align: center;
-    line-height: 1;
-  }
-
-  .flow__step-label {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0;
-    color: var(--color-text);
-    margin-bottom: 4px;
-  }
-
-  .flow__step-desc {
-    font-size: 13px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
     color: var(--color-muted);
-    line-height: 1.5;
+    display: inline-flex; gap: 8px; align-items: center;
+  }
+  .flowx__hint span { color: var(--color-accent); animation: fx-nudge 1.6s ease-in-out infinite; }
+  @keyframes fx-nudge { 0%,100%{transform:translateX(0)} 50%{transform:translateX(6px)} }
+
+  .flowx__viewport { width: 100%; overflow: hidden; }
+  .flowx__track {
+    display: flex;
+    gap: 24px;
+    padding: 0 max(24px, calc((100vw - 1280px) / 2 + 40px));
+    will-change: transform;
   }
 
-  .flow__arrow {
-    display: none;
-  }
-
-  .flow__note {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 40px;
+  .fxcard {
+    flex: 0 0 auto;
+    width: clamp(300px, 34vw, 460px);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding: 36px 34px;
     background: var(--glass-tint);
     backdrop-filter: blur(20px) saturate(1.4);
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
     border: 1px solid var(--color-border);
-    border-radius: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
+    border-radius: 20px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.3), var(--glass-edge);
+    transition: border-color 0.35s, box-shadow 0.35s;
   }
-
-  .flow__note p {
-    font-size: clamp(15px, 1.4vw, 18px);
-    line-height: 1.65;
-    color: var(--color-muted);
-    margin: 0;
+  .fxcard:hover {
+    border-color: rgba(139,92,255,0.4);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4), 0 0 50px rgba(139,92,255,0.14), var(--glass-edge);
   }
+  .fxcard__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .fxcard__num { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 2px; color: var(--color-accent); }
+  .fxcard__icon { font-size: 28px; color: var(--color-accent); line-height: 1; }
+  .fxcard__label {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(20px, 1.8vw, 28px);
+    font-weight: 500; line-height: 1.15; letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin-top: auto;
+    margin-bottom: 12px;
+  }
+  .fxcard__desc { font-size: 15px; line-height: 1.5; color: var(--color-muted); }
 
-  .flow__cta { align-self: flex-start; }
+  .fxcard--note {
+    width: clamp(320px, 38vw, 520px);
+    justify-content: center;
+    background: linear-gradient(140deg, rgba(139,92,255,0.16), rgba(199,124,255,0.06));
+    border-color: rgba(139,92,255,0.3);
+  }
+  .fxcard--note p {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(18px, 1.7vw, 24px);
+    font-weight: 400; line-height: 1.3; letter-spacing: -0.02em;
+    color: var(--color-text); margin: 0 0 24px;
+  }
+  .fxcard__cta { align-self: flex-start; }
 
+  /* Мобайл/планшет — без пиннинга: обычный горизонтальный свайп */
   @media (max-width: 900px) {
-    .flow { padding: 80px 0; }
-    .flow__step {
-      grid-template-columns: 36px 36px 1fr;
-      gap: 10px;
-      padding: 18px 20px;
-    }
-    .flow__note { padding: 28px 24px; }
+    .flowx { height: auto; }
+    .flowx__sticky { position: static; height: auto; padding: 80px 0; gap: 28px; }
+    .flowx__viewport { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .flowx__track { transform: none !important; padding: 0 24px 16px; }
+    .fxcard { scroll-snap-align: start; width: 78vw; min-height: 240px; }
+    .fxcard--note { width: 82vw; }
   }
-
-  @media (max-width: 600px) {
-    .flow__step { grid-template-columns: 28px 1fr; }
-    .flow__step-icon { display: none; }
-  }
-  @media (max-width: 480px) {
-    .flow__step { padding: 14px 14px; gap: 8px; }
-    .flow__note { padding: 20px 16px; }
-    .flow__cta { width: 100%; justify-content: center; }
+  @media (prefers-reduced-motion: reduce) {
+    .flowx { height: auto; }
+    .flowx__sticky { position: static; height: auto; }
+    .flowx__track { transform: none !important; flex-wrap: wrap; }
+    .flowx__hint span { animation: none; }
   }
 </style>
+
+<script>
+  const section = document.getElementById('flow');
+  const track = document.getElementById('flowTrack');
+  const mq = window.matchMedia('(max-width: 900px)');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let lastX = -1;
+  function update() {
+    if (!section || !track) return;
+    if (mq.matches || reduce.matches) {
+      if (track.style.transform) track.style.transform = '';
+      return;
+    }
+    const rect = section.getBoundingClientRect();
+    // считаем только когда секция в зоне видимости
+    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+    const total = section.offsetHeight - window.innerHeight;
+    const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
+    const maxX = Math.max(0, track.scrollWidth - window.innerWidth + 48);
+    const x = Math.round(progress * maxX);
+    if (x !== lastX) { track.style.transform = `translate3d(${-x}px,0,0)`; lastX = x; }
+  }
+
+  // rAF-тикер: надёжно работает и с Lenis (не зависит от scroll-событий)
+  function loop() { update(); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+  window.addEventListener('resize', update);
+</script>
