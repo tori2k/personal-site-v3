@@ -69,6 +69,7 @@ const featured = [
               loading="eager"
               decoding="async"
             />
+            <span class="fcard__tint" aria-hidden="true"></span>
             {f.video && (
               <video class="fcard__video" muted loop playsinline preload="none" poster={`${base}screenshots/${f.img}`}>
                 <source src={`${base}screenshots/${f.video}`} type="video/mp4" />
@@ -174,22 +175,37 @@ const featured = [
   .fcard__media {
     position: relative;
     overflow: hidden;
-    min-height: 380px;
     display: block;
+    aspect-ratio: 1280 / 964;   /* под разрешение записи */
+    align-self: center;
   }
   .fcard__media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top center;
-    transition: transform 0.7s cubic-bezier(.22,1,.36,1);
+    /* дефолт — серо-фиолетовый дуотон; при наведении расцветает */
+    filter: grayscale(0.85) brightness(0.55) contrast(1.05);
+    transition: filter 0.45s ease, transform 0.7s cubic-bezier(.22,1,.36,1);
   }
-  .fcard:hover .fcard__media img { transform: scale(1.03); }
+  .fcard:hover .fcard__media img { filter: none; transform: scale(1.03); }
+
+  /* фиолетовый тон поверх ч/б-кадра (дуотон), уходит при наведении */
+  .fcard__tint {
+    position: absolute; inset: 0; z-index: 1;
+    background: #8B5CFF;
+    mix-blend-mode: color;
+    opacity: 0.6;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
+  }
+  .fcard:hover .fcard__tint { opacity: 0; }
 
   /* видео-запись сайта: проигрывается при наведении (как у ТЕПЛЕЕ) */
   .fcard__video {
     position: absolute;
     inset: 0;
+    z-index: 2;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -202,6 +218,7 @@ const featured = [
 
   .fcard__status {
     position: absolute;
+    z-index: 3;
     top: 20px;
     left: 20px;
     font-family: 'JetBrains Mono', monospace;
