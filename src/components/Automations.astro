@@ -24,7 +24,6 @@ const items = [
             <video class="acard__video" muted loop playsinline preload="none" poster={`/${it.v}-poster.jpg`}>
               <source src={`/${it.v}.mp4`} type="video/mp4" />
             </video>
-            <span class="acard__play" aria-hidden="true">▶</span>
           </div>
           <div class="acard__meta">
             <div class="acard__icon">{it.icon}</div>
@@ -86,25 +85,6 @@ const items = [
   }
   .acard:hover .acard__video { filter: none; transform: scale(1.03); }
 
-  /* значок «play» поверх статичного кадра */
-  .acard__play {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 48px; height: 48px;
-    display: grid; place-items: center;
-    border-radius: 50%;
-    background: rgba(10,7,18,0.55);
-    border: 1px solid rgba(139,92,255,0.5);
-    color: var(--color-accent);
-    font-size: 14px;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    pointer-events: none;
-  }
-  .acard:hover .acard__play { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-
   .acard__meta { padding: 22px 24px 26px; }
   .acard__icon { font-size: 18px; color: var(--color-accent); margin-bottom: 10px; line-height: 1; }
   .acard__title {
@@ -123,7 +103,6 @@ const items = [
     .autos__grid { grid-template-columns: 1fr; }
     /* на тач — видео сразу видно (без hover), но без звука и по требованию */
     .acard__video { filter: none; }
-    .acard__play { display: none; }
   }
 </style>
 
