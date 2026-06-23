@@ -4,21 +4,16 @@ import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import ManifestScreen from '../components/ManifestScreen.astro';
 import Approach from '../components/Approach.astro';
-import ForWhom from '../components/ForWhom.astro';
-import FlowBlock from '../components/FlowBlock.astro';
-import CalcPreview from '../components/CalcPreview.astro';
-import ProductPreview from '../components/ProductPreview.astro';
 import Portfolio from '../components/Portfolio.astro';
-import LeadMagnetPreview from '../components/LeadMagnetPreview.astro';
+import FlowBlock from '../components/FlowBlock.astro';
 import MethodBlock from '../components/MethodBlock.astro';
 import Pricing from '../components/Pricing.astro';
-import Faq from '../components/Faq.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Footer from '../components/Footer.astro';
 import StickyGuide from '../components/StickyGuide.astro';
 import { faqItems } from '../data/faq';
 
-// JSON-LD: FAQPage из тех же вопросов, что в блоке FAQ
+// JSON-LD: FAQPage из тех же вопросов (блок FAQ убран с главной, но разметка для SEO остаётся)
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -35,15 +30,10 @@ const faqJsonLd = {
     <Hero />
     <ManifestScreen />
     <Approach />
-    <FlowBlock />
-    <CalcPreview />
-    <ProductPreview />
-    <ForWhom />
     <Portfolio />
-    <Pricing />
-    <LeadMagnetPreview />
+    <FlowBlock />
     <MethodBlock />
-    <Faq />
+    <Pricing />
     <FinalCta />
   </main>
   <Footer />
