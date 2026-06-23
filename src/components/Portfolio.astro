@@ -5,6 +5,7 @@ const featured = [
   {
     slug: 'manifik',
     img: 'manifik.jpg',
+    video: 'manifik.mp4',
     title: 'Manifik',
     niche: 'Школа вокала',
     url: 'https://manifik-school.ru',
@@ -22,6 +23,7 @@ const featured = [
   {
     slug: 'znamya-truda',
     img: 'znamya-truda.jpg',
+    video: 'znamya.mp4',
     title: 'ФК «Знамя Труда»',
     niche: 'Футбольный клуб · Орехово-Зуево',
     url: 'https://fczt1909.ru',
@@ -59,7 +61,7 @@ const featured = [
 
     <div class="featured">
       {featured.map((f, i) => (
-        <article class:list={['fcard', 'reveal']} style={`transition-delay: ${i * 0.1}s`}>
+        <article class:list={['fcard', 'reveal']} style={`transition-delay: ${i * 0.1}s`} data-hover-video>
           <a href={f.url} target="_blank" rel="noopener" class="fcard__media">
             <img
               src={`${base}screenshots/${f.img}`}
@@ -67,6 +69,11 @@ const featured = [
               loading="eager"
               decoding="async"
             />
+            {f.video && (
+              <video class="fcard__video" muted loop playsinline preload="none" poster={`${base}screenshots/${f.img}`}>
+                <source src={`${base}screenshots/${f.video}`} type="video/mp4" />
+              </video>
+            )}
             <span class="fcard__status">{f.status}</span>
           </a>
           <div class="fcard__body">
@@ -178,6 +185,20 @@ const featured = [
     transition: transform 0.7s cubic-bezier(.22,1,.36,1);
   }
   .fcard:hover .fcard__media img { transform: scale(1.03); }
+
+  /* видео-запись сайта: проигрывается при наведении (как у ТЕПЛЕЕ) */
+  .fcard__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    pointer-events: none;
+  }
+  .fcard:hover .fcard__video { opacity: 1; }
 
   .fcard__status {
     position: absolute;
@@ -408,3 +429,14 @@ const featured = [
     .featured { margin-bottom: 60px; }
   }
 </style>
+
+<script>
+  // Hover-play записей сайтов в кейсах (как у ТЕПЛЕЕ): по наведению — играет, уводишь — пауза.
+  const cards = document.querySelectorAll<HTMLElement>('.fcard[data-hover-video]');
+  cards.forEach((card) => {
+    const v = card.querySelector<HTMLVideoElement>('video.fcard__video');
+    if (!v) return;
+    card.addEventListener('mouseenter', () => { v.play().catch(() => {}); });
+    card.addEventListener('mouseleave', () => { v.pause(); });
+  });
+</script>
