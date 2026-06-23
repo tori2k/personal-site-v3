@@ -66,55 +66,52 @@ const levels = [
     max-width: 400px;
   }
 
-  /* Лестница */
+  /* Лестница — строки с заливкой при наведении (стиль услуг ТЕПЛЕЕ) */
   .method-block__ladder {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 0;
+    border-top: 1px solid rgba(139,92,255,0.35);
   }
 
   .level {
     display: grid;
-    grid-template-columns: 32px 1fr auto;
+    grid-template-columns: 48px 1fr auto;
     align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    transition: all 0.25s;
-    opacity: 0.45;
+    gap: 18px;
+    padding: 18px 18px;
+    border-bottom: 1px solid rgba(139,92,255,0.16);
+    transition: background 0.3s cubic-bezier(.22,1,.36,1), color 0.3s, padding 0.3s cubic-bezier(.22,1,.36,1);
   }
-  .level--accent  { opacity: 0.75; border-color: var(--color-border); background: var(--glass-tint); }
-  .level--highlight {
-    opacity: 1;
-    border-color: rgba(139,92,255,0.4);
-    background: linear-gradient(135deg, rgba(139,92,255,0.1), var(--glass-tint));
-    box-shadow: 0 0 30px rgba(139,92,255,0.08);
-  }
-  .level--dim { opacity: 0.3; }
-  .level:hover { opacity: 1; }
+  .level--highlight { background: rgba(139,92,255,0.07); }
+  .level:hover { background: var(--color-accent); padding-left: 28px; }
+  .level:hover .level__n,
+  .level:hover .level__label,
+  .level:hover .level__note { color: #0A0712; }
 
   .level__n {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 1.5px;
     color: var(--color-accent);
-    opacity: 0.7;
+    transition: color 0.3s;
   }
   .level__label {
     font-family: 'Unbounded', sans-serif;
-    font-size: 12px;
+    font-size: clamp(15px, 1.5vw, 20px);
     font-weight: 500;
     color: var(--color-text);
-    letter-spacing: 0;
+    letter-spacing: -0.01em;
+    transition: color 0.3s;
   }
   .level__note {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.5px;
-    color: var(--color-muted-2);
+    color: var(--color-muted);
     text-align: right;
     white-space: nowrap;
+    transition: color 0.3s;
   }
   .level--highlight .level__note { color: var(--color-accent); }
 

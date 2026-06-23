@@ -127,8 +127,10 @@ const perks = [
     height: 100%;
     object-fit: cover;
     border-radius: 12px;
-    filter: contrast(1.05) brightness(0.95);
+    filter: grayscale(0.6) contrast(1.05) brightness(0.82);
+    transition: filter 0.5s ease;
   }
+  .approach__photo:hover img { filter: grayscale(0) contrast(1.06) brightness(1); }
   .approach__photo-badge {
     position: absolute;
     bottom: 18px; left: 18px;
