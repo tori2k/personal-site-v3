@@ -1,54 +1,68 @@
 ---
-import HeroMedia from './HeroMedia.astro';
+const base = import.meta.env.BASE_URL;
+// Превью кейсов, вплетённые в заголовок (стиль ТЕПЛЕЕ): дуотон → цвет при наведении
+const pills = {
+  manifik: { img: 'manifik.jpg', url: '/cases', label: 'кейс Manifik' },
+  znamya:  { img: 'znamya-truda.jpg', url: '/cases', label: 'кейс ФК «Знамя Труда»' },
+  chtivo:  { img: 'chtivo-dom.jpg', url: '/cases', label: 'концепт ЧТИВО ДОМ' },
+};
 ---
 <section class="hero section-dark" id="hero">
   <div class="hero__cursor-glow" id="heroGlow"></div>
 
   <div class="container-x hero__inner">
-    <div class="hero__content">
-      <div class="hero__badge">
-        <span class="live-badge__dot"></span>
-        Клиники, салоны, эксперты, малый бизнес
-      </div>
+    <div class="hero__badge">
+      <span class="live-badge__dot"></span>
+      Клиники, салоны, эксперты, малый бизнес
+    </div>
 
-      <h1 class="hero__title text-glow">
-        Больше обработанных <em>заявок</em> без расширения штата
-      </h1>
-
-      <p class="hero__sub">
-        Собираю сайт/квиз, Telegram-заявки, CRM/таблицу и AI-дожим,
-        чтобы лиды не умирали после клика.
-      </p>
-
-      <div class="hero__actions">
-        <a href="/razbor" class="btn btn--filled" data-magnetic="0.4" data-track="click_razbor_cta">
-          <span class="btn__plus">(+)</span>
-          Найти 3 точки слива
+    <!-- Заголовок-сцена: слова + плавающие превью кейсов -->
+    <div class="hero__stage">
+      <div class="hero__row">
+        <span class="hero__word">больше</span>
+        <a href={pills.manifik.url} class="hpill hpill--a" aria-label={pills.manifik.label}>
+          <img src={`${base}screenshots/${pills.manifik.img}`} alt="" loading="eager" decoding="async" />
         </a>
-        <a href="/calculator" class="btn">
-          Посчитать потери
-        </a>
+        <span class="hero__word">обработанных</span>
       </div>
+      <div class="hero__rule"></div>
+      <div class="hero__row">
+        <a href={pills.znamya.url} class="hpill hpill--b" aria-label={pills.znamya.label}>
+          <img src={`${base}screenshots/${pills.znamya.img}`} alt="" loading="eager" decoding="async" />
+        </a>
+        <span class="hero__word hero__word--accent">заявок</span>
+        <span class="hero__word">без</span>
+      </div>
+      <div class="hero__rule"></div>
+      <div class="hero__row">
+        <span class="hero__word">расширения</span>
+        <a href={pills.chtivo.url} class="hpill hpill--c" aria-label={pills.chtivo.label}>
+          <img src={`${base}screenshots/${pills.chtivo.img}`} alt="" loading="eager" decoding="async" />
+        </a>
+        <span class="hero__word">штата</span>
+      </div>
+    </div>
 
-      <ul class="hero__chips">
-        <li class="hero__chip"><span class="hero__chip-i">◎</span> Telegram-заявки</li>
-        <li class="hero__chip"><span class="hero__chip-i">◎</span> CRM / таблица</li>
-        <li class="hero__chip"><span class="hero__chip-i">◎</span> AI-дожим</li>
-      </ul>
+    <p class="hero__sub">
+      Собираю сайт/квиз, Telegram-заявки, CRM/таблицу и AI-дожим,
+      чтобы лиды не умирали после клика.
+    </p>
 
-      <a href="/anti-sliv-zayavok" class="hero__free" data-track="click_pdf_cta">
-        <span class="hero__free-badge">PDF · бесплатно</span>
-        <span class="hero__free-text">Антислив заявок: 25 ошибок + калькулятор потерь</span>
-        <span class="hero__free-arr">→</span>
+    <div class="hero__actions">
+      <a href="/razbor" class="btn btn--filled" data-magnetic="0.4" data-track="click_razbor_cta">
+        <span class="btn__plus">(+)</span>
+        Найти 3 точки слива
       </a>
+      <a href="/calculator" class="btn">Посчитать потери</a>
     </div>
 
-    <div class="hero__visual">
-      <HeroMedia />
-    </div>
+    <ul class="hero__chips">
+      <li class="hero__chip"><span class="hero__chip-i">◎</span> Telegram-заявки</li>
+      <li class="hero__chip"><span class="hero__chip-i">◎</span> CRM / таблица</li>
+      <li class="hero__chip"><span class="hero__chip-i">◎</span> AI-дожим</li>
+    </ul>
   </div>
 
-  <!-- Marquee -->
   <div class="hero__marquee" aria-hidden="true">
     <div class="marquee-track">
       <span>ЛЕНДИНГИ ПОД ЗАЯВКИ</span><span>·</span>
@@ -72,41 +86,37 @@ import HeroMedia from './HeroMedia.astro';
 <style>
   .hero {
     position: relative;
-    min-height: 92vh;
-    padding: 100px 0 0;
+    min-height: 96vh;
+    padding: 120px 0 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
-
   .hero__cursor-glow {
     position: absolute;
     top: 0; left: 0;
-    width: 600px; height: 600px;
+    width: 640px; height: 640px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(95,198,255,0.10) 0%, transparent 65%);
-    filter: blur(40px);
+    background: radial-gradient(circle, rgba(139,92,255,0.16) 0%, transparent 65%);
+    filter: blur(50px);
     pointer-events: none;
     transform: translate(-50%, -50%);
     transition: transform 0.4s cubic-bezier(.22,1,.36,1);
     z-index: 1;
     will-change: transform;
   }
-
   .hero__inner {
     position: relative;
     z-index: 2;
     flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 48px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding-top: 24px;
-    padding-bottom: 48px;
+    padding-bottom: 40px;
   }
 
-  /* Badge */
   .hero__badge {
     display: inline-flex;
     align-items: center;
@@ -115,101 +125,100 @@ import HeroMedia from './HeroMedia.astro';
     font-size: 11px;
     letter-spacing: 1px;
     color: var(--color-muted);
-    margin-bottom: 24px;
+    margin-bottom: 28px;
     padding: 6px 14px;
     border: 1px solid var(--color-border);
     border-radius: 999px;
+    align-self: flex-start;
   }
+  .live-badge__dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 10px var(--color-accent);
+    animation: hero-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes hero-pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
-  /* Title — переносимый текст, без жёстких строк (не обрезается на mobile) */
-  .hero__title {
+  /* Сцена заголовка */
+  .hero__stage {
     font-family: 'Unbounded', sans-serif;
     font-weight: 500;
-    font-size: clamp(32px, 5.4vw, 92px);
-    line-height: 1.04;
     letter-spacing: -0.03em;
-    margin: 0 0 28px;
-    color: var(--color-text);
-    overflow-wrap: normal;
-    word-break: keep-all;
-    max-width: 14ch;
+    line-height: 0.98;
+    font-size: clamp(38px, 7.4vw, 116px);
   }
-  .hero__title em {
+  .hero__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.18em 0.4em;
+  }
+  .hero__word { color: var(--color-text); }
+  .hero__word--accent {
     font-style: italic;
     font-weight: 300;
-    color: #8FD8FF;
-    text-shadow:
-      0 0 1px rgba(6,7,13,1),
-      0 2px 24px rgba(6,7,13,0.95),
-      0 0 50px rgba(95,198,255,0.4);
+    color: var(--color-accent);
+    text-shadow: 0 0 50px rgba(139,92,255,0.45);
+  }
+  .hero__rule {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, rgba(139,92,255,0.55), rgba(139,92,255,0.12) 60%, transparent);
+    margin: 0.16em 0;
   }
 
-  /* Sub */
+  /* Плавающие превью кейсов */
+  .hpill {
+    position: relative;
+    display: none;            /* на мобиле скрыты, как у ТЕПЛЕЕ */
+    overflow: hidden;
+    border-radius: 999px;
+    height: clamp(70px, 8.2vw, 124px);
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+    transition: transform 0.45s cubic-bezier(.22,1,.36,1), box-shadow 0.45s, border-color 0.45s;
+  }
+  .hpill img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top center;
+    filter: grayscale(0.85) brightness(0.62) contrast(1.05);
+    transition: filter 0.5s ease, transform 0.7s cubic-bezier(.22,1,.36,1);
+  }
+  .hpill::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(140deg, rgba(139,92,255,0.5), rgba(199,124,255,0.25));
+    mix-blend-mode: overlay;
+    transition: opacity 0.5s ease;
+  }
+  .hpill:hover {
+    transform: scale(1.05);
+    border-color: rgba(139,92,255,0.6);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.4), 0 0 50px rgba(139,92,255,0.3);
+  }
+  .hpill:hover img { filter: none; transform: scale(1.06); }
+  .hpill:hover::after { opacity: 0; }
+  .hpill--a { width: clamp(220px, 24vw, 360px); }
+  .hpill--b { width: clamp(190px, 20vw, 300px); }
+  .hpill--c { width: clamp(200px, 22vw, 330px); }
+  @media (min-width: 1024px) {
+    .hpill { display: block; }
+  }
+
   .hero__sub {
     font-size: clamp(15px, 1.3vw, 18px);
     line-height: 1.6;
     color: var(--color-muted);
-    margin: 0 0 36px;
+    margin: 32px 0 32px;
     max-width: 540px;
   }
-  .hero__sub b { color: var(--color-text); font-weight: 600; }
-
-  /* Actions */
-  .hero__actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-
-  /* Proof-chips */
-  .hero__chips {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 18px;
-  }
+  .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 26px; }
+  .hero__chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 10px 18px; }
   .hero__chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.3px;
-    color: var(--color-muted);
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--color-muted);
   }
   .hero__chip-i { color: var(--color-accent); font-size: 11px; }
-
-  /* Free PDF mini-card */
-  .hero__free {
-    display: inline-flex; align-items: center; gap: 12px;
-    margin-top: 24px; padding: 12px 16px;
-    background: rgba(95,198,255,0.06);
-    border: 1px solid rgba(95,198,255,0.25);
-    border-radius: 12px;
-    text-decoration: none;
-    transition: border-color 0.25s, background 0.25s, transform 0.25s;
-    max-width: 100%;
-  }
-  .hero__free:hover { border-color: rgba(95,198,255,0.5); background: rgba(95,198,255,0.1); transform: translateY(-2px); }
-  .hero__free-badge {
-    flex-shrink: 0;
-    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase;
-    padding: 4px 9px; border-radius: 999px;
-    background: var(--color-accent); color: #06070D; font-weight: 600;
-  }
-  .hero__free-text { font-size: 13px; color: var(--color-text); line-height: 1.35; }
-  .hero__free-arr { color: var(--color-accent); flex-shrink: 0; transition: transform 0.25s; }
-  .hero__free:hover .hero__free-arr { transform: translateX(4px); }
-
-  /* min-width:0 — чтобы grid-колонки сжимались до контейнера, а не распирались
-     контентом (иначе H1 уходит за экран под overflow:hidden) */
-  .hero__content, .hero__visual { min-width: 0; }
-
-  /* Visual (HeroMedia) */
-  .hero__visual { align-self: center; width: 100%; }
 
   /* Marquee */
   .hero__marquee {
@@ -221,59 +230,37 @@ import HeroMedia from './HeroMedia.astro';
     z-index: 2;
   }
   .marquee-track {
-    display: inline-flex;
-    gap: 32px;
-    white-space: nowrap;
+    display: inline-flex; gap: 32px; white-space: nowrap;
     animation: marquee 38s linear infinite;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    color: var(--color-muted);
+    font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 400;
+    letter-spacing: 0.02em; color: var(--color-muted);
   }
   .marquee-track span:nth-child(even) { color: var(--color-accent); font-weight: 300; }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  @media (max-width: 1100px) {
-    .hero__inner { grid-template-columns: 1fr 340px; gap: 32px; }
-  }
   @media (max-width: 900px) {
-    .hero { padding: 100px 0 0; min-height: auto; }
-    .hero__inner { grid-template-columns: 1fr; gap: 36px; padding-bottom: 40px; }
-    .hero__visual { max-width: 440px; }
+    .hero { min-height: auto; padding: 110px 0 0; }
     .marquee-track { font-size: 14px; gap: 20px; }
   }
   @media (max-width: 480px) {
-    .hero__inner { gap: 28px; padding-top: 28px; padding-bottom: 28px; }
-    .hero__badge { font-size: 10px; padding: 5px 12px; }
-    .hero__title { font-size: clamp(30px, 7.8vw, 42px); margin-bottom: 20px; max-width: 100%; }
-    .hero__sub { font-size: 15px; margin-bottom: 24px; }
-    .hero__actions { flex-direction: column; gap: 10px; }
+    .hero__actions { flex-direction: column; }
     .hero__actions .btn { width: 100%; justify-content: center; }
-    .hero__chips { gap: 8px 14px; }
     .marquee-track { font-size: 12px; gap: 16px; }
-  }
-  @media (max-height: 800px) {
-    .hero { min-height: auto; }
-    .hero__title { font-size: clamp(36px, 5.5vw, 80px); }
   }
   @media (prefers-reduced-motion: reduce) {
     .hero__cursor-glow { display: none; }
-    .marquee-track { animation: none; }
+    .marquee-track, .live-badge__dot { animation: none; }
   }
 </style>
 
 <script>
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const glow = document.getElementById('heroGlow');
   const hero = document.querySelector<HTMLElement>('.hero');
-  if (glow && hero && !reduceMotion) {
+  if (glow && hero && !reduce) {
     hero.addEventListener('mousemove', (e) => {
-      const rect = hero.getBoundingClientRect();
-      glow.style.transform = `translate(${e.clientX - rect.left}px, ${e.clientY - rect.top}px) translate(-50%, -50%)`;
+      const r = hero.getBoundingClientRect();
+      glow.style.transform = `translate(${e.clientX - r.left}px, ${e.clientY - r.top}px) translate(-50%, -50%)`;
     });
   }
 </script>

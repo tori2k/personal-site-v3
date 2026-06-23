@@ -1,9 +1,9 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-accent: #5FC6FF;
-  --color-accent-soft: rgba(95,198,255,0.08);
-  --color-accent-glow: rgba(95,198,255,0.20);
+  --color-accent: #8B5CFF;
+  --color-accent-soft: rgba(139,92,255,0.08);
+  --color-accent-glow: rgba(139,92,255,0.20);
 
   --font-display: 'Unbounded', 'Inter', sans-serif;
   --font-sans: 'Inter', -apple-system, sans-serif;
@@ -12,26 +12,26 @@
 
 :root {
   /* Основа (тёмная) — значения переменных переключают всю систему */
-  --color-bg: #06070D;
-  --color-bg-2: #0A0C16;
-  --color-surface: #11131F;
-  --color-text: #F4F6FB;
-  --color-muted: #8A90A6;
-  --color-muted-2: #4A4F63;
-  --color-border: rgba(244,246,251,0.10);
-  --color-border-2: rgba(244,246,251,0.20);
+  --color-bg: #0A0712;
+  --color-bg-2: #100B1C;
+  --color-surface: #181230;
+  --color-text: #F1EFFA;
+  --color-muted: #8E88A6;
+  --color-muted-2: #4A4560;
+  --color-border: rgba(241,239,250,0.10);
+  --color-border-2: rgba(241,239,250,0.20);
   /* cream-алиасы перенаправлены на тёмные «приподнятые» поверхности */
-  --color-cream: #0A0C16;
-  --color-cream-2: #11131F;
-  --color-cream-text: #F4F6FB;
+  --color-cream: #100B1C;
+  --color-cream-2: #181230;
+  --color-cream-text: #F1EFFA;
 
   /* Aurora-свет (источники света, не заливка) */
-  --aurora-cyan: #5FC6FF;
-  --aurora-violet: #A280FF;
-  --aurora-magenta: #FF6EC7;
+  --aurora-cyan: #8B5CFF;
+  --aurora-violet: #A88BFF;
+  --aurora-magenta: #C77CFF;
 
   /* Человеческий тёплый акцент (наследие ЧТИВО) */
-  --signal-warm: #A22E1F;
+  --signal-warm: #FF6B5C;
 
   /* Стекло (токены из glass3d.dev) */
   --glass-tint: hsl(225 40% 12% / 0.45);
@@ -222,40 +222,40 @@ body {
 }
 .btn:hover {
   transform: translateY(-2px);
-  border-color: rgba(95,198,255,0.5);
-  background: rgba(95,198,255,0.1);
+  border-color: rgba(139,92,255,0.5);
+  background: rgba(139,92,255,0.1);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.45),
-    inset 0 -8px 18px rgba(95,198,255,0.08),
+    inset 0 -8px 18px rgba(139,92,255,0.08),
     0 6px 16px rgba(0,0,0,0.3),
-    0 0 40px rgba(95,198,255,0.25);
+    0 0 40px rgba(139,92,255,0.25);
 }
 .btn:hover::after { left: 120%; }
 .btn:active { transform: translateY(0) scale(0.97); }
 
 /* Главная CTA — более «налитое» светлое стекло (контраст) */
 .btn--filled {
-  color: #06070D;
+  color: #0A0712;
   background: rgba(255,255,255,0.9);
   border-color: rgba(255,255,255,0.6);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.9),
-    inset 0 -10px 20px rgba(95,198,255,0.12),
+    inset 0 -10px 20px rgba(139,92,255,0.12),
     0 6px 18px rgba(0,0,0,0.3),
-    0 0 30px rgba(95,198,255,0.15);
+    0 0 30px rgba(139,92,255,0.15);
 }
 .btn--filled::before {
   background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 50%);
 }
 .btn--filled:hover {
-  color: #06070D;
+  color: #0A0712;
   background: rgba(255,255,255,1);
-  border-color: rgba(95,198,255,0.6);
+  border-color: rgba(139,92,255,0.6);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,1),
-    inset 0 -10px 22px rgba(95,198,255,0.2),
+    inset 0 -10px 22px rgba(139,92,255,0.2),
     0 8px 22px rgba(0,0,0,0.35),
-    0 0 50px rgba(95,198,255,0.35);
+    0 0 50px rgba(139,92,255,0.35);
 }
 .btn__plus {
   font-size: 16px;
@@ -371,8 +371,8 @@ body {
 /* Свечение текста от aurora (для oversized-заголовков) */
 .text-glow {
   text-shadow:
-    0 0 40px rgba(95,198,255,0.15),
-    0 0 80px rgba(162,128,255,0.10);
+    0 0 40px rgba(139,92,255,0.15),
+    0 0 80px rgba(168,139,255,0.10);
 }
 
 /* ============================================
@@ -413,12 +413,12 @@ body {
 /* Ближние крупные звёзды с aurora-оттенком */
 .cosmos__stars--near {
   background-image:
-    radial-gradient(1.5px 1.5px at 15% 25%, rgba(95,198,255,0.9), transparent),
+    radial-gradient(1.5px 1.5px at 15% 25%, rgba(139,92,255,0.9), transparent),
     radial-gradient(2px 2px at 55% 65%, rgba(255,255,255,0.95), transparent),
-    radial-gradient(1.5px 1.5px at 85% 35%, rgba(162,128,255,0.8), transparent),
+    radial-gradient(1.5px 1.5px at 85% 35%, rgba(168,139,255,0.8), transparent),
     radial-gradient(2px 2px at 35% 85%, rgba(255,255,255,0.9), transparent),
-    radial-gradient(1.5px 1.5px at 75% 15%, rgba(95,198,255,0.7), transparent),
-    radial-gradient(1.5px 1.5px at 5% 45%, rgba(162,128,255,0.6), transparent);
+    radial-gradient(1.5px 1.5px at 75% 15%, rgba(139,92,255,0.7), transparent),
+    radial-gradient(1.5px 1.5px at 5% 45%, rgba(168,139,255,0.6), transparent);
   background-size: 460px 460px;
   opacity: 0.6;
   animation: cosmos-drift-near 100s linear infinite;
@@ -446,7 +446,7 @@ body {
   max-width: 900px;
   max-height: 900px;
   background: radial-gradient(circle at 50% 50%,
-    rgba(95,198,255,0.18) 0%, rgba(162,128,255,0.12) 40%, transparent 70%);
+    rgba(139,92,255,0.18) 0%, rgba(168,139,255,0.12) 40%, transparent 70%);
   animation: cosmos-breathe 16s ease-in-out infinite;
 }
 .cosmos__aurora--2 {
@@ -457,7 +457,7 @@ body {
   max-width: 800px;
   max-height: 800px;
   background: radial-gradient(circle at 50% 50%,
-    rgba(162,128,255,0.12) 0%, rgba(255,110,199,0.06) 45%, transparent 70%);
+    rgba(168,139,255,0.12) 0%, rgba(199,124,255,0.06) 45%, transparent 70%);
   animation: cosmos-breathe 20s ease-in-out infinite reverse;
 }
 @keyframes cosmos-breathe {
@@ -498,7 +498,7 @@ body {
   transform-origin: left center;
   /* Поворот хвоста на угол, обратный движению: движение ~150° → хвост в -30° (вверх-вправо) */
   transform: rotate(-30deg);
-  background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(95,198,255,0.5), transparent);
+  background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(139,92,255,0.5), transparent);
 }
 .cosmos__comet--1 {
   top: 10%; left: 75%;
