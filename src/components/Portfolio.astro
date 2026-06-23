@@ -139,8 +139,9 @@ const featured = [
   .featured {
     display: flex;
     flex-direction: column;
-    gap: 40px;
-    margin-bottom: 100px;
+    gap: 36px;
+    max-width: 940px;
+    margin: 0 auto 90px;
   }
   .fcard {
     position: sticky;
@@ -235,7 +236,7 @@ const featured = [
   }
 
   .fcard__body {
-    padding: 40px 36px;
+    padding: 28px 30px;
     display: flex;
     flex-direction: column;
   }
@@ -249,11 +250,11 @@ const featured = [
   }
   .fcard__title {
     font-family: 'Unbounded', sans-serif;
-    font-size: clamp(28px, 2.8vw, 40px);
+    font-size: clamp(22px, 2.1vw, 30px);
     font-weight: 500;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    margin: 0 0 18px;
+    margin: 0 0 14px;
     color: var(--color-text);
   }
   .fcard__task-label {

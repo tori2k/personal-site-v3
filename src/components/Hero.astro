@@ -34,7 +34,8 @@ const pills = {
       </div>
       <div class="hero__rule"></div>
       <div class="hero__row">
-        <span class="hero__word">расширения штата</span>
+        <span class="hero__word">расширения</span>
+        <span class="hero__word">штата</span>
       </div>
     </div>
 
@@ -235,9 +236,12 @@ const pills = {
 
   @media (max-width: 900px) {
     .hero { min-height: auto; padding: 110px 0 0; }
+    .hero__stage { font-size: clamp(30px, 7vw, 58px); }
     .marquee-track { font-size: 14px; gap: 20px; }
   }
   @media (max-width: 480px) {
+    .hero__stage { font-size: clamp(26px, 8.6vw, 40px); }
+    .hero__row { gap: 0.12em 0.35em; }
     .hero__actions { flex-direction: column; }
     .hero__actions .btn { width: 100%; justify-content: center; }
     .marquee-track { font-size: 12px; gap: 16px; }
