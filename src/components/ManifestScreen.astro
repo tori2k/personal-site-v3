@@ -27,15 +27,23 @@
   .manifest__video {
     position: absolute;
     top: 0; left: 50%;
-    width: 130vw; max-width: 1700px;
+    width: 150vw; max-width: 2000px;
     transform: translateX(-50%);
     mix-blend-mode: screen;
-    opacity: 0.9;
+    opacity: 0.92;
     /* перекрашиваем teal/green исходник в фиолет под палитру */
-    filter: hue-rotate(115deg) saturate(1.35) brightness(1.05) blur(2px);
-    /* бесшовно тает в фон по всем краям */
-    -webkit-mask-image: radial-gradient(ellipse 62% 60% at 50% 42%, #000 0%, rgba(0,0,0,0.45) 45%, transparent 72%);
-    mask-image: radial-gradient(ellipse 62% 60% at 50% 42%, #000 0%, rgba(0,0,0,0.45) 45%, transparent 72%);
+    filter: hue-rotate(115deg) saturate(1.35) brightness(1.05) blur(3px);
+    /* вертикальная маска: гаснет в ноль сверху и снизу ВНУТРИ бокса видео,
+       до его жёсткого края → бесшовно с фоном и сверху, и снизу.
+       Горизонтальная — мягкое затухание к краям, чтобы не было боковых швов. */
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 20%, #000 54%, transparent 82%),
+      radial-gradient(120% 100% at 50% 45%, #000 55%, transparent 100%);
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 20%, #000 54%, transparent 82%),
+      radial-gradient(120% 100% at 50% 45%, #000 55%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
   }
 
   .manifest__inner {
