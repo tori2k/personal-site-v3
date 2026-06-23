@@ -1,5 +1,5 @@
 ---
-// Блок «Что я автоматизирую» — 6 карточек с наглядными видео (Veo3), в стиле сайта.
+// Блок «Что я автоматизирую» — 6 карточек, видео играет при наведении (как у ТЕПЛЕЕ).
 const items = [
   { v: 'auto-tg',      icon: '✈', title: 'Заявка → Telegram',  desc: 'Каждое обращение мгновенно прилетает в чат — ничего не теряется в формах.' },
   { v: 'auto-crm',     icon: '⊞', title: 'CRM / таблица лидов', desc: 'Лиды сами падают в таблицу со статусом, источником и данными.' },
@@ -14,16 +14,17 @@ const items = [
     <div class="autos__head reveal">
       <div class="sec-tag">Автоматизации</div>
       <h2 class="display-h autos__title">Что я автоматизирую <em>под капотом.</em></h2>
-      <p class="autos__lead">Не просто сайт — система, где заявка сама доходит до вас и не теряется.</p>
+      <p class="autos__lead">Не просто сайт — система, где заявка сама доходит до вас и не теряется. Наведите на карточку.</p>
     </div>
 
     <div class="autos__grid">
       {items.map((it) => (
-        <article class="acard reveal">
+        <article class="acard reveal" data-hover-video>
           <div class="acard__demo">
-            <video class="acard__video" autoplay muted loop playsinline preload="metadata">
+            <video class="acard__video" muted loop playsinline preload="none" poster={`/${it.v}-poster.jpg`}>
               <source src={`/${it.v}.mp4`} type="video/mp4" />
             </video>
+            <span class="acard__play" aria-hidden="true">▶</span>
           </div>
           <div class="acard__meta">
             <div class="acard__icon">{it.icon}</div>
@@ -79,9 +80,30 @@ const items = [
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.6s cubic-bezier(.22,1,.36,1);
+    /* статичный кадр приглушён, при наведении — оживает */
+    filter: grayscale(0.5) brightness(0.66) contrast(1.05);
+    transition: filter 0.45s ease, transform 0.6s cubic-bezier(.22,1,.36,1);
   }
-  .acard:hover .acard__video { transform: scale(1.03); }
+  .acard:hover .acard__video { filter: none; transform: scale(1.03); }
+
+  /* значок «play» поверх статичного кадра */
+  .acard__play {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px; height: 48px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: rgba(10,7,18,0.55);
+    border: 1px solid rgba(139,92,255,0.5);
+    color: var(--color-accent);
+    font-size: 14px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .acard:hover .acard__play { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
 
   .acard__meta { padding: 22px 24px 26px; }
   .acard__icon { font-size: 18px; color: var(--color-accent); margin-bottom: 10px; line-height: 1; }
@@ -99,5 +121,28 @@ const items = [
   @media (max-width: 700px) {
     .autos { padding: 72px 0; }
     .autos__grid { grid-template-columns: 1fr; }
+    /* на тач — видео сразу видно (без hover), но без звука и по требованию */
+    .acard__video { filter: none; }
+    .acard__play { display: none; }
   }
 </style>
+
+<script>
+  // Видео играет только при наведении на свою карточку (не все сразу).
+  const cards = document.querySelectorAll<HTMLElement>('.acard[data-hover-video]');
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  cards.forEach((card) => {
+    const v = card.querySelector<HTMLVideoElement>('video.acard__video');
+    if (!v) return;
+    if (isTouch) {
+      // на тач-устройствах включаем по появлению в зоне видимости
+      const io = new IntersectionObserver((es) => {
+        es.forEach((e) => { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); });
+      }, { threshold: 0.5 });
+      io.observe(v);
+      return;
+    }
+    card.addEventListener('mouseenter', () => { v.play().catch(() => {}); });
+    card.addEventListener('mouseleave', () => { v.pause(); });
+  });
+</script>
