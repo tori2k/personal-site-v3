@@ -4,7 +4,6 @@ const base = import.meta.env.BASE_URL;
 const pills = {
   manifik: { img: 'manifik.jpg', url: '/cases', label: 'кейс Manifik' },
   znamya:  { img: 'znamya-truda.jpg', url: '/cases', label: 'кейс ФК «Знамя Труда»' },
-  chtivo:  { img: 'chtivo-dom.jpg', url: '/cases', label: 'концепт ЧТИВО ДОМ' },
 };
 ---
 <section class="hero section-dark" id="hero">
@@ -35,11 +34,7 @@ const pills = {
       </div>
       <div class="hero__rule"></div>
       <div class="hero__row">
-        <span class="hero__word">расширения</span>
-        <a href={pills.chtivo.url} class="hpill hpill--c" aria-label={pills.chtivo.label}>
-          <img src={`${base}screenshots/${pills.chtivo.img}`} alt="" loading="eager" decoding="async" />
-        </a>
-        <span class="hero__word">штата</span>
+        <span class="hero__word">расширения штата</span>
       </div>
     </div>
 
