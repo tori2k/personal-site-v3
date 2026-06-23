@@ -3,18 +3,15 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 import ManifestScreen from '../components/ManifestScreen.astro';
-import Approach from '../components/Approach.astro';
+import LeadJourney from '../components/LeadJourney.astro';
 import Portfolio from '../components/Portfolio.astro';
-import FlowBlock from '../components/FlowBlock.astro';
-import Automations from '../components/Automations.astro';
-import MethodBlock from '../components/MethodBlock.astro';
-import Pricing from '../components/Pricing.astro';
+import Approach from '../components/Approach.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Footer from '../components/Footer.astro';
 import StickyGuide from '../components/StickyGuide.astro';
 import { faqItems } from '../data/faq';
 
-// JSON-LD: FAQPage из тех же вопросов (блок FAQ убран с главной, но разметка для SEO остаётся)
+// JSON-LD: FAQPage из тех же вопросов (блок FAQ убран с главной, разметка для SEO остаётся)
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -30,12 +27,9 @@ const faqJsonLd = {
   <main>
     <Hero />
     <ManifestScreen />
-    <Approach />
+    <LeadJourney />
     <Portfolio />
-    <FlowBlock />
-    <Automations />
-    <MethodBlock />
-    <Pricing />
+    <Approach />
     <FinalCta />
   </main>
   <Footer />
