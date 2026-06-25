@@ -3,8 +3,8 @@ import PapercraftBase from './PapercraftBase.astro';
 
 // Общий папиркрафт-лейаут для доп. страниц (нав, футер, кнопки, бумага, курсор, reveal).
 // База в одном месте — страницы добавляют только свой контент + scoped-CSS.
-interface Props { title: string; description: string; active?: string; jsonLd?: Record<string, unknown> | Record<string, unknown>[]; }
-const { title, description, active, jsonLd } = Astro.props;
+interface Props { title: string; description: string; active?: string; jsonLd?: Record<string, unknown> | Record<string, unknown>[]; noindex?: boolean; }
+const { title, description, active, jsonLd, noindex } = Astro.props;
 const HOME = '/';
 const links = [
   { href: '/services', label: 'Услуги', key: 'services' },
@@ -13,7 +13,7 @@ const links = [
   { href: '/razbor', label: 'Разбор', key: 'razbor' },
 ];
 ---
-<PapercraftBase title={title} description={description} jsonLd={jsonLd} bodyClass="pc-body">
+<PapercraftBase title={title} description={description} jsonLd={jsonLd} noindex={noindex} bodyClass="pc-body">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <filter id="torn"><feTurbulence type="fractalNoise" baseFrequency="0.013 0.022" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7"/></filter>
   </svg>

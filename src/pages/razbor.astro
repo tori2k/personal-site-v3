@@ -28,9 +28,16 @@ const gains = ['Где теряются заявки', 'Что докрутит�
       <label class="pc-field"><span>Telegram / контакт</span><input type="text" name="contact" placeholder="@username" /></label>
       <label class="pc-field"><span>Сайт или профиль</span><input type="text" name="site" placeholder="kirillbaryev.ru" /></label>
       <label class="pc-field"><span>Ниша и что продаёте</span><input type="text" name="niche" placeholder="Юрист · 20 000 ₽ / консультация" /></label>
-      <button type="submit" class="pc-btn"><span class="pc-btn__plus">(+)</span>Отправить в Telegram</button>
-      <p class="pc-form__note">Откроется чат в&nbsp;Telegram — данные подставлю в&nbsp;сообщение.</p>
+      <button type="submit" class="pc-btn"><span class="pc-btn__plus">(+)</span>Отправить заявку</button>
+      <p class="pc-form__note">Заявка придёт мне в&nbsp;Telegram. Отвечу в&nbsp;тот&nbsp;же день.</p>
     </form>
+
+    <div class="pc-ok pc-paper" id="razbor-ok" hidden>
+      <div class="pc-ok__check">✓</div>
+      <h2 class="pc-h3">Заявка отправлена!</h2>
+      <p>Посмотрю сайт и&nbsp;путь заявки, пришлю разбор в&nbsp;Telegram — обычно в&nbsp;тот&nbsp;же день.</p>
+      <a href="https://t.me/tori2k" class="pc-btn pc-btn--sm" target="_blank" rel="noopener">Написать сразу</a>
+    </div>
 
     <aside class="pc-gains pc-reveal">
       <span class="pc-eyebrow"><i class="pc-bdot"></i>Что получите</span>
@@ -65,17 +72,28 @@ const gains = ['Где теряются заявки', 'Что докрутит�
     .pc-gains__list span { color: var(--mark2); font-weight: 700; }
     .pc-gains__hand { margin-top: 20px; font-family: 'Caveat', cursive; font-size: 22px; color: var(--mark); transform: rotate(-2deg); }
 
+    .pc-ok { padding: 36px 32px; text-align: center; align-self: start; }
+    .pc-ok__check { width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 50%; background: var(--mark); color: #fff; font-size: 30px; line-height: 56px; text-shadow: none; }
+    .pc-ok p { margin: 8px 0 18px; font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
+
     @media (max-width: 820px) { .pc-razbor { grid-template-columns: 1fr; gap: 28px; } }
   </style>
 
   <script>
+    const WEBHOOK = 'https://script.google.com/macros/s/AKfycbyeXV7TI8klBfvtnrAMYKOLNi3jifjO9IhRnkLDBKd7UJ0_XJCG3BpVlXlxiuvv60QM/exec';
     const form = document.getElementById('razbor-form');
-    form?.addEventListener('submit', (e) => {
+    form?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const data = new FormData(form);
-      const msg = `Заявка на разбор%0AИмя: ${data.get('name') || '—'}%0AКонтакт: ${data.get('contact') || '—'}%0AСайт: ${data.get('site') || '—'}%0AНиша: ${data.get('niche') || '—'}`;
-      try { navigator.clipboard?.writeText(decodeURIComponent(msg)); } catch (_) {}
-      window.open('https://t.me/tori2k', '_blank', 'noopener');
+      const fd = new FormData(form);
+      const data = { source: 'papercraft-razbor', submittedAt: new Date().toISOString(), referrer: document.referrer || '', userAgent: navigator.userAgent };
+      for (const [k, v] of fd.entries()) data[k] = v;
+      const btn = form.querySelector('button[type=submit]');
+      if (btn) { btn.disabled = true; btn.textContent = 'Отправляю…'; }
+      try {
+        await fetch(WEBHOOK, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) });
+      } catch (_) {}
+      const ok = document.getElementById('razbor-ok');
+      if (ok) { form.style.display = 'none'; ok.hidden = false; ok.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     });
   </script>
 </PapercraftLayout>

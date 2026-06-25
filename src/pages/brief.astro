@@ -28,8 +28,15 @@ const questions = [
       </div>
     ))}
     <div class="pc-brief__send pc-reveal">
-      <button class="pc-btn" id="brief-send"><span class="pc-btn__plus">(+)</span>Отправить бриф в Telegram</button>
+      <input type="text" id="brief-contact" class="pc-brief__contact" placeholder="Ваш Telegram / контакт для ответа" />
+      <button class="pc-btn" id="brief-send"><span class="pc-btn__plus">(+)</span>Отправить бриф</button>
       <span class="pc-brief__hand">займёт минуту ✦</span>
+    </div>
+    <div class="pc-ok pc-paper" id="brief-ok" hidden>
+      <div class="pc-ok__check">✓</div>
+      <h2 class="pc-h3">Бриф отправлен!</h2>
+      <p>Изучу и&nbsp;напишу вам в&nbsp;Telegram с&nbsp;предложением — обычно в&nbsp;тот&nbsp;же день.</p>
+      <a href="https://t.me/tori2k" class="pc-btn pc-btn--sm" target="_blank" rel="noopener">Написать сразу</a>
     </div>
   </section>
 
@@ -44,6 +51,12 @@ const questions = [
     .pc-brief__opt.is-on { background: var(--mark); color: #fff; border-style: solid; border-color: var(--mark); }
     .pc-brief__send { display: flex; align-items: center; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
     .pc-brief__hand { font-family: 'Caveat', cursive; font-size: 21px; color: var(--mark); transform: rotate(-2deg); }
+    .pc-brief__contact { font-family: 'Special Elite', monospace; font-size: 15px; color: var(--ink); background: var(--paper); border: 2px dashed rgba(44,36,24,.35); border-radius: 3px; padding: 11px 14px; outline: none; min-width: 260px; flex: 1; }
+    .pc-brief__contact:focus { border-color: var(--mark); border-style: solid; }
+    .pc-brief__contact::placeholder { color: rgba(44,36,24,.4); }
+    .pc-ok { max-width: 560px; margin-top: 10px; padding: 32px 30px; text-align: center; }
+    .pc-ok__check { width: 56px; height: 56px; margin: 0 auto 14px; border-radius: 50%; background: var(--mark); color: #fff; font-size: 30px; line-height: 56px; text-shadow: none; }
+    .pc-ok p { margin: 8px 0 18px; font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
   </style>
 
   <script>
@@ -55,15 +68,23 @@ const questions = [
         btn.classList.add('is-on');
       });
     });
-    document.getElementById('brief-send')?.addEventListener('click', () => {
-      const lines: string[] = ['Бриф:'];
+    const WEBHOOK = 'https://script.google.com/macros/s/AKfycbyeXV7TI8klBfvtnrAMYKOLNi3jifjO9IhRnkLDBKd7UJ0_XJCG3BpVlXlxiuvv60QM/exec';
+    document.getElementById('brief-send')?.addEventListener('click', async () => {
+      const data: Record<string, string> = { source: 'papercraft-brief', submittedAt: new Date().toISOString(), referrer: document.referrer || '', userAgent: navigator.userAgent };
+      data.contact = (document.getElementById('brief-contact') as HTMLInputElement | null)?.value || '';
       document.querySelectorAll('.pc-brief__opts').forEach((group) => {
-        const q = (group as HTMLElement).dataset.q;
+        const q = (group as HTMLElement).dataset.q || '';
         const sel = group.querySelector('.pc-brief__opt.is-on');
-        lines.push(`${q} ${sel ? (sel as HTMLElement).dataset.v : '—'}`);
+        data[q] = sel ? ((sel as HTMLElement).dataset.v || '') : '';
       });
-      try { navigator.clipboard?.writeText(lines.join('\n')); } catch (_) {}
-      window.open('https://t.me/tori2k', '_blank', 'noopener');
+      const btn = document.getElementById('brief-send') as HTMLButtonElement | null;
+      if (btn) { btn.disabled = true; btn.textContent = 'Отправляю…'; }
+      try {
+        await fetch(WEBHOOK, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) });
+      } catch (_) {}
+      const ok = document.getElementById('brief-ok');
+      const send = document.querySelector('.pc-brief__send') as HTMLElement | null;
+      if (ok) { if (send) send.style.display = 'none'; ok.hidden = false; ok.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     });
   </script>
 </PapercraftLayout>
