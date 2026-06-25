@@ -1,10 +1,10 @@
 ---
-import PapercraftLayout from '../../../layouts/templates/PapercraftLayout.astro';
+import PapercraftLayout from '../layouts/PapercraftLayout.astro';
 
 export function getStaticPaths() {
   const niches = [
     {
-      slug: 'ekspert', eyebrow: 'Для экспертов',
+      slug: 'lending-dlya-eksperta', eyebrow: 'Для экспертов',
       h1a: 'Аудитория есть, ', h1mark: 'заявок нет',
       lead: 'Подписчики растут, а обращения тонут в директе. Собираю сайт-воронку, где интерес превращается в заявку.',
       pains: ['Подписчики есть — заявок нет', 'Обращения теряются в переписках', 'Нет системы, всё вручную'],
@@ -12,7 +12,7 @@ export function getStaticPaths() {
       cta: 'Превратить аудиторию в заявки',
     },
     {
-      slug: 'yurist', eyebrow: 'Для юристов',
+      slug: 'sajt-dlya-yurista', eyebrow: 'Для юристов',
       h1a: 'Клиент не видит ', h1mark: 'вашу специализацию',
       lead: 'Когда не понятно, чем вы отличаетесь, выбирают по цене. Сайт с оффером и кейсами выводит экспертизу на первый экран.',
       pains: ['Выбирают по цене, не по опыту', 'Не понимают, чем вы отличаетесь', 'Заявки теряются до звонка'],
@@ -20,7 +20,7 @@ export function getStaticPaths() {
       cta: 'Показать специализацию',
     },
     {
-      slug: 'ai', eyebrow: 'AI-автоматизация',
+      slug: 'ai-avtomatizaciya-zayavok', eyebrow: 'AI-автоматизация',
       h1a: 'Заявки обрабатываются ', h1mark: 'сами',
       lead: 'Не успеваете отвечать вовремя — холодные уходят. AI-дожим и автоматизация доводят лида до записи без вашего участия.',
       pains: ['Не успеваете отвечать вовремя', 'Холодные уходят без дожима', 'Рутина съедает время'],
@@ -28,7 +28,7 @@ export function getStaticPaths() {
       cta: 'Автоматизировать заявки',
     },
     {
-      slug: 'antisliv', eyebrow: 'Антислив заявок',
+      slug: 'anti-sliv-zayavok', eyebrow: 'Антислив заявок',
       h1a: 'Заявка не должна ', h1mark: 'сливаться',
       lead: 'Пришла и потерялась в форме — деньги мимо. Делаю так, чтобы каждое обращение фиксировалось и доходило до вас.',
       pains: ['Пришла и потерялась в форме', 'Никто не зафиксировал', 'Ответили через день — клиент ушёл'],
@@ -36,11 +36,11 @@ export function getStaticPaths() {
       cta: 'Перекрыть слив',
     },
   ];
-  return niches.map((n) => ({ params: { slug: n.slug }, props: n }));
+  return niches.map((n) => ({ params: { landing: n.slug }, props: n }));
 }
 
 const n = Astro.props;
-const HOME = '/templates/06-papercraft';
+const HOME = '/';
 ---
 <PapercraftLayout title={`${n.h1a}${n.h1mark} · Papercraft`} description={n.lead} active="services">
   <section class="pc-head">
@@ -48,7 +48,7 @@ const HOME = '/templates/06-papercraft';
     <span class="pc-eyebrow"><i class="pc-bdot"></i>{n.eyebrow}</span>
     <h1 class="pc-h1b">{n.h1a}<span class="pc-mark">{n.h1mark}</span></h1>
     <p class="pc-lead">{n.lead}</p>
-    <div style="margin-top:24px"><a href="/templates/06-papercraft-razbor" class="pc-btn"><span class="pc-btn__plus">(+)</span>{n.cta}</a></div>
+    <div style="margin-top:24px"><a href="/razbor" class="pc-btn"><span class="pc-btn__plus">(+)</span>{n.cta}</a></div>
   </section>
 
   <section class="pc-sec">
@@ -69,7 +69,7 @@ const HOME = '/templates/06-papercraft';
     <div class="pc-ticket pc-paper pc-reveal">
       <h2 class="pc-h2">Начните с <span class="pc-mark">бесплатного разбора</span></h2>
       <p class="pc-lead pc-lead--c">Напишите нишу — покажу, где вы теряете заявки и что докрутить.</p>
-      <a href="/templates/06-papercraft-razbor" class="pc-btn"><span class="pc-btn__plus">(+)</span>Получить разбор</a>
+      <a href="/razbor" class="pc-btn"><span class="pc-btn__plus">(+)</span>Получить разбор</a>
     </div>
   </section>
 
