@@ -98,13 +98,13 @@ function ransom(text) {
         <a href="/services">Услуги</a><a href="/method">Метод</a><a href="/cases">Кейсы</a><a href="/razbor">Разбор</a>
       </nav>
       <span class="pc-nav__avail"><i></i>доступен</span>
-      <a href="https://t.me/tori2k" class="pc-btn pc-btn--sm">в&nbsp;Telegram</a>
+      <a href="https://t.me/tori2k" data-track="click_telegram" class="pc-btn pc-btn--sm">в&nbsp;Telegram</a>
     </header>
 
     <!-- ════ HERO — cinematic scroll-build (pinned scrub) ════ -->
     <section class="pc-hero" id="top">
       <div class="pc-hero__pin">
-        <video class="pc-hero__build" id="hero-build" src="/pc/video/hero-build.mp4" poster="/pc/hero-build.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
+        <video class="pc-hero__build" id="hero-build" src="/pc/video/hero-build.mp4" poster="/pc/hero-build.jpg" muted playsinline preload="none" aria-hidden="true"></video>
         <div class="pc-hero__scrim" aria-hidden="true"></div>
         <div class="pc-hero__content">
           <span class="pc-eyebrow"><i class="pc-bdot"></i>Клиники, салоны, эксперты, малый бизнес</span>
@@ -438,27 +438,6 @@ function ransom(text) {
     .pc-guide { position: fixed; right: 18px; bottom: 18px; z-index: 50; padding: 12px 18px; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 13px; color: var(--ink); }
     .pc-guide:hover { transform: translateY(-2px); }
 
-    /* ════ Hero decor (legacy — частично неиспользуемое после рефактора) ════ */
-    .pc-ph--pill { width: 78px; height: 46px; }
-    .pc-doodle { position: relative; align-self: center; font-family: 'Caveat', cursive; font-size: 24px; color: var(--mark); padding-left: 6px; }
-    .pc-doodle__arr { position: absolute; left: -2px; top: 16px; width: 60px; height: 40px; color: var(--mark); }
-    .pc-hero__scene { display: flex; justify-content: center; }
-    .pc-scene { position: relative; width: 100%; max-width: 380px; aspect-ratio: 1/1; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-    .pc-scene__vid { position: absolute; inset: 12px; width: calc(100% - 24px); height: calc(100% - 24px); object-fit: cover; border-radius: 5px; z-index: 0; }
-    .pc-scene__note { z-index: 1; }
-    .pc-funnel { width: 150px; height: 118px; clip-path: polygon(0 0, 100% 0, 66% 100%, 34% 100%); display: flex; justify-content: center; align-items: flex-start; }
-    .pc-funnel span { margin-top: 16px; font-family: 'Caveat', cursive; font-size: 22px; color: var(--mark); }
-    .pc-coin { position: absolute; bottom: 44px; width: 46px; height: 46px; border-radius: 50%; background: #e9c45a !important; display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 700; color: #6a4e12; }
-    .pc-scene__note { position: absolute; bottom: 8px; font-family: 'Caveat', cursive; font-size: 22px; color: var(--ink); transform: rotate(-3deg); }
-    .pc-bit { position: absolute; width: 14px; height: 14px; background: var(--mark); transform: rotate(12deg); opacity: .9; animation: pc-fall 2.8s ease-in infinite; }
-    .pc-bit.b1 { left: 30%; top: 8%; animation-delay: 0s; }
-    .pc-bit.b2 { left: 50%; top: 8%; animation-delay: .8s; }
-    .pc-bit.b3 { left: 68%; top: 8%; animation-delay: 1.5s; }
-    @keyframes pc-fall { 0%{transform:translateY(0) rotate(12deg);opacity:.9} 70%{opacity:.9} 100%{transform:translateY(126px) rotate(120deg);opacity:0} }
-    .pc-scrap { position: absolute; width: 46px; height: 30px; background: var(--paper2); filter: url(#torn2) drop-shadow(0 6px 9px rgba(40,28,12,.26)); }
-    .pc-scrap--a { top: 4%; right: 2%; transform: rotate(8deg); }
-    .pc-scrap--b { bottom: 12%; left: 0%; transform: rotate(-10deg); }
-
     /* ════ Marquee — бумажная лента ════ */
     .pc-marquee { position: relative; z-index: 2; margin: 0; padding: 15px 0; background: var(--mark); overflow: hidden; box-shadow: 0 12px 22px rgba(40,28,12,.26); }
     .pc-marquee__track { display: flex; width: max-content; animation: pc-marq 28s linear infinite; }
@@ -467,32 +446,6 @@ function ransom(text) {
     .pc-marquee__row i { margin: 0 14px; font-style: normal; opacity: .6; }
     @keyframes pc-marq { to { transform: translateX(-50%); } }
 
-    /* ═══ ПРЕСС-ВЫРЕЗКА — газетная статья, приколота к доске ═══ */
-    .pc-press { max-width: 1140px; margin: 24px auto; padding: 24px 26px 44px; }
-    .pc-clip {
-      position: relative; max-width: 720px; margin: 0 auto; padding: 32px 36px 26px;
-      background: #efe7d2; color: #1d1812; text-shadow: none; transform: rotate(-1deg);
-      font-family: Georgia, 'Times New Roman', serif;
-      box-shadow: 0 22px 44px rgba(40,28,12,.34);
-      background-image: linear-gradient(rgba(0,0,0,.022) .5px, transparent .5px); background-size: 100% 4px;
-    }
-    .pc-clip__pin { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 36% 30%, #ff8475, #c0392b 72%); box-shadow: 0 4px 7px rgba(40,28,12,.45), inset -2px -2px 3px rgba(0,0,0,.3); z-index: 2; }
-    .pc-clip__masthead { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 8px 0; border-top: 3px double #1d1812; border-bottom: 1px solid #1d1812; }
-    .pc-clip__masthead span { font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: clamp(18px, 2.6vw, 28px); letter-spacing: .5px; text-transform: uppercase; }
-    .pc-clip__masthead i { font-style: normal; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; opacity: .8; white-space: nowrap; }
-    .pc-clip__head { font-weight: 700; font-size: clamp(25px, 4vw, 38px); line-height: 1.1; margin: 16px 0 6px; text-align: center; }
-    .pc-clip__sub { text-align: center; font-style: italic; font-size: 15px; opacity: .85; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid rgba(29,24,18,.4); }
-    .pc-clip__body { column-count: 2; column-gap: 28px; font-size: 14px; line-height: 1.56; text-align: justify; hyphens: auto; }
-    .pc-clip__body p { margin: 0 0 10px; }
-    .pc-clip__body p:first-of-type::first-letter { font-size: 3.1em; float: left; line-height: .8; padding: 4px 7px 0 0; font-weight: 700; }
-    .pc-clip__fig { position: relative; margin: 0 0 10px; break-inside: avoid; }
-    .pc-clip__photo { width: 100%; display: block; filter: grayscale(1) contrast(1.18) brightness(1.02); }
-    .pc-clip__fig::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle, #000 .8px, transparent 1.3px) 0 0 / 3.6px 3.6px; mix-blend-mode: multiply; opacity: .32; pointer-events: none; }
-    .pc-clip__fig figcaption { font-size: 11px; font-style: italic; opacity: .7; padding-top: 3px; text-align: center; }
-    .pc-clip__foot { margin-top: 14px; padding-top: 8px; border-top: 1px solid #1d1812; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; text-align: center; opacity: .75; }
-    .pc-clip { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
-    .pc-clip:hover { transform: rotate(.4deg) translateY(-3px); }
-    @media (max-width: 700px) { .pc-clip__body { column-count: 1; } }
 
     /* ════ Scroll-progress — лента сверху ════ */
     .pc-progress { position: fixed; top: 0; left: 0; height: 5px; width: 100%; z-index: 60; transform: scaleX(0); transform-origin: 0 50%; background: repeating-linear-gradient(45deg, var(--mark) 0 7px, #a07dff 7px 14px); }
@@ -642,6 +595,9 @@ function ransom(text) {
           const hsec = document.querySelector<HTMLElement>('.pc-hero');
           const hpin = document.querySelector<HTMLElement>('.pc-hero__pin');
           if (!hbuild || !hsec || !hpin) return;
+          // грузим тяжёлое hero-видео только на десктопе (где есть scrub); на мобиле остаётся постер
+          hbuild.preload = 'auto';
+          hbuild.load();
           hbuild.pause();
           ScrollTrigger.create({
             trigger: hsec, start: 'top top', end: 'bottom bottom',

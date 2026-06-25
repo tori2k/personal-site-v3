@@ -5,7 +5,8 @@ const HOME = '/';
 const blogJsonLd = {
   '@context': 'https://schema.org', '@type': 'Blog',
   name: 'Блог — Кирилл Барыев', url: 'https://kirillbaryev.ru/articles/', inLanguage: 'ru',
-  blogPost: pcArticles.map((a) => ({ '@type': 'BlogPosting', headline: a.title, description: a.excerpt, url: `https://kirillbaryev.ru/articles/${a.slug}/` })),
+  author: { '@type': 'Person', name: 'Кирилл Барыев', url: 'https://kirillbaryev.ru' },
+  blogPost: pcArticles.map((a) => ({ '@type': 'BlogPosting', headline: a.title, description: a.excerpt, url: `https://kirillbaryev.ru/articles/${a.slug}/`, datePublished: a.date, image: 'https://kirillbaryev.ru/og-image.jpg', author: { '@type': 'Person', name: 'Кирилл Барыев' } })),
 };
 ---
 <PapercraftLayout title="Блог — заявки, автоматизация, сайты · Кирилл Барыев" description="Заметки про заявки, автоматизацию и сайты, которые продают." jsonLd={blogJsonLd} active="">

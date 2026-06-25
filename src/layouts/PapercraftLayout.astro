@@ -3,8 +3,8 @@ import PapercraftBase from './PapercraftBase.astro';
 
 // Общий папиркрафт-лейаут для доп. страниц (нав, футер, кнопки, бумага, курсор, reveal).
 // База в одном месте — страницы добавляют только свой контент + scoped-CSS.
-interface Props { title: string; description: string; active?: string; jsonLd?: Record<string, unknown> | Record<string, unknown>[]; noindex?: boolean; }
-const { title, description, active, jsonLd, noindex } = Astro.props;
+interface Props { title: string; description: string; active?: string; jsonLd?: Record<string, unknown> | Record<string, unknown>[]; noindex?: boolean; ogType?: string; }
+const { title, description, active, jsonLd, noindex, ogType } = Astro.props;
 const HOME = '/';
 const links = [
   { href: '/services', label: 'Услуги', key: 'services' },
@@ -13,7 +13,7 @@ const links = [
   { href: '/razbor', label: 'Разбор', key: 'razbor' },
 ];
 ---
-<PapercraftBase title={title} description={description} jsonLd={jsonLd} noindex={noindex} bodyClass="pc-body">
+<PapercraftBase title={title} description={description} jsonLd={jsonLd} noindex={noindex} ogType={ogType} bodyClass="pc-body">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <filter id="torn"><feTurbulence type="fractalNoise" baseFrequency="0.013 0.022" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7"/></filter>
   </svg>
@@ -30,7 +30,7 @@ const links = [
         ))}
       </nav>
       <span class="pc-nav__avail"><i></i>доступен</span>
-      <a href="https://t.me/tori2k" class="pc-btn pc-btn--sm">в&nbsp;Telegram</a>
+      <a href="https://t.me/tori2k" data-track="click_telegram" class="pc-btn pc-btn--sm">в&nbsp;Telegram</a>
     </header>
 
     <slot />
@@ -141,5 +141,15 @@ const links = [
       if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
     }), { threshold: 0.14 });
     document.querySelectorAll('.pc-reveal').forEach((el) => io.observe(el));
+    // магнитные кнопки (как на главной)
+    if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+        el.addEventListener('mousemove', (e) => {
+          const r = el.getBoundingClientRect();
+          el.style.transform = `translate(${(e.clientX - (r.left + r.width / 2)) * 0.3}px, ${(e.clientY - (r.top + r.height / 2)) * 0.3}px)`;
+        });
+        el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+      });
+    }
   </script>
 </PapercraftBase>

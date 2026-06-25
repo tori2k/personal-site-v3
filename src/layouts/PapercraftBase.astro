@@ -5,6 +5,7 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogType?: string;
   noindex?: boolean;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   bodyClass?: string;
@@ -14,6 +15,7 @@ const {
   title = 'AI-автоматизация заявок для малого бизнеса: сайт, квиз, Telegram, CRM',
   description = 'Собираю сайт/квиз, Telegram-заявки, CRM и AI-дожим, чтобы лиды не умирали после клика. Больше обработанных заявок без расширения штата. Первый разбор бесплатно.',
   ogImage,
+  ogType = 'website',
   noindex = false,
   jsonLd,
   bodyClass = 'pc-body',
@@ -55,7 +57,7 @@ const allJsonLd = [...baseJsonLd, ...pageJsonLd];
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="ru_RU" />

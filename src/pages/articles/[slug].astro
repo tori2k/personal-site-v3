@@ -11,6 +11,8 @@ const articleJsonLd = [
   {
     '@context': 'https://schema.org', '@type': 'Article',
     headline: a.title, description: a.excerpt,
+    datePublished: a.date, dateModified: a.date,
+    image: 'https://kirillbaryev.ru/og-image.jpg',
     author: { '@type': 'Person', name: 'Кирилл Барыев', url: 'https://kirillbaryev.ru' },
     publisher: { '@type': 'Person', name: 'Кирилл Барыев' },
     mainEntityOfPage: `https://kirillbaryev.ru/articles/${a.slug}/`,
@@ -26,7 +28,7 @@ const articleJsonLd = [
   },
 ];
 ---
-<PapercraftLayout title={`${a.title} — блог · Кирилл Барыев`} description={a.excerpt} jsonLd={articleJsonLd} active="">
+<PapercraftLayout title={`${a.title} — блог · Кирилл Барыев`} description={a.excerpt} jsonLd={articleJsonLd} ogType="article" active="">
   <section class="pc-press">
     <a href={BLOG} class="pc-back">← все заметки</a>
     <article class="pc-clip pc-reveal">
