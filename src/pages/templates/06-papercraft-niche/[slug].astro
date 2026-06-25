@@ -1,0 +1,86 @@
+---
+import PapercraftLayout from '../../../layouts/templates/PapercraftLayout.astro';
+
+export function getStaticPaths() {
+  const niches = [
+    {
+      slug: 'ekspert', eyebrow: 'Для экспертов',
+      h1a: 'Аудитория есть, ', h1mark: 'заявок нет',
+      lead: 'Подписчики растут, а обращения тонут в директе. Собираю сайт-воронку, где интерес превращается в заявку.',
+      pains: ['Подписчики есть — заявок нет', 'Обращения теряются в переписках', 'Нет системы, всё вручную'],
+      sol: ['Воронка: оффер → доверие → квиз → Telegram', 'Квиз отсеивает «просто посмотреть»', 'Заявка падает в чат сразу'],
+      cta: 'Превратить аудиторию в заявки',
+    },
+    {
+      slug: 'yurist', eyebrow: 'Для юристов',
+      h1a: 'Клиент не видит ', h1mark: 'вашу специализацию',
+      lead: 'Когда не понятно, чем вы отличаетесь, выбирают по цене. Сайт с оффером и кейсами выводит экспертизу на первый экран.',
+      pains: ['Выбирают по цене, не по опыту', 'Не понимают, чем вы отличаетесь', 'Заявки теряются до звонка'],
+      sol: ['Лендинг с оффером и кейсами практики', 'Квиз-квалификация под услугу', 'Заявка в Telegram с деталями дела'],
+      cta: 'Показать специализацию',
+    },
+    {
+      slug: 'ai', eyebrow: 'AI-автоматизация',
+      h1a: 'Заявки обрабатываются ', h1mark: 'сами',
+      lead: 'Не успеваете отвечать вовремя — холодные уходят. AI-дожим и автоматизация доводят лида до записи без вашего участия.',
+      pains: ['Не успеваете отвечать вовремя', 'Холодные уходят без дожима', 'Рутина съедает время'],
+      sol: ['AI-бот отвечает и доводит до записи', 'Авто-уведомления в Telegram', 'CRM ведёт лида по этапам'],
+      cta: 'Автоматизировать заявки',
+    },
+    {
+      slug: 'antisliv', eyebrow: 'Антислив заявок',
+      h1a: 'Заявка не должна ', h1mark: 'сливаться',
+      lead: 'Пришла и потерялась в форме — деньги мимо. Делаю так, чтобы каждое обращение фиксировалось и доходило до вас.',
+      pains: ['Пришла и потерялась в форме', 'Никто не зафиксировал', 'Ответили через день — клиент ушёл'],
+      sol: ['Мгновенное уведомление в Telegram', 'Таблица лидов со статусами', 'Ничего не теряется на ровном месте'],
+      cta: 'Перекрыть слив',
+    },
+  ];
+  return niches.map((n) => ({ params: { slug: n.slug }, props: n }));
+}
+
+const n = Astro.props;
+const HOME = '/templates/06-papercraft';
+---
+<PapercraftLayout title={`${n.h1a}${n.h1mark} · Papercraft`} description={n.lead} active="services">
+  <section class="pc-head">
+    <a href={HOME} class="pc-back">← на главную</a>
+    <span class="pc-eyebrow"><i class="pc-bdot"></i>{n.eyebrow}</span>
+    <h1 class="pc-h1b">{n.h1a}<span class="pc-mark">{n.h1mark}</span></h1>
+    <p class="pc-lead">{n.lead}</p>
+    <div style="margin-top:24px"><a href="/templates/06-papercraft-razbor" class="pc-btn"><span class="pc-btn__plus">(+)</span>{n.cta}</a></div>
+  </section>
+
+  <section class="pc-sec">
+    <span class="pc-eyebrow"><i class="pc-bdot"></i>Узнаёте?</span>
+    <div class="pc-nx">
+      {n.pains.map((p) => (<div class="pc-nx__card pc-paper pc-reveal"><span class="pc-nx__bad">✕</span>{p}</div>))}
+    </div>
+  </section>
+
+  <section class="pc-sec">
+    <span class="pc-eyebrow"><i class="pc-bdot"></i>Что делаю</span>
+    <div class="pc-nx">
+      {n.sol.map((s) => (<div class="pc-nx__card pc-paper pc-reveal"><span class="pc-nx__ok">✓</span>{s}</div>))}
+    </div>
+  </section>
+
+  <section class="pc-sec pc-ctasec">
+    <div class="pc-ticket pc-paper pc-reveal">
+      <h2 class="pc-h2">Начните с <span class="pc-mark">бесплатного разбора</span></h2>
+      <p class="pc-lead pc-lead--c">Напишите нишу — покажу, где вы теряете заявки и что докрутить.</p>
+      <a href="/templates/06-papercraft-razbor" class="pc-btn"><span class="pc-btn__plus">(+)</span>Получить разбор</a>
+    </div>
+  </section>
+
+  <style>
+    .pc-nx { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+    .pc-nx__card { display: flex; gap: 12px; align-items: flex-start; padding: 20px 22px; font-size: 15px; line-height: 1.45; transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
+    .pc-nx__card:nth-child(2n) { transform: rotate(.6deg); }
+    .pc-nx__card:hover { transform: translateY(-5px) rotate(-1deg); }
+    .pc-nx__bad, .pc-nx__ok { font-family: 'Unbounded', sans-serif; font-weight: 700; flex-shrink: 0; text-shadow: none; }
+    .pc-nx__bad { color: var(--mark2); }
+    .pc-nx__ok { color: var(--mark); }
+    @media (max-width: 760px) { .pc-nx { grid-template-columns: 1fr; } }
+  </style>
+</PapercraftLayout>
