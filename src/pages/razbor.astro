@@ -5,7 +5,7 @@ const HOME = '/';
 const checks = ['Первый экран', 'Оффер', 'CTA', 'Доверие', 'Путь до заявки', 'Telegram / CRM'];
 const gains = ['Где теряются заявки', 'Что докрутить в первую очередь', 'Конкретный план из 3 шагов'];
 ---
-<PapercraftLayout title="Бесплатный разбор · Papercraft — kirillbaryev.ru" description="Бесплатный разбор сайта: найду 3 точки слива заявок и пришлю план из 3 шагов." active="razbor">
+<PapercraftLayout title="Бесплатный разбор · Кирилл Барыев" description="Бесплатный разбор сайта: найду 3 точки слива заявок и пришлю план из 3 шагов." active="razbor">
   <section class="pc-head">
     <a href={HOME} class="pc-back">← на главную</a>
     <span class="pc-sticker pc-sticker--new" style="--rot:-11deg; top:0; right:8px">FREE</span>
@@ -36,7 +36,7 @@ const gains = ['Где теряются заявки', 'Что докрутит�
       <div class="pc-ok__check">✓</div>
       <h2 class="pc-h3">Заявка отправлена!</h2>
       <p>Посмотрю сайт и&nbsp;путь заявки, пришлю разбор в&nbsp;Telegram — обычно в&nbsp;тот&nbsp;же день.</p>
-      <a href="https://t.me/tori2k" class="pc-btn pc-btn--sm" target="_blank" rel="noopener">Написать сразу</a>
+      <a href="https://t.me/tori2k" data-track="click_telegram" class="pc-btn pc-btn--sm" target="_blank" rel="noopener">Написать сразу</a>
     </div>
 
     <aside class="pc-gains pc-reveal">
@@ -80,18 +80,28 @@ const gains = ['Где теряются заявки', 'Что докрутит�
   </style>
 
   <script>
-    const WEBHOOK = 'https://script.google.com/macros/s/AKfycbyeXV7TI8klBfvtnrAMYKOLNi3jifjO9IhRnkLDBKd7UJ0_XJCG3BpVlXlxiuvv60QM/exec';
-    const form = document.getElementById('razbor-form');
+    import { LEAD_WEBHOOK } from '../data/webhook';
+    const form = document.getElementById('razbor-form') as HTMLFormElement | null;
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(form);
-      const data = { source: 'papercraft-razbor', submittedAt: new Date().toISOString(), referrer: document.referrer || '', userAgent: navigator.userAgent };
-      for (const [k, v] of fd.entries()) data[k] = v;
-      const btn = form.querySelector('button[type=submit]');
+      const data: Record<string, string> = { source: 'papercraft-razbor', submittedAt: new Date().toISOString(), referrer: document.referrer || '', userAgent: navigator.userAgent };
+      for (const [k, v] of fd.entries()) data[k] = String(v);
+      const btn = form.querySelector('button[type=submit]') as HTMLButtonElement | null;
+      const note = form.querySelector('.pc-form__note') as HTMLElement | null;
+      const origHtml = btn ? btn.innerHTML : '';
       if (btn) { btn.disabled = true; btn.textContent = 'Отправляю…'; }
+      let sent = true;
       try {
-        await fetch(WEBHOOK, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) });
-      } catch (_) {}
+        await fetch(LEAD_WEBHOOK, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) });
+      } catch (_) { sent = false; }
+      if (!sent) {
+        // сеть недоступна — не врём про успех, даём фоллбэк
+        if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+        if (note) { note.textContent = 'Не удалось отправить — проверьте сеть или напишите в Telegram @tori2k.'; note.style.color = '#d9694a'; }
+        return;
+      }
+      (window as any).track?.('submit_razbor');
       const ok = document.getElementById('razbor-ok');
       if (ok) { form.style.display = 'none'; ok.hidden = false; ok.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     });

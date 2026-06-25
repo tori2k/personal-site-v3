@@ -5,11 +5,13 @@ export interface PcArticle {
   tag: string;
   excerpt: string;
   body: string[];
+  date: string;
 }
 
 export const pcArticles: PcArticle[] = [
   {
     slug: 'pochemu-biznes-teryaet-zayavki-posle-klika',
+    date: '2026-01-14',
     title: 'Почему бизнес теряет заявки после клика',
     tag: 'Воронка',
     excerpt: 'Между кликом и продажей теряется до половины обращений. Разбираем, где именно.',
@@ -21,6 +23,7 @@ export const pcArticles: PcArticle[] = [
   },
   {
     slug: 'ai-avtomatizaciya-zayavok-dlya-malogo-biznesa',
+    date: '2026-01-28',
     title: 'AI-автоматизация заявок для малого бизнеса',
     tag: 'AI',
     excerpt: 'Бот, который отвечает первым и доводит холодного клиента до записи.',
@@ -32,6 +35,7 @@ export const pcArticles: PcArticle[] = [
   },
   {
     slug: 'kak-avtomatizirovat-zayavki-s-saita-v-telegram',
+    date: '2026-02-11',
     title: 'Как автоматизировать заявки с сайта в Telegram',
     tag: 'Telegram',
     excerpt: 'Самый быстрый способ перестать терять обращения — увидеть их сразу.',
@@ -43,6 +47,7 @@ export const pcArticles: PcArticle[] = [
   },
   {
     slug: 'google-sheets-kak-crm-dlya-malogo-biznesa',
+    date: '2026-02-25',
     title: 'Google Sheets как CRM для малого бизнеса',
     tag: 'CRM',
     excerpt: 'Не нужна дорогая CRM, чтобы навести порядок в заявках.',
@@ -54,6 +59,7 @@ export const pcArticles: PcArticle[] = [
   },
   {
     slug: 'chto-avtomatizirovat-pervym-v-malom-biznese',
+    date: '2026-03-10',
     title: 'Что автоматизировать первым в малом бизнесе',
     tag: 'Старт',
     excerpt: 'Не всё сразу. Начинать стоит с того, что приносит деньги завтра.',
@@ -65,6 +71,7 @@ export const pcArticles: PcArticle[] = [
   },
   {
     slug: 'pochemu-krasivyi-sait-ne-prodaet',
+    date: '2026-03-24',
     title: 'Почему красивый сайт не продаёт',
     tag: 'Дизайн',
     excerpt: 'Красота без структуры — это плакат, а не инструмент продаж.',

@@ -11,7 +11,7 @@ const services = [
 ];
 const autos = ['Заявка → Telegram', 'CRM / таблица', 'AI-дожим', 'Онлайн-оплата', 'Лид-воронка', 'Контент-завод'];
 ---
-<PapercraftLayout title="Услуги · Papercraft — kirillbaryev.ru" description="Сайты и автоматизация заявок: разбор, лёгкий фикс, AI-система, сопровождение." active="services">
+<PapercraftLayout title="Услуги · Кирилл Барыев" description="Сайты и автоматизация заявок: разбор, лёгкий фикс, AI-система, сопровождение." active="services">
   <section class="pc-head">
     <a href={HOME} class="pc-back">← на главную</a>
     <span class="pc-sticker pc-sticker--ai" style="--rot:12deg; top:0; right:8px">AI</span>
@@ -30,7 +30,7 @@ const autos = ['Заявка → Telegram', 'CRM / таблица', 'AI-дожи
           <h3 class="pc-svc__name">{s.name}</h3>
           <div class="pc-svc__price">{s.price}</div>
           <p class="pc-svc__d">{s.d}</p>
-          <a href="https://t.me/tori2k" class="pc-btn pc-btn--sm pc-btn--ghost">Обсудить</a>
+          <a href="https://t.me/tori2k" data-track="click_telegram" class="pc-btn pc-btn--sm pc-btn--ghost">Обсудить</a>
         </div>
       ))}
     </div>
@@ -59,7 +59,7 @@ const autos = ['Заявка → Telegram', 'CRM / таблица', 'AI-дожи
     <div class="pc-ticket pc-paper pc-reveal">
       <h2 class="pc-h2">Не знаете, <span class="pc-mark">что вам нужно?</span></h2>
       <p class="pc-lead pc-lead--c">Начните с бесплатного разбора — скажу честно, нужен ли новый сайт.</p>
-      <a href="https://t.me/tori2k" class="pc-btn"><span class="pc-btn__plus">(+)</span>Получить разбор</a>
+      <a href="https://t.me/tori2k" data-track="click_telegram" class="pc-btn"><span class="pc-btn__plus">(+)</span>Получить разбор</a>
     </div>
   </section>
 
