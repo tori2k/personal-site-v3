@@ -2,8 +2,13 @@
 import PapercraftLayout from '../../layouts/PapercraftLayout.astro';
 import { pcArticles } from '../../data/pcArticles';
 const HOME = '/';
+const blogJsonLd = {
+  '@context': 'https://schema.org', '@type': 'Blog',
+  name: 'Блог — Кирилл Барыев', url: 'https://kirillbaryev.ru/articles/', inLanguage: 'ru',
+  blogPost: pcArticles.map((a) => ({ '@type': 'BlogPosting', headline: a.title, description: a.excerpt, url: `https://kirillbaryev.ru/articles/${a.slug}/` })),
+};
 ---
-<PapercraftLayout title="Блог · Papercraft — kirillbaryev.ru" description="Заметки про заявки, автоматизацию и сайты, которые продают." active="">
+<PapercraftLayout title="Блог — заявки, автоматизация, сайты · Кирилл Барыев" description="Заметки про заявки, автоматизацию и сайты, которые продают." jsonLd={blogJsonLd} active="">
   <section class="pc-head">
     <a href={HOME} class="pc-back">← на главную</a>
     <span class="pc-eyebrow"><i class="pc-bdot"></i>Блог</span>

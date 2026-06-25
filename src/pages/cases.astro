@@ -26,10 +26,22 @@ const cases = [
     automated: 'Форма брони → уведомление организаторам',
   },
 ];
+const casesJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Кейсы — сайты с системой заявок',
+  url: 'https://kirillbaryev.ru/cases/',
+  inLanguage: 'ru',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: cases.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.title, url: c.url })),
+  },
+};
 ---
 <PapercraftBase
   title="Кейсы — сайты с системой заявок · Кирилл Барыев"
   description="Проекты: сайты с приёмом заявок в Telegram, оплатой и автоматизацией. Manifik, ФК «Знамя Труда», ЧТИВО ДОМ."
+  jsonLd={casesJsonLd}
   bodyClass="pc-body"
 >
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">

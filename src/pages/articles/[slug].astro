@@ -7,8 +7,26 @@ export function getStaticPaths() {
 }
 const a = Astro.props;
 const BLOG = '/articles';
+const articleJsonLd = [
+  {
+    '@context': 'https://schema.org', '@type': 'Article',
+    headline: a.title, description: a.excerpt,
+    author: { '@type': 'Person', name: 'Кирилл Барыев', url: 'https://kirillbaryev.ru' },
+    publisher: { '@type': 'Person', name: 'Кирилл Барыев' },
+    mainEntityOfPage: `https://kirillbaryev.ru/articles/${a.slug}/`,
+    inLanguage: 'ru',
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://kirillbaryev.ru/' },
+      { '@type': 'ListItem', position: 2, name: 'Блог', item: 'https://kirillbaryev.ru/articles/' },
+      { '@type': 'ListItem', position: 3, name: a.title, item: `https://kirillbaryev.ru/articles/${a.slug}/` },
+    ],
+  },
+];
 ---
-<PapercraftLayout title={`${a.title} · Блог · Papercraft`} description={a.excerpt} active="">
+<PapercraftLayout title={`${a.title} — блог · Кирилл Барыев`} description={a.excerpt} jsonLd={articleJsonLd} active="">
   <section class="pc-press">
     <a href={BLOG} class="pc-back">← все заметки</a>
     <article class="pc-clip pc-reveal">
