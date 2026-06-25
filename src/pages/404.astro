@@ -1,0 +1,24 @@
+---
+import PapercraftLayout from '../layouts/PapercraftLayout.astro';
+---
+<PapercraftLayout title="404 — страница не найдена · Кирилл Барыев" description="Страница потерялась. Вернитесь на главную." active="">
+  <section class="pc-sec pc-404wrap">
+    <div class="pc-404 pc-paper pc-reveal">
+      <span class="pc-sticker pc-sticker--star" style="--rot:13deg; top:-22px; right:-14px">?</span>
+      <div class="pc-404__big">404</div>
+      <h1 class="pc-h2">Страница <span class="pc-mark">потерялась</span></h1>
+      <p class="pc-lead">Похоже, эту бумажку сдуло со&nbsp;стола. Вернёмся на&nbsp;главную?</p>
+      <div class="pc-404__btns">
+        <a href="/" class="pc-btn"><span class="pc-btn__plus">(+)</span>На главную</a>
+        <a href="/razbor" class="pc-btn pc-btn--ghost pc-btn--sm">Бесплатный разбор</a>
+      </div>
+    </div>
+  </section>
+  <style>
+    .pc-404wrap { display: flex; justify-content: center; min-height: 64vh; align-items: center; }
+    .pc-404 { position: relative; max-width: 560px; padding: 48px 42px; text-align: center; transform: rotate(-1deg); }
+    .pc-404__big { font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: clamp(70px, 16vw, 148px); line-height: 1; color: var(--mark2); text-shadow: none; }
+    .pc-404 .pc-lead { margin: 14px auto 0; text-align: center; }
+    .pc-404__btns { margin-top: 26px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  </style>
+</PapercraftLayout>
