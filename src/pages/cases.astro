@@ -1,291 +1,233 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
+import PapercraftBase from '../layouts/PapercraftBase.astro';
 
-const base = import.meta.env.BASE_URL;
-
+// Папиркрафт-страница кейсов /cases в стиле 06-papercraft. Структура и контент с реального сайта.
+const HOME = '/';
 const cases = [
   {
-    slug: 'manifik',
-    img: 'manifik.jpg',
-    title: 'Manifik',
-    niche: 'Школа вокала',
-    url: 'https://manifik-school.ru',
-    status: 'В продакшене',
-    task: 'Школе нужен был сайт, через который родители находят педагогов и сразу записываются и оплачивают занятие — без звонков и переписок.',
-    built: 'Многостраничный сайт: каталог педагогов и направлений, онлайн-оплата, форма записи, интеграции.',
-    points: [
-      'Запись на пробный урок приходит в Telegram — администратор видит заявку сразу',
-      'Оплата занятий и абонементов прямо на сайте — деньги не ждут звонка',
-      'Цены и расписание редактируются без разработчика',
-      'Путь от «нашёл» до «записался» — три клика',
-    ],
-    automated: 'Заявка → Telegram-уведомление → запись в таблицу со статусом',
+    init: 'M', title: 'Manifik', niche: 'Школа вокала', status: 'В продакшене',
+    url: 'https://manifik-school.ru', vid: '/pc/video/manifik.mp4', poster: '/pc/manifik.jpg',
+    task: 'Школе нужен сайт, через который родители находят педагогов и сразу записываются и оплачивают — без звонков.',
+    points: ['Запись на пробный → Telegram', 'Оплата прямо на сайте', 'Цены и расписание без разработчика', 'Путь «нашёл → записался» в три клика'],
+    automated: 'Заявка → Telegram → таблица со статусом',
   },
   {
-    slug: 'znamya-truda',
-    img: 'znamya-truda.jpg',
-    title: 'ФК «Знамя Труда»',
-    niche: 'Футбольный клуб · Орехово-Зуево',
-    url: 'https://fczt1909.ru',
-    status: 'Запущен',
-    task: 'Старейший действующий клуб России жил в соцсетях. Нужен был официальный сайт, где болельщик за 10 секунд найдёт матч, состав и новости.',
-    built: 'Многостраничник: расписание, новости, история клуба, команда, партнёры.',
-    points: [
-      'Пользователь быстрее понимает, куда нажать — навигация выстроена под сценарий болельщика',
-      'Контент редактируется без программиста — редактор клуба сам публикует новости',
-      'Страница партнёров превращает присутствие в структурированное предложение',
-      'Сайт стал официальным источником информации вместо разрозненных пабликов',
-    ],
-    automated: 'Публикация новостей через CMS без участия разработчика',
+    init: 'Ф', title: 'ФК «Знамя Труда»', niche: 'Футбольный клуб · Орехово-Зуево', status: 'Запущен',
+    url: 'https://fczt1909.ru', vid: '/pc/video/znamya.mp4', poster: '/pc/znamya.jpg',
+    task: 'Старейший клуб России жил в соцсетях. Нужен сайт, где болельщик за 10 секунд найдёт матч, состав и новости.',
+    points: ['Навигация под сценарий болельщика', 'Новости публикует редактор без программиста', 'Партнёры — как предложение', 'Один источник вместо пабликов'],
+    automated: 'Публикация новостей через CMS',
   },
   {
-    slug: 'chtivo',
-    img: 'chtivo-dom.jpg',
-    title: 'ЧТИВО ДОМ',
-    niche: 'Концепт · спекулятивная работа',
-    url: 'https://tori2k.github.io/chtivo-dom-concept/',
-    status: 'Концепт',
-    task: 'Место зацепило — вдохновился и собрал сайт-визитку в их фирменной стилистике. Упражнение в рамках места, которое понравилось.',
-    built: 'Концепт-лендинг: атмосфера, навигация по залам, кинотека, форма брони.',
-    points: [
-      'Тёмная эстетика под стиль пространства',
-      'Быстрая навигация — посетитель сразу видит что здесь есть',
-      'Форма записи интегрирована в страницу без перехода',
-      'Адаптив под телефон для посетителей на месте',
-    ],
+    init: 'Ч', title: 'ЧТИВО ДОМ', niche: 'Концепт · спекулятивная работа', status: 'Концепт',
+    url: 'https://tori2k.github.io/chtivo-dom-concept/', img: '/pc/chtivo.jpg',
+    task: 'Место зацепило — собрал сайт-визитку в их фирменной стилистике. Упражнение в рамках понравившегося пространства.',
+    points: ['Тёмная эстетика под стиль места', 'Быстрая навигация по залам', 'Форма брони прямо на странице', 'Адаптив под телефон'],
     automated: 'Форма брони → уведомление организаторам',
   },
 ];
-
-// JSON-LD: CollectionPage + BreadcrumbList
-const casesJsonLd = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: 'Кейсы сайтов под заявки',
-    url: 'https://kirillbaryev.ru/cases/',
-    description:
-      'Проекты Кирилла Барыева: сайты с системой заявок, Telegram-интеграцией и автоматизацией.',
-    hasPart: cases.map((c) => ({
-      '@type': 'CreativeWork',
-      name: c.title,
-      about: c.niche,
-      url: c.url,
-    })),
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://kirillbaryev.ru/' },
-      { '@type': 'ListItem', position: 2, name: 'Кейсы', item: 'https://kirillbaryev.ru/cases/' },
-    ],
-  },
-];
 ---
-<Layout
-  title="Кейсы сайтов под заявки: лендинги, Telegram-интеграции и CRM"
-  description="Проекты Кирилла Барыева: сайты для школы вокала, футбольного клуба и культурного пространства. Лендинги, заявки, Telegram-интеграции и автоматизация."
-  jsonLd={casesJsonLd}
+<PapercraftBase
+  title="Кейсы — сайты с системой заявок · Кирилл Барыев"
+  description="Проекты: сайты с приёмом заявок в Telegram, оплатой и автоматизацией. Manifik, ФК «Знамя Труда», ЧТИВО ДОМ."
+  bodyClass="pc-body"
 >
-  <Nav />
-  <main>
-    <section class="cases-hero section-dark">
-      <div class="container-x">
-        <div class="cases-hero__inner reveal">
-          <div class="sec-tag">Кейсы</div>
-          <h1 class="display-h cases-hero__h1">
-            Проекты <em>в деле.</em>
-          </h1>
-          <p class="cases-hero__sub">
-            Не просто «сделал сайт» — а как заявка теперь проходит путь от контента до CRM.
-          </p>
-          <p class="cases-hero__links">
-            <a href="/razbor">Получить бесплатный разбор</a> ·
-            <a href="/services">Услуги и цены</a>
-          </p>
-        </div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="torn"><feTurbulence type="fractalNoise" baseFrequency="0.013 0.022" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7"/></filter>
+  </svg>
+
+  <main class="pc">
+    <div class="pc-cloud" id="pc-cloud" aria-hidden="true"></div>
+    <div class="pc-cur" id="pc-cur" aria-hidden="true"></div>
+
+    <header class="pc-nav">
+      <a href={HOME} class="pc-nav__brand"><span class="pc-tape"></span>Кирилл<span class="pc-dot">.</span></a>
+      <nav class="pc-nav__links">
+        <a href="/services">Услуги</a><a href="/method">Метод</a><a href="/cases" aria-current="page">Кейсы</a><a href="/razbor">Разбор</a>
+      </nav>
+      <span class="pc-nav__avail"><i></i>доступен</span>
+      <a href="https://t.me/tori2k" class="pc-btn pc-btn--sm">в&nbsp;Telegram</a>
+    </header>
+
+    <section class="pc-head">
+      <a href={HOME} class="pc-back">← на главную</a>
+      <span class="pc-sticker pc-sticker--star" style="--rot:13deg; top:0; right:6px">★</span>
+      <span class="pc-eyebrow"><i class="pc-bdot"></i>Портфолио</span>
+      <h1 class="pc-h1b">Сайты, которые <span class="pc-mark">ловят заявки</span></h1>
+      <p class="pc-lead">Каждый — с системой заявок и&nbsp;интеграциями. Наведитесь — запись оживает.</p>
+    </section>
+
+    <section class="pc-cases2">
+      {cases.map((c) => (
+        <article class="pc-case2 pc-paper pc-reveal">
+          <a href={c.url} target="_blank" rel="noopener" class="pc-case2__media">
+            <img class="pc-case2__frame" src="/pc/caseframe.webp" alt="" aria-hidden="true" />
+            <span class="pc-case2__screen" aria-hidden="true">
+              {c.vid
+                ? <video class="pc-case2__vid" src={c.vid} poster={c.poster} muted loop playsinline preload="none"></video>
+                : <img class="pc-case2__vid" src={c.img} alt="" />}
+              <span class="pc-case2__tint"></span>
+            </span>
+            <span class="pc-case2__status">{c.status}</span>
+            <span class="pc-case2__play">▶ открыть</span>
+          </a>
+          <div class="pc-case2__body">
+            <div class="pc-case2__niche">{c.niche}</div>
+            <div class="pc-case2__title">{c.title}</div>
+            <p class="pc-case2__task">{c.task}</p>
+            <ul class="pc-case2__points">{c.points.map((p) => (<li><span>✓</span>{p}</li>))}</ul>
+            <div class="pc-case2__auto"><b>Автоматизировано:</b> {c.automated}</div>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <section class="pc-ctasec">
+      <div class="pc-ticket pc-paper pc-reveal">
+        <h2 class="pc-h2">Хотите так же — <span class="pc-mark">с системой заявок?</span></h2>
+        <p class="pc-lead pc-lead--c">Напишите нишу и&nbsp;что продаёте — покажу, где вы&nbsp;теряете заявки.</p>
+        <a href="https://t.me/tori2k" class="pc-btn" data-magnetic><span class="pc-btn__plus">(+)</span>Получить разбор</a>
       </div>
     </section>
 
-    <section class="cases-list section-dark">
-      <div class="container-x">
-        {cases.map((c, i) => (
-          <article class:list={['ccase', 'reveal']} style={`transition-delay: ${i * 0.08}s`}>
-            <a href={c.url} target="_blank" rel="noopener" class="ccase__media">
-              <img src={`${base}screenshots/${c.img}`} alt={c.title} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
-              <span class="ccase__status">{c.status}</span>
-            </a>
-
-            <div class="ccase__body">
-              <div class="ccase__niche">{c.niche}</div>
-              <h2 class="ccase__title">{c.title}</h2>
-
-              <div class="ccase__section-label">Задача</div>
-              <p class="ccase__text">{c.task}</p>
-
-              <div class="ccase__section-label">Что собрано</div>
-              <p class="ccase__text">{c.built}</p>
-
-              <ul class="ccase__points">
-                {c.points.map((p) => (
-                  <li>
-                    <span class="ccase__check">(+)</span>
-                    {p}
-                  </li>
-                ))}
-              </ul>
-
-              <div class="ccase__automated">
-                <span class="ccase__auto-label">Автоматизировано</span>
-                {c.automated}
-              </div>
-
-              <a href={c.url} target="_blank" rel="noopener" class="btn btn--filled ccase__cta">
-                <span class="btn__plus">(+)</span>
-                Открыть сайт
-              </a>
-            </div>
-          </article>
-        ))}
+    <footer class="pc-foot">
+      <div class="pc-foot__inner">
+        <a href={HOME} class="pc-foot__brand">Кирилл<span class="pc-dot">.</span></a>
+        <div class="pc-foot__mid">Сайты на&nbsp;Astro&nbsp;+&nbsp;Tailwind · Москва · удалённо</div>
+        <nav class="pc-foot__links"><a href="/services">Услуги</a><a href="/method">Метод</a><a href="/cases">Кейсы</a><a href="/articles">Блог</a><a href="/razbor">Разбор</a></nav>
+        <div class="pc-foot__copy">© 2026 Кирилл Барыев</div>
       </div>
-    </section>
-
+    </footer>
   </main>
-  <Footer />
-</Layout>
 
-<style>
-  .cases-hero { padding: 140px 0 60px; }
-  .cases-hero__h1 { margin: 0 0 20px; }
-  .cases-hero__h1 em { color: var(--aurora-cyan); }
-  .cases-hero__sub {
-    font-size: clamp(16px, 1.4vw, 19px);
-    color: var(--color-muted);
-    max-width: 520px;
-    line-height: 1.6;
-    margin: 0;
-  }
-  .cases-hero__links {
-    margin: 20px 0 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--color-muted-2);
-  }
-  .cases-hero__links a { color: var(--color-accent); text-decoration: none; }
-  .cases-hero__links a:hover { text-decoration: underline; }
+  <style is:global>
+    .pc-body { background: #bd9457; }
+    @media (pointer: fine) { html.pc-cursor-on, html.pc-cursor-on * { cursor: none; } }
+  </style>
 
-  .cases-list { padding: 40px 0 100px; }
-  .cases-list .container-x { display: flex; flex-direction: column; gap: 28px; }
+  <style>
+    .pc {
+      --paper: #f4ead2; --paper2: #ece0c0; --ink: #2c2418; --ink-soft: #6a5c44;
+      --mark: #7b4cff; --mark-soft: #e7defb; --mark2: #d9694a;
+      position: relative; min-height: 100vh; color: var(--ink);
+      font-family: 'Special Elite', 'Courier New', monospace;
+      text-shadow: .42px 0 0 currentColor, -.42px 0 0 currentColor;
+      background: #bd9457 url('/pc/kraft.webp') 0 0 / 760px repeat; overflow-x: clip;
+    }
+    .pc a { color: inherit; text-decoration: none; }
+    .pc-dot { color: var(--mark); }
+    .pc-paper { background: var(--paper); filter: url(#torn) drop-shadow(0 14px 20px rgba(40,28,12,0.3)); }
+    .pc-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: 'Special Elite', monospace; font-size: 12px; letter-spacing: .5px; text-transform: uppercase; color: #5734b8; }
+    .pc-bdot { width: 8px; height: 8px; border-radius: 50%; background: var(--mark2); }
+    .pc-mark { position: relative; color: var(--ink); background: var(--mark-soft); box-shadow: 0 0 0 4px var(--mark-soft); border-radius: 3px; }
+    .pc-h2 { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: clamp(24px, 3.4vw, 40px); margin: 0; }
+    .pc-lead { margin: 18px 0 0; max-width: 540px; font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
+    .pc-lead--c { margin: 16px auto 0; text-align: center; }
 
-  .ccase {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    background: var(--glass-tint);
-    backdrop-filter: blur(20px) saturate(1.4);
-    -webkit-backdrop-filter: blur(20px) saturate(1.4);
-    border: 1px solid var(--color-border);
-    border-radius: 18px;
-    overflow: hidden;
-    transition: border-color 0.35s, transform 0.35s cubic-bezier(.22,1,.36,1);
-  }
-  .ccase:hover { border-color: rgba(139,92,255,0.35); transform: translateY(-3px); }
+    /* cursor */
+    .pc-cloud { position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(120,76,28,0.18), rgba(120,76,28,0.06) 45%, transparent 70%); filter: blur(36px); mix-blend-mode: multiply; opacity: 0; transition: opacity .6s; will-change: transform; }
+    .pc-cur { position: fixed; top: 0; left: 0; pointer-events: none; transform: translate(-50%,-50%); will-change: transform; opacity: 0; z-index: 9999; width: 24px; height: 24px; background: url('/pc/cursor.png') center/contain no-repeat; }
+    @media (hover: none) { .pc-cloud, .pc-cur { display: none; } }
 
-  .ccase__media {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    min-height: 360px;
-  }
-  .ccase__media img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    transition: transform 0.7s cubic-bezier(.22,1,.36,1);
-  }
-  .ccase:hover .ccase__media img { transform: scale(1.03); }
+    /* buttons */
+    .pc-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 14px; color: var(--paper); background: var(--ink); padding: 14px 22px; filter: url(#torn) drop-shadow(0 10px 14px rgba(40,28,12,.35)); transition: transform .2s; }
+    .pc-btn:hover { transform: translateY(-2px) rotate(-.6deg); }
+    .pc-btn--ghost { color: var(--ink); background: var(--paper); }
+    .pc-btn--sm { padding: 9px 15px; font-size: 12.5px; }
+    .pc-btn__plus { color: var(--mark2); }
 
-  .ccase__status {
-    position: absolute; top: 18px; left: 18px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--color-text);
-    padding: 6px 12px;
-    background: rgba(6,7,13,0.7);
-    border: 1px solid rgba(244,246,251,0.18);
-    border-radius: 999px;
-    backdrop-filter: blur(8px);
-  }
+    /* nav */
+    .pc-nav { position: relative; z-index: 5; max-width: 1140px; margin: 0 auto; padding: 22px 26px; display: flex; align-items: center; gap: 18px; }
+    .pc-nav__brand { position: relative; font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 21px; background: var(--paper); padding: 8px 16px; filter: url(#torn) drop-shadow(0 8px 12px rgba(40,28,12,.3)); transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
+    .pc-nav__brand:hover { transform: rotate(-1.6deg) scale(1.03); }
+    .pc-tape { position: absolute; top: -9px; left: 50%; transform: translateX(-50%) rotate(-3deg); width: 54px; height: 17px; background: rgba(123,76,255,.32); transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
+    .pc-nav__brand:hover .pc-tape { transform: translateX(-50%) translateY(-2px) rotate(-8deg); }
+    .pc-nav__links { margin-left: 12px; display: flex; gap: 18px; font-family: 'Special Elite', monospace; font-size: 13.5px; }
+    .pc-nav__links a { padding-bottom: 2px; border-bottom: 2px solid transparent; }
+    .pc-nav__links a:hover, .pc-nav__links a[aria-current] { border-color: var(--mark); }
+    .pc-nav__avail { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; font-family: 'Special Elite', monospace; font-size: 12px; color: var(--ink-soft); }
+    .pc-nav__avail i { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; }
 
-  .ccase__body { padding: 40px 36px; display: flex; flex-direction: column; }
-  .ccase__niche {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--color-accent); margin-bottom: 12px;
-  }
-  .ccase__title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(26px, 2.6vw, 38px);
-    font-weight: 500; letter-spacing: -0.02em; line-height: 1.1;
-    margin: 0 0 20px; color: var(--color-text);
-  }
-  .ccase__section-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--color-accent); margin-bottom: 6px;
-  }
-  .ccase__text { font-size: 14px; line-height: 1.6; color: var(--color-muted); margin: 0 0 16px; }
-  .ccase__points {
-    list-style: none; padding: 0; margin: 0 0 16px;
-    display: flex; flex-direction: column; gap: 8px;
-  }
-  .ccase__points li { display: flex; gap: 8px; font-size: 13px; color: var(--color-text); line-height: 1.5; }
-  .ccase__check { color: var(--color-accent); font-family: 'JetBrains Mono', monospace; font-size: 11px; flex-shrink: 0; }
+    /* header */
+    .pc-head { position: relative; max-width: 1140px; margin: 0 auto; padding: 30px 26px 10px; }
+    .pc-back { display: inline-block; font-family: 'Special Elite', monospace; font-size: 13px; color: var(--ink-soft); margin-bottom: 18px; }
+    .pc-back:hover { color: var(--mark); }
+    .pc-h1b { font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: clamp(32px, 5vw, 60px); line-height: 1.05; letter-spacing: -.02em; margin: 14px 0 0; max-width: 720px; }
 
-  .ccase__automated {
-    font-size: 12px; line-height: 1.55; color: var(--color-muted);
-    padding: 10px 14px; margin: 0 0 24px;
-    background: rgba(139,92,255,0.06);
-    border-left: 2px solid rgba(139,92,255,0.4);
-    border-radius: 0 8px 8px 0;
-  }
-  .ccase__auto-label {
-    display: block; font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--color-accent); margin-bottom: 3px;
-  }
-  .ccase__cta { align-self: flex-start; margin-top: auto; }
+    /* стикер-звезда */
+    .pc-sticker { position: absolute; z-index: 6; display: inline-flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-weight: 700; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 6px 13px rgba(40,28,12,.32); transform: rotate(var(--rot,-8deg)); text-shadow: none; transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
+    .pc-sticker:hover { transform: rotate(calc(var(--rot,-8deg) * -1.2)) scale(1.14); }
+    .pc-sticker--star { width: 58px; height: 58px; background: #e9c45a; color: var(--ink); font-size: 27px; }
 
-  .cases-cta { padding: 0 0 100px; }
-  .cases-cta__inner {
-    padding: 48px 44px;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
-  .cases-cta__text {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(22px, 2.5vw, 34px);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    margin: 0;
-    color: var(--color-text);
-  }
+    /* кейс-карточки (как на главной, но не sticky — обычная стопка) */
+    .pc-cases2 { max-width: 1040px; margin: 28px auto 0; display: flex; flex-direction: column; gap: 30px; }
+    .pc-case2 { position: relative; display: grid; grid-template-columns: 1.5fr 1fr; gap: 0; overflow: hidden; align-items: start; transition: transform .32s cubic-bezier(.34,1.56,.64,1); }
+    .pc-case2:nth-child(2n) { transform: rotate(.4deg); }
+    .pc-case2:hover { transform: translateY(-5px) rotate(-.3deg); }
+    .pc-case2__media { position: relative; display: block; }
+    .pc-case2__frame { display: block; width: 100%; height: auto; position: relative; z-index: 2; pointer-events: none; }
+    .pc-case2__screen { position: absolute; inset: 17.5% 8.5% 8.5% 9.5%; z-index: 0; overflow: hidden; border-radius: 3px; background: #d8caa6; }
+    .pc-case2__vid { width: 100%; height: 100%; object-fit: contain; object-position: center; filter: grayscale(.82) brightness(.74); transition: filter .5s ease; }
+    .pc-case2:hover .pc-case2__vid { filter: none; }
+    .pc-case2__tint { position: absolute; inset: 0; z-index: 1; background: #7b4cff; mix-blend-mode: color; opacity: .5; transition: opacity .5s ease; pointer-events: none; }
+    .pc-case2:hover .pc-case2__tint { opacity: 0; }
+    .pc-case2__status { position: absolute; z-index: 3; top: 14px; left: 14px; font-family: 'Special Elite', monospace; font-size: 10px; text-transform: uppercase; color: var(--ink); background: rgba(244,234,210,.92); padding: 5px 11px; border-radius: 999px; }
+    .pc-case2__play { position: absolute; z-index: 3; bottom: 14px; right: 14px; font-family: 'Special Elite', monospace; font-size: 11px; color: #fff; background: rgba(44,36,24,.7); padding: 6px 12px; border-radius: 999px; opacity: 0; transition: opacity .4s; }
+    .pc-case2:hover .pc-case2__play { opacity: 1; }
+    .pc-case2__body { padding: 24px 26px; display: flex; flex-direction: column; }
+    .pc-case2__niche { font-family: 'Special Elite', monospace; font-size: 12px; color: var(--mark); }
+    .pc-case2__title { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 24px; margin: 4px 0 8px; transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
+    .pc-case2__title:hover { transform: rotate(-1deg) translateX(2px); }
+    .pc-case2__task { margin: 0; font-size: 14px; color: var(--ink-soft); line-height: 1.55; }
+    .pc-case2__points { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 7px; }
+    .pc-case2__points li { display: flex; gap: 9px; font-size: 13.5px; }
+    .pc-case2__points span { color: var(--mark); font-weight: 700; display: inline-block; transition: transform .2s ease; }
+    .pc-case2__points li:hover span { transform: scale(1.45) rotate(-9deg); }
+    .pc-case2__auto { margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(44,36,24,.25); font-size: 13px; color: var(--ink-soft); }
 
-  @media (max-width: 1000px) { .ccase { grid-template-columns: 1fr; } .ccase__media { min-height: 260px; } }
-  @media (max-width: 700px) {
-    .cases-hero { padding: 100px 0 40px; }
-    .cases-list { padding: 20px 0 60px; }
-    .ccase__body { padding: 28px 22px; }
-    .cases-cta__inner { flex-direction: column; align-items: flex-start; padding: 32px 28px; }
-  }
-  @media (max-width: 480px) {
-    .ccase__body { padding: 22px 16px; }
-    .ccase__cta { width: 100%; justify-content: center; }
-    .cases-cta__inner { padding: 24px 18px; }
-  }
-</style>
+    /* cta */
+    .pc-ctasec { display: flex; justify-content: center; max-width: 1140px; margin: 0 auto; padding: 56px 26px; }
+    .pc-ticket { max-width: 660px; padding: 46px 44px; text-align: center; }
+    .pc-ticket .pc-btn { margin-top: 24px; }
+
+    /* footer */
+    .pc-foot { max-width: 1140px; margin: 0 auto; }
+    .pc-foot__inner { padding: 30px 26px 60px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; font-family: 'Special Elite', monospace; font-size: 13px; color: #5a4626; }
+    .pc-foot__brand { font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 20px; color: var(--ink); }
+    .pc-foot__links { display: flex; gap: 16px; }
+    .pc-foot__copy { margin-left: auto; }
+
+    /* reveal */
+    .pc-reveal { opacity: 0; transform: translateY(30px) rotate(-1.4deg); transition: opacity .7s ease, transform .8s cubic-bezier(.34,1.56,.64,1); }
+    .pc-reveal.is-in { opacity: 1; transform: none; }
+
+    @media (max-width: 820px) {
+      .pc-nav__links, .pc-nav__avail { display: none; }
+      .pc-case2 { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { .pc-reveal { opacity: 1; transform: none; } }
+  </style>
+
+  <script>
+    // курсор-облачко + точка
+    const cloud = document.getElementById('pc-cloud');
+    const cur = document.getElementById('pc-cur');
+    if (matchMedia('(pointer: fine)').matches) {
+      document.documentElement.classList.add('pc-cursor-on');
+      addEventListener('mousemove', (e) => {
+        if (cloud) { cloud.style.transform = `translate(${e.clientX - 180}px, ${e.clientY - 180}px)`; cloud.style.opacity = '1'; }
+        if (cur) { cur.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`; cur.style.opacity = '1'; }
+      });
+    }
+    // reveal по появлению
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    }), { threshold: 0.16 });
+    document.querySelectorAll('.pc-reveal').forEach((el) => io.observe(el));
+    // видео играет при наведении
+    document.querySelectorAll('.pc-case2').forEach((c) => {
+      const v = c.querySelector('video');
+      if (v) { c.addEventListener('mouseenter', () => v.play().catch(() => {})); c.addEventListener('mouseleave', () => v.pause()); }
+    });
+  </script>
+</PapercraftBase>

@@ -1,24 +1,19 @@
 ---
-import TemplateLayout from './TemplateLayout.astro';
+import PapercraftBase from './PapercraftBase.astro';
 
 // Общий папиркрафт-лейаут для доп. страниц (нав, футер, кнопки, бумага, курсор, reveal).
 // База в одном месте — страницы добавляют только свой контент + scoped-CSS.
-interface Props { title: string; description: string; active?: string; }
-const { title, description, active } = Astro.props;
-const HOME = '/templates/06-papercraft';
+interface Props { title: string; description: string; active?: string; jsonLd?: Record<string, unknown> | Record<string, unknown>[]; }
+const { title, description, active, jsonLd } = Astro.props;
+const HOME = '/';
 const links = [
-  { href: '/templates/06-papercraft-services', label: 'Услуги', key: 'services' },
-  { href: '/templates/06-papercraft-method', label: 'Метод', key: 'method' },
-  { href: '/templates/06-papercraft-cases', label: 'Кейсы', key: 'cases' },
-  { href: '/templates/06-papercraft-razbor', label: 'Разбор', key: 'razbor' },
+  { href: '/services', label: 'Услуги', key: 'services' },
+  { href: '/method', label: 'Метод', key: 'method' },
+  { href: '/cases', label: 'Кейсы', key: 'cases' },
+  { href: '/razbor', label: 'Разбор', key: 'razbor' },
 ];
 ---
-<TemplateLayout
-  title={title}
-  description={description}
-  fontsHref="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Special+Elite&family=Caveat:wght@600;700&display=swap"
-  bodyClass="pc-body"
->
+<PapercraftBase title={title} description={description} jsonLd={jsonLd} bodyClass="pc-body">
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <filter id="torn"><feTurbulence type="fractalNoise" baseFrequency="0.013 0.022" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7"/></filter>
   </svg>
@@ -45,11 +40,11 @@ const links = [
         <a href={HOME} class="pc-foot__brand">Кирилл<span class="pc-dot">.</span></a>
         <div class="pc-foot__mid">Сайты на&nbsp;Astro&nbsp;+&nbsp;Tailwind · Москва · удалённо</div>
         <nav class="pc-foot__links">
-          <a href="/templates/06-papercraft-services">Услуги</a>
-          <a href="/templates/06-papercraft-method">Метод</a>
-          <a href="/templates/06-papercraft-cases">Кейсы</a>
-          <a href="/templates/06-papercraft-articles">Блог</a>
-          <a href="/templates/06-papercraft-razbor">Разбор</a>
+          <a href="/services">Услуги</a>
+          <a href="/method">Метод</a>
+          <a href="/cases">Кейсы</a>
+          <a href="/articles">Блог</a>
+          <a href="/razbor">Разбор</a>
         </nav>
         <div class="pc-foot__copy">© 2026 Кирилл Барыев</div>
       </div>
@@ -147,4 +142,4 @@ const links = [
     }), { threshold: 0.14 });
     document.querySelectorAll('.pc-reveal').forEach((el) => io.observe(el));
   </script>
-</TemplateLayout>
+</PapercraftBase>

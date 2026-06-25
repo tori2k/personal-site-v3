@@ -1,0 +1,95 @@
+---
+import YandexMetrika from '../components/YandexMetrika.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  bodyClass?: string;
+}
+
+const {
+  title = 'AI-автоматизация заявок для малого бизнеса: сайт, квиз, Telegram, CRM',
+  description = 'Собираю сайт/квиз, Telegram-заявки, CRM и AI-дожим, чтобы лиды не умирали после клика. Больше обработанных заявок без расширения штата. Первый разбор бесплатно.',
+  ogImage,
+  noindex = false,
+  jsonLd,
+  bodyClass = 'pc-body',
+} = Astro.props;
+
+const SITE = 'https://kirillbaryev.ru';
+const canonical = new URL(Astro.url.pathname, SITE).href;
+const ogImageUrl = ogImage ?? `${SITE}/og-image.jpg`;
+
+const baseJsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Кирилл Барыев', url: SITE, inLanguage: 'ru' },
+  {
+    '@context': 'https://schema.org', '@type': 'Person', name: 'Кирилл Барыев', url: SITE,
+    image: `${SITE}/kirill.jpg`, sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
+    jobTitle: 'Разработчик сайтов и AI-воронок',
+    knowsAbout: ['разработка сайтов', 'лендинги под заявки', 'AI-воронки', 'Telegram-боты', 'квизы для лендинга', 'CRM и автоматизация заявок', 'лидогенерация'],
+  },
+  {
+    '@context': 'https://schema.org', '@type': 'ProfessionalService',
+    name: 'Кирилл Барыев — разработка сайтов и AI-воронок', url: SITE, image: `${SITE}/og-image.jpg`,
+    description: 'Лендинги, сайты, квизы, Telegram-заявки, CRM/таблицы и AI-автоматизации для экспертов, юристов, консультантов, онлайн-школ и сервисного бизнеса.',
+    priceRange: 'от 49 000 ₽', areaServed: 'RU',
+    founder: { '@type': 'Person', name: 'Кирилл Барыев' },
+    sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
+  },
+];
+const pageJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const allJsonLd = [...baseJsonLd, ...pageJsonLd];
+---
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#bd9457" />
+
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Кирилл Барыев" />
+    <meta property="og:image" content={ogImageUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {allJsonLd.map((node) => (
+      <script type="application/ld+json" set:html={JSON.stringify(node)} />
+    ))}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Special+Elite&family=Caveat:wght@600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Special+Elite&family=Caveat:wght@600;700&display=swap" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <style is:global>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      a { color: inherit; text-decoration: none; }
+      img { max-width: 100%; display: block; }
+      button { font: inherit; cursor: pointer; }
+      :focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+    </style>
+  </head>
+  <body class={bodyClass}>
+    <slot />
+    <YandexMetrika />
+  </body>
+</html>

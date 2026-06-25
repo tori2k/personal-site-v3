@@ -1,348 +1,89 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
+import PapercraftLayout from '../layouts/PapercraftLayout.astro';
 
+const HOME = '/';
 const services = [
-  {
-    tag: 'Бесплатно',
-    name: 'Бесплатный разбор',
-    price: '0 ₽',
-    for: 'Бизнес с потоком заявок, но без прозрачной обработки',
-    pain: 'Непонятно, где теряются заявки после клика',
-    includes: ['Разбор пути заявки после клика', 'Оценка скорости ответа и фиксации лидов', 'Поиск 3 точек слива', 'План в Telegram'],
-    excludes: ['Внедрение', 'Правки'],
-    time: '1–2 дня',
-    result: '3 конкретные точки слива и приоритет, что чинить первым',
-    cta: '/razbor',
-    ctaLabel: 'Получить разбор',
-  },
-  {
-    tag: 'Диагностика',
-    name: 'Аудит обработки заявок',
-    price: '10 000–25 000 ₽',
-    for: 'Бизнес, который хочет цифры до внедрения',
-    pain: 'Нужно понять масштаб потерь и план, но без обязательств',
-    includes: ['Полная карта пути заявки', 'Расчёт потерь в деньгах', 'Анализ каналов и скорости ответа', 'Пошаговый план внедрения', 'Приоритеты по ROI'],
-    excludes: ['Сборка системы'],
-    time: '3–5 дней',
-    result: 'Понятный план и цифры: что внедрять и в каком порядке',
-    cta: '/razbor',
-    ctaLabel: 'Заказать аудит',
-  },
-  {
-    tag: 'Входной формат',
-    name: 'Лёгкий фикс: сайт с Telegram-заявками',
-    price: 'от 35 000 ₽',
-    for: 'Тем, кому нужно быстро остановить утечку',
-    pain: 'Заявки падают на почту и теряются',
-    includes: ['Лендинг или фикс текущего', 'Заявки в Telegram', 'Базовая таблица лидов', 'Автоответ клиенту', 'Адаптив и домен'],
-    excludes: ['AI-бот', 'CRM', 'Квалификация'],
-    time: '3–7 дней',
-    result: 'Заявки перестают теряться — быстрый первый шаг',
-    cta: '/razbor',
-    ctaLabel: 'Обсудить',
-  },
-  {
-    tag: 'Основной продукт',
-    name: 'Антислив заявок: AI-система',
-    price: '150 000 ₽',
-    for: '50+ заявок/мес из нескольких каналов',
-    pain: 'Заявки есть, но обработка хаотичная — деньги утекают',
-    includes: ['Аудит и карта точек слива', 'Квиз и квалификация лида', 'Telegram/CRM-уведомления', 'AI-бот по базе знаний', 'Подсказки менеджеру', '7–14 дней поддержки'],
-    excludes: ['Реклама', 'Ведение соцсетей'],
-    time: '14–21 день',
-    result: 'Система после клика: лид фиксируется, квалифицируется и не теряется',
-    cta: '/ai-avtomatizaciya-zayavok',
-    ctaLabel: 'Смотреть продукт',
-    featured: true,
-  },
-  {
-    tag: 'После запуска',
-    name: 'Антислив + сопровождение',
-    price: '25 000–50 000 ₽/мес',
-    for: 'Клиентов с внедрённой системой',
-    pain: 'Систему нужно развивать и держать в форме',
-    includes: ['Доработка сценариев', 'Улучшение AI-бота', 'Аналитика заявок', 'Новые связки', 'Контроль системы', 'Отчёт раз в месяц'],
-    excludes: [],
-    time: 'Ежемесячно',
-    result: 'Система улучшается, конверсия растёт, владелец видит отчёт',
-    cta: '/ai-avtomatizaciya-zayavok',
-    ctaLabel: 'Подробнее',
-    premium: true,
-  },
+  { name: 'Бесплатный разбор', tag: 'старт', price: '0 ₽', d: 'Смотрю сайт и путь заявки — план из 3 шагов.' },
+  { name: 'Аудит обработки заявок', tag: 'диагностика', price: 'от 0 ₽', d: 'Где теряются лиды между кликом и продажей.' },
+  { name: 'Сайт с Telegram-заявками', tag: 'лёгкий фикс', price: 'от 49 000 ₽', d: 'Лендинг + приём заявок в Telegram, быстрый запуск.' },
+  { name: 'Антислив: AI-система', tag: 'система', price: 'от 120 000 ₽', d: 'Сайт + квиз + Telegram + CRM + AI-дожим.', featured: true },
+  { name: 'Антислив + сопровождение', tag: 'максимум', price: 'индивид.', d: 'Система заявок плюс ведение и доработки.' },
 ];
-
-// Корректный price для JSON-LD: одиночная цена → price, диапазон → PriceSpecification.
-// «10 000–25 000 ₽» больше не склеивается в «1000025000».
-function priceLd(priceStr) {
-  if (!priceStr) return {};
-  const nums = (priceStr.match(/\d[\d\s]*\d|\d/g) || []).map((n) => n.replace(/\s/g, ''));
-  if (nums.length >= 2) {
-    return { priceSpecification: { '@type': 'PriceSpecification', minPrice: nums[0], maxPrice: nums[1], priceCurrency: 'RUB' } };
-  }
-  if (nums.length === 1) return { price: nums[0], priceCurrency: 'RUB' };
-  return {};
-}
-
-// JSON-LD: каталог услуг (Service + OfferCatalog)
-const servicesJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  serviceType: 'AI-автоматизация обработки заявок',
-  provider: { '@type': 'Person', name: 'Кирилл Барыев', url: 'https://kirillbaryev.ru' },
-  areaServed: 'RU',
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Продуктовая линейка',
-    itemListElement: services.map((s) => ({
-      '@type': 'Offer',
-      name: s.name,
-      description: s.pain,
-      ...priceLd(s.price),
-    })),
-  },
-};
+const autos = ['Заявка → Telegram', 'CRM / таблица', 'AI-дожим', 'Онлайн-оплата', 'Лид-воронка', 'Контент-завод'];
 ---
-<Layout
-  title="Автоматизация заявок для бизнеса: сайт, квиз, Telegram, CRM, дожим — цены"
-  description="Продуктовая линейка для обработки лидов: экспресс-лендинг, лендинг эксперта, сайт с Telegram-заявками, CRM/таблица, боты и AI-дожим. Стоимость от 49 000 ₽."
-  jsonLd={servicesJsonLd}
->
-  <Nav />
-  <main>
-    <section class="srv-hero section-dark">
-      <div class="container-x">
-        <div class="srv-hero__inner reveal">
-          <div class="sec-tag">Услуги</div>
-          <h1 class="display-h srv-hero__h1">
-            Полная <em>линейка.</em>
-          </h1>
-          <p class="srv-hero__sub">
-            От бесплатного разбора до полной системы заявок под ключ.
-            Выберите формат или начните с разбора — скажу, что нужно именно вам.
-          </p>
-          <p class="srv-hero__links">
-            <a href="/ai-avtomatizaciya-zayavok">AI-автоматизация заявок</a> ·
-            <a href="/razbor">Бесплатный разбор</a> ·
-            <a href="/cases">Кейсы</a> ·
-            <a href="/method">Метод</a>
-          </p>
+<PapercraftLayout title="Услуги · Papercraft — kirillbaryev.ru" description="Сайты и автоматизация заявок: разбор, лёгкий фикс, AI-система, сопровождение." active="services">
+  <section class="pc-head">
+    <a href={HOME} class="pc-back">← на главную</a>
+    <span class="pc-sticker pc-sticker--ai" style="--rot:12deg; top:0; right:8px">AI</span>
+    <span class="pc-eyebrow"><i class="pc-bdot"></i>Услуги</span>
+    <h1 class="pc-h1b">Сайт + автоматизация <span class="pc-mark">под заявки</span></h1>
+    <p class="pc-lead">От бесплатного разбора до&nbsp;системы, где заявка сама доходит до&nbsp;вас.</p>
+  </section>
+
+  <section class="pc-sec">
+    <span class="pc-eyebrow"><i class="pc-bdot"></i>Линейка</span>
+    <h2 class="pc-h2">Выберите <span class="pc-mark">формат</span></h2>
+    <div class="pc-svc">
+      {services.map((s) => (
+        <div class:list={['pc-svc__card pc-paper pc-reveal', s.featured && 'is-feat']}>
+          <span class="pc-svc__tag">{s.tag}</span>
+          <h3 class="pc-svc__name">{s.name}</h3>
+          <div class="pc-svc__price">{s.price}</div>
+          <p class="pc-svc__d">{s.d}</p>
+          <a href="https://t.me/tori2k" class="pc-btn pc-btn--sm pc-btn--ghost">Обсудить</a>
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
+  </section>
 
-    <section class="srv-list section-dark">
-      <div class="container-x">
-        {services.map((s, i) => (
-          <article
-            class:list={['srv-card', 'reveal', s.featured && 'srv-card--featured', s.premium && 'srv-card--premium']}
-            style={`transition-delay: ${i * 0.06}s`}
-          >
-            {s.featured && <div class="srv-card__badge">Основной выбор</div>}
-            {s.premium && <div class="srv-card__badge srv-card__badge--premium">★ aurora</div>}
+  <section class="pc-sec">
+    <span class="pc-eyebrow"><i class="pc-bdot"></i>Под капотом</span>
+    <h2 class="pc-h2">Что я <span class="pc-mark">автоматизирую</span></h2>
+    <ul class="pc-autos pc-reveal">
+      {autos.map((a) => (<li class="pc-autos__chip">{a}</li>))}
+    </ul>
+  </section>
 
-            <div class="srv-card__header">
-              <div class="srv-card__meta">
-                <div class="srv-card__tag">{s.tag}</div>
-                <h2 class="srv-card__name">{s.name}</h2>
-                {s.price && <div class="srv-card__price">{s.price}</div>}
-              </div>
-              <div class="srv-card__time-wrap">
-                <div class="srv-card__time-label">Срок</div>
-                <div class="srv-card__time">{s.time}</div>
-              </div>
-            </div>
+  <section class="pc-sec">
+    <span class="pc-eyebrow"><i class="pc-bdot"></i>По нишам</span>
+    <h2 class="pc-h2">Найдите <span class="pc-mark">свой случай</span></h2>
+    <div class="pc-niches pc-reveal">
+      <a href="/lending-dlya-eksperta" class="pc-niche pc-paper">Экспертам</a>
+      <a href="/sajt-dlya-yurista" class="pc-niche pc-paper">Юристам</a>
+      <a href="/ai-avtomatizaciya-zayavok" class="pc-niche pc-paper">AI-автоматизация</a>
+      <a href="/anti-sliv-zayavok" class="pc-niche pc-paper">Антислив заявок</a>
+    </div>
+  </section>
 
-            <div class="srv-card__body">
-              <div class="srv-card__col">
-                <div class="srv-card__col-label">Кому подходит</div>
-                <p class="srv-card__col-text">{s.for}</p>
-                <div class="srv-card__col-label">Боль</div>
-                <p class="srv-card__col-text">{s.pain}</p>
-              </div>
+  <section class="pc-sec pc-ctasec">
+    <div class="pc-ticket pc-paper pc-reveal">
+      <h2 class="pc-h2">Не знаете, <span class="pc-mark">что вам нужно?</span></h2>
+      <p class="pc-lead pc-lead--c">Начните с бесплатного разбора — скажу честно, нужен ли новый сайт.</p>
+      <a href="https://t.me/tori2k" class="pc-btn"><span class="pc-btn__plus">(+)</span>Получить разбор</a>
+    </div>
+  </section>
 
-              <div class="srv-card__col">
-                <div class="srv-card__col-label">Что входит</div>
-                <ul class="srv-card__list">
-                  {s.includes.map((inc) => (
-                    <li><span class="srv-card__check">(+)</span>{inc}</li>
-                  ))}
-                </ul>
-                {s.excludes.length > 0 && (
-                  <>
-                    <div class="srv-card__col-label" style="margin-top:12px">Что не входит</div>
-                    <ul class="srv-card__list srv-card__list--dim">
-                      {s.excludes.map((exc) => (
-                        <li><span class="srv-card__minus">(–)</span>{exc}</li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </div>
+  <style>
+    .pc-svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; align-items: start; }
+    .pc-svc__card { position: relative; padding: 26px 24px 24px; display: flex; flex-direction: column; transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
+    .pc-svc__card:nth-child(2n) { transform: rotate(.5deg); }
+    .pc-svc__card:hover { transform: translateY(-6px) rotate(-.7deg); }
+    .pc-svc__card.is-feat { outline: 3px solid var(--mark); outline-offset: -3px; }
+    .pc-svc__tag { display: inline-block; align-self: flex-start; font-family: 'Special Elite', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: #fff; background: var(--mark2); padding: 3px 9px; border-radius: 4px; text-shadow: none; }
+    .pc-svc__name { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 17px; margin: 12px 0 0; }
+    .pc-svc__price { font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 22px; color: var(--mark); margin: 8px 0 0; }
+    .pc-svc__d { margin: 8px 0 16px; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); }
+    .pc-svc__card .pc-btn { margin-top: auto; align-self: flex-start; }
 
-              <div class="srv-card__col">
-                <div class="srv-card__result glass">
-                  <div class="srv-card__result-label">Результат</div>
-                  <p class="srv-card__result-text">{s.result}</p>
-                </div>
-                <a
-                  href={s.cta}
-                  class:list={['btn', 'btn--filled', 'srv-card__cta']}
-                  target={s.external ? '_blank' : undefined}
-                  rel={s.external ? 'noopener' : undefined}
-                  data-magnetic="0.3"
-                >
-                  <span class="btn__plus">(+)</span>
-                  {s.ctaLabel}
-                </a>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  </main>
-  <Footer />
-</Layout>
+    .pc-autos { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
+    .pc-autos__chip { font-family: 'Special Elite', monospace; font-size: 14px; background: var(--paper); padding: 11px 18px; filter: url(#torn) drop-shadow(0 6px 10px rgba(40,28,12,.22)); transition: transform .25s cubic-bezier(.34,1.56,.64,1); }
+    .pc-autos__chip:nth-child(2n) { transform: rotate(-1.4deg); }
+    .pc-autos__chip:hover { transform: translateY(-3px) rotate(1.5deg); }
 
-<style>
-  .srv-hero { padding: 140px 0 60px; }
-  .srv-hero__h1 { margin: 0 0 20px; }
-  .srv-hero__h1 em { color: var(--aurora-cyan); }
-  .srv-hero__sub {
-    font-size: clamp(15px, 1.3vw, 18px);
-    color: var(--color-muted);
-    max-width: 520px;
-    line-height: 1.65;
-    margin: 0;
-  }
-  .srv-hero__links {
-    margin: 20px 0 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--color-muted-2);
-  }
-  .srv-hero__links a { color: var(--color-accent); text-decoration: none; }
-  .srv-hero__links a:hover { text-decoration: underline; }
-
-  .srv-list { padding: 40px 0 120px; }
-  .srv-list .container-x { display: flex; flex-direction: column; gap: 16px; }
-
-  .srv-card {
-    position: relative;
-    padding: 36px 32px;
-    background: var(--glass-tint);
-    backdrop-filter: blur(20px) saturate(1.4);
-    -webkit-backdrop-filter: blur(20px) saturate(1.4);
-    border: 1px solid var(--color-border);
-    border-radius: 18px;
-    transition: border-color 0.35s;
-  }
-  .srv-card:hover { border-color: rgba(139,92,255,0.3); }
-  .srv-card--featured {
-    border-color: rgba(139,92,255,0.4);
-    background: linear-gradient(135deg, rgba(139,92,255,0.08), transparent), var(--glass-tint);
-  }
-  .srv-card--premium {
-    border-color: rgba(168,139,255,0.4);
-    background: linear-gradient(135deg, rgba(168,139,255,0.07), transparent), var(--glass-tint);
-  }
-
-  .srv-card__badge {
-    position: absolute; top: -10px; left: 28px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 4px 12px; border-radius: 999px;
-    background: var(--aurora-cyan); color: #0A0712;
-  }
-  .srv-card__badge--premium {
-    background: linear-gradient(120deg, #8B5CFF, #A88BFF, #C77CFF);
-  }
-
-  .srv-card__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 24px;
-    margin-bottom: 28px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .srv-card__tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--color-accent); margin-bottom: 8px;
-  }
-  .srv-card__name {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(18px, 1.8vw, 26px);
-    font-weight: 500; letter-spacing: -0.01em; line-height: 1.15;
-    color: var(--color-text); margin: 0 0 10px;
-  }
-  .srv-card__price {
-    font-family: 'Unbounded', sans-serif;
-    font-size: clamp(20px, 2vw, 30px);
-    font-weight: 500; letter-spacing: -0.02em;
-    color: var(--color-text);
-  }
-  .srv-card__time-wrap { text-align: right; flex-shrink: 0; }
-  .srv-card__time-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--color-muted-2); margin-bottom: 4px;
-  }
-  .srv-card__time {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px; color: var(--color-muted);
-  }
-
-  .srv-card__body {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 28px;
-  }
-  .srv-card__col-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--color-accent); margin-bottom: 8px;
-  }
-  .srv-card__col-text {
-    font-size: 14px; color: var(--color-muted); line-height: 1.55; margin: 0 0 16px;
-  }
-  .srv-card__list {
-    list-style: none; padding: 0; margin: 0;
-    display: flex; flex-direction: column; gap: 6px;
-  }
-  .srv-card__list li { display: flex; gap: 8px; font-size: 13px; line-height: 1.5; color: var(--color-text); }
-  .srv-card__list--dim li { color: var(--color-muted-2); }
-  .srv-card__check { color: var(--color-accent); font-family: 'JetBrains Mono', monospace; font-size: 11px; flex-shrink: 0; }
-  .srv-card__minus { color: var(--color-muted-2); font-family: 'JetBrains Mono', monospace; font-size: 11px; flex-shrink: 0; }
-
-  .srv-card__result {
-    padding: 18px 18px; border-radius: 12px; margin-bottom: 20px;
-  }
-  .srv-card__result-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--color-accent); margin-bottom: 6px;
-  }
-  .srv-card__result-text { font-size: 13px; color: var(--color-muted); line-height: 1.55; margin: 0; }
-  .srv-card__cta { align-self: flex-start; }
-
-  @media (max-width: 1100px) { .srv-card__body { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 900px) {
-    .srv-hero { padding: 100px 0 40px; }
-    .srv-list { padding: 20px 0 80px; }
-    .srv-card { padding: 28px 22px; }
-    .srv-card__body { grid-template-columns: 1fr; gap: 20px; }
-    .srv-card__header { flex-direction: column; gap: 12px; }
-    .srv-card__time-wrap { text-align: left; }
-  }
-  @media (max-width: 480px) {
-    .srv-card { padding: 22px 16px; }
-    .srv-card__name { font-size: 16px; }
-    .srv-card__price { font-size: 20px; }
-    .srv-card__cta { width: 100%; justify-content: center; }
-  }
-</style>
+    .pc-niches { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 20px; }
+    .pc-niche { padding: 16px 24px; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 16px; transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
+    .pc-niche:nth-child(2n) { transform: rotate(-1.2deg); }
+    .pc-niche:hover { transform: translateY(-4px) rotate(1.4deg); }
+    @media (max-width: 860px) { .pc-svc { grid-template-columns: 1fr; } }
+  </style>
+</PapercraftLayout>

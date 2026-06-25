@@ -1,12 +1,12 @@
 ---
-import PapercraftLayout from '../../../layouts/templates/PapercraftLayout.astro';
-import { pcArticles } from '../../../data/pcArticles';
+import PapercraftLayout from '../../layouts/PapercraftLayout.astro';
+import { pcArticles } from '../../data/pcArticles';
 
 export function getStaticPaths() {
   return pcArticles.map((a) => ({ params: { slug: a.slug }, props: a }));
 }
 const a = Astro.props;
-const BLOG = '/templates/06-papercraft-articles';
+const BLOG = '/articles';
 ---
 <PapercraftLayout title={`${a.title} · Блог · Papercraft`} description={a.excerpt} active="">
   <section class="pc-press">
@@ -24,7 +24,7 @@ const BLOG = '/templates/06-papercraft-articles';
 
     <div class="pc-press__cta pc-reveal">
       <a href={BLOG} class="pc-btn pc-btn--ghost pc-btn--sm">← к заметкам</a>
-      <a href="/templates/06-papercraft-razbor" class="pc-btn pc-btn--sm"><span class="pc-btn__plus">(+)</span>Получить разбор</a>
+      <a href="/razbor" class="pc-btn pc-btn--sm"><span class="pc-btn__plus">(+)</span>Получить разбор</a>
     </div>
   </section>
 
