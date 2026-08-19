@@ -1,5 +1,6 @@
 ---
 import YandexMetrika from '../components/YandexMetrika.astro';
+import '../styles/studio.css';
 
 interface Props {
   title?: string;
@@ -12,13 +13,13 @@ interface Props {
 }
 
 const {
-  title = 'AI-автоматизация заявок для малого бизнеса: сайт, квиз, Telegram, CRM',
-  description = 'Собираю сайт/квиз, Telegram-заявки, CRM и AI-дожим, чтобы лиды не умирали после клика. Больше обработанных заявок без расширения штата. Первый разбор бесплатно.',
+  title = 'Кирилл Барыев: сайты, системы и AI',
+  description = 'Проектирую и запускаю сайты, Telegram- и AI-системы для бизнеса. Сайты от 70 000 ₽.',
   ogImage,
   ogType = 'website',
   noindex = false,
   jsonLd,
-  bodyClass = 'pc-body',
+  bodyClass = 'studio-body',
 } = Astro.props;
 
 const SITE = 'https://kirillbaryev.ru';
@@ -30,14 +31,14 @@ const baseJsonLd = [
   {
     '@context': 'https://schema.org', '@type': 'Person', name: 'Кирилл Барыев', url: SITE,
     image: `${SITE}/kirill.jpg`, sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
-    jobTitle: 'Разработчик сайтов и AI-воронок',
-    knowsAbout: ['разработка сайтов', 'лендинги под заявки', 'AI-воронки', 'Telegram-боты', 'квизы для лендинга', 'CRM и автоматизация заявок', 'лидогенерация'],
+    jobTitle: 'Инженер цифровых продуктов',
+    knowsAbout: ['разработка сайтов', 'маршруты заявок', 'Telegram-боты', 'CRM-интеграции', 'AI-ассистенты', 'автоматизация процессов'],
   },
   {
     '@context': 'https://schema.org', '@type': 'ProfessionalService',
-    name: 'Кирилл Барыев — разработка сайтов и AI-воронок', url: SITE, image: `${SITE}/og-image.jpg`,
-    description: 'Лендинги, сайты, квизы, Telegram-заявки, CRM/таблицы и AI-автоматизации для экспертов, юристов, консультантов, онлайн-школ и сервисного бизнеса.',
-    priceRange: 'от 49 000 ₽', areaServed: 'RU',
+    name: 'Личная инженерная студия: Кирилл Барыев', url: SITE, image: ogImageUrl,
+    description: 'Сайты, Telegram- и AI-системы для бизнеса.',
+    priceRange: 'от 70 000 ₽', areaServed: 'RU',
     founder: { '@type': 'Person', name: 'Кирилл Барыев' },
     sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
   },
@@ -52,11 +53,9 @@ const allJsonLd = [...baseJsonLd, ...pageJsonLd];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#bd9457" />
-
+    <meta name="theme-color" content="#0b0c0d" />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
-
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -64,33 +63,19 @@ const allJsonLd = [...baseJsonLd, ...pageJsonLd];
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="Кирилл Барыев" />
     <meta property="og:image" content={ogImageUrl} />
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
-
-    {allJsonLd.map((node) => (
-      <script type="application/ld+json" set:html={JSON.stringify(node)} />
-    ))}
-
+    {allJsonLd.map((node) => <script is:inline type="application/ld+json" set:html={JSON.stringify(node)} />)}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Special+Elite&family=Caveat:wght@600;700&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Special+Elite&family=Caveat:wght@600;700&display=swap" />
-
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Onest:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Onest:wght@400;500;600;700&display=swap" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <style is:global>
-      *, *::before, *::after { box-sizing: border-box; }
-      html, body { margin: 0; padding: 0; }
-      a { color: inherit; text-decoration: none; }
-      img { max-width: 100%; display: block; }
-      button { font: inherit; cursor: pointer; }
-      :focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
-    </style>
   </head>
   <body class={bodyClass}>
+    <a class="skip-link" href="#content">К содержанию</a>
     <slot />
     <YandexMetrika />
   </body>

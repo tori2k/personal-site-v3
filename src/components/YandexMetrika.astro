@@ -1,7 +1,7 @@
 ---
 // Privacy-friendly Яндекс Метрика (152-ФЗ): счётчик грузится ТОЛЬКО после
 // согласия пользователя на аналитические cookies. Выбор хранится в localStorage.
-// window.track() — безопасный helper для целей (no-op, пока ym не загружен).
+// window.track() is a safe helper for goals (no-op until ym is loaded).
 // GA здесь нет намеренно: фактически не используется + трансграничная передача.
 const YM_ID = 109657352;
 ---
@@ -9,7 +9,7 @@ const YM_ID = 109657352;
 <div class="cc" id="cookieConsent" role="dialog" aria-label="Согласие на использование cookie" hidden>
   <p class="cc__text">
     Используем cookies и Яндекс Метрику для аналитики и улучшения сайта.
-    Подробнее — в <a href="/privacy">Политике обработки персональных данных</a>.
+    Подробнее в <a href="/privacy">Политике обработки персональных данных</a>.
   </p>
   <div class="cc__actions">
     <button type="button" class="cc__btn cc__btn--accept" id="ccAccept">Принять</button>
@@ -18,48 +18,26 @@ const YM_ID = 109657352;
 </div>
 
 <style>
-  /* Папиркрафт: бумажная плашка-записка справа внизу */
   .cc {
-    position: fixed;
-    right: 20px; bottom: 20px; left: auto;
-    z-index: 700;
-    max-width: 540px;
-    padding: 16px 18px;
-    background: #f4ead2; color: #2c2418;
-    border: 1px solid rgba(44,36,24,.16);
-    border-radius: 4px;
-    box-shadow: 0 14px 32px rgba(40,28,12,.34);
-    display: flex; align-items: center; gap: 16px;
-    font-family: 'Special Elite', 'Courier New', monospace;
-    transform: rotate(-.5deg);
-    animation: cc-in 0.4s cubic-bezier(.22,1,.36,1);
+    position: fixed; right: 16px; bottom: 16px; z-index: 700;
+    width: min(520px, calc(100vw - 32px)); padding: 14px;
+    display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center;
+    color: #f3f1ec; background: rgba(17, 17, 17, .97);
+    border: 1px solid rgba(243, 241, 236, .18); border-radius: 0;
+    font-family: 'Onest', Inter, system-ui, sans-serif;
+    animation: cc-in .35s cubic-bezier(.22,1,.36,1);
   }
-  .cc::before {
-    content: ''; position: absolute; top: -8px; left: 22px;
-    width: 56px; height: 16px; background: rgba(123,76,255,.32); transform: rotate(-3deg);
-  }
-  @keyframes cc-in { from { opacity: 0; transform: translateY(20px) rotate(-.5deg); } to { opacity: 1; transform: rotate(-.5deg); } }
+  @keyframes cc-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   .cc[hidden] { display: none; }
-  .cc__text { font-size: 13px; line-height: 1.5; color: #6a5c44; margin: 0; }
-  .cc__text a { color: #7b4cff; text-decoration: none; border-bottom: 1px solid currentColor; }
-  .cc__actions { display: flex; gap: 8px; flex-shrink: 0; }
-  .cc__btn {
-    font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 12.5px;
-    padding: 9px 16px; border-radius: 4px; cursor: pointer; border: 1px solid #2c2418;
-    transition: transform 0.2s, background 0.2s, color 0.2s; white-space: nowrap;
-  }
-  .cc__btn--accept { background: #2c2418; border-color: #2c2418; color: #f4ead2; }
-  .cc__btn--accept:hover { transform: translateY(-2px) rotate(-1deg); }
-  .cc__btn--decline { background: transparent; color: #6a5c44; }
-  .cc__btn--decline:hover { color: #2c2418; border-color: #2c2418; }
-
-  /* Mobile */
-  @media (max-width: 600px) {
-    .cc { left: 10px; right: 10px; bottom: 10px; max-width: none; flex-direction: column; align-items: stretch; gap: 10px; padding: 16px; transform: none; }
-    .cc::before { display: none; }
-    .cc__actions { gap: 8px; }
-    .cc__btn { flex: 1; padding: 11px 14px; }
-  }
+  .cc__text { margin: 0; color: #a7a49e; font-size: 11px; line-height: 1.45; }
+  .cc__text a { color: #f3f1ec; border-bottom: 1px solid rgba(243, 241, 236, .18); }
+  .cc__actions { display: flex; gap: 6px; }
+  .cc__btn { min-height: 36px; padding: 0 12px; border: 1px solid rgba(243, 241, 236, .18); border-radius: 0; font-size: 11px; font-weight: 600; cursor: pointer; transition: border-color .2s, color .2s, background .2s; }
+  .cc__btn--accept { color: #160a05; background: #ff6534; border-color: #ff6534; }
+  .cc__btn--accept:hover { background: #ff7b50; }
+  .cc__btn--decline { color: #a7a49e; background: transparent; }
+  .cc__btn--decline:hover { color: #f3f1ec; border-color: #f3f1ec; }
+  @media (max-width: 620px) { .cc { left: 10px; right: 10px; bottom: 10px; width: auto; grid-template-columns: 1fr; }.cc__actions { width: 100%; }.cc__btn { flex: 1; } }
   @media (prefers-reduced-motion: reduce) { .cc { animation: none; } }
 </style>
 
@@ -67,19 +45,19 @@ const YM_ID = 109657352;
   (function () {
     var KEY = 'analyticsConsent'; // 'granted' | 'denied'
 
-    // ── Безопасный трекер целей: работает и до загрузки Метрики ──
+    // Safe goal tracker. It also works before Metrika loads.
     window.track = function (name, params) {
       try { if (typeof window.ym === 'function') window.ym(YM_ID, 'reachGoal', name, params || {}); }
       catch (e) { /* no-op */ }
     };
 
-    // ── Делегирование: любой [data-track] шлёт цель по клику ──
+    // Any data-track element sends its goal on click.
     document.addEventListener('click', function (e) {
       var el = e.target && e.target.closest ? e.target.closest('[data-track]') : null;
       if (el) window.track(el.getAttribute('data-track'));
     }, { passive: true });
 
-    // ── Загрузка счётчика Метрики (вызывается только при согласии) ──
+    // Load Metrika only after consent.
     var loaded = false;
     function loadMetrika() {
       if (loaded) return; loaded = true;
@@ -90,7 +68,7 @@ const YM_ID = 109657352;
       window.ym(YM_ID, 'init', { webvisor:true, clickmap:true, accurateTrackBounce:true, trackLinks:true });
     }
 
-    // ── Consent-логика ──
+    // Consent state.
     var banner = document.getElementById('cookieConsent');
     var consent = null;
     try { consent = localStorage.getItem(KEY); } catch (e) {}
@@ -98,7 +76,7 @@ const YM_ID = 109657352;
     if (consent === 'granted') {
       loadMetrika();
     } else if (consent !== 'denied' && banner) {
-      banner.hidden = false; // нет выбора — показываем баннер
+      banner.hidden = false; // No stored choice, show the banner.
     }
 
     function setConsent(v) {

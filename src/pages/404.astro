@@ -1,24 +1,16 @@
 ---
+import { ArrowUpRightIcon as ArrowUpRight } from '@phosphor-icons/react';
 import PapercraftLayout from '../layouts/PapercraftLayout.astro';
 ---
-<PapercraftLayout title="404 — страница не найдена · Кирилл Барыев" description="Страница потерялась. Вернитесь на главную." active="">
-  <section class="pc-sec pc-404wrap">
-    <div class="pc-404 pc-paper pc-reveal">
-      <span class="pc-sticker pc-sticker--star" style="--rot:13deg; top:-22px; right:-14px">?</span>
-      <div class="pc-404__big">404</div>
-      <h1 class="pc-h2">Страница <span class="pc-mark">потерялась</span></h1>
-      <p class="pc-lead">Похоже, эту бумажку сдуло со&nbsp;стола. Вернёмся на&nbsp;главную?</p>
-      <div class="pc-404__btns">
-        <a href="/" class="pc-btn"><span class="pc-btn__plus">(+)</span>На главную</a>
-        <a href="/razbor" class="pc-btn pc-btn--ghost pc-btn--sm">Бесплатный разбор</a>
-      </div>
-    </div>
+<PapercraftLayout title="404 | Кирилл Барыев" description="Страница не найдена." noindex={true}>
+  <section class="not-found">
+    <span class="mono-label">404</span>
+    <h1>Здесь <span>ничего нет</span></h1>
+    <p>Вернитесь на главную.</p>
+    <a class="button" href="/">На главную <ArrowUpRight size={18} weight="regular" /></a>
   </section>
   <style>
-    .pc-404wrap { display: flex; justify-content: center; min-height: 64vh; align-items: center; }
-    .pc-404 { position: relative; max-width: 560px; padding: 48px 42px; text-align: center; transform: rotate(-1deg); }
-    .pc-404__big { font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: clamp(70px, 16vw, 148px); line-height: 1; color: var(--mark2); text-shadow: none; }
-    .pc-404 .pc-lead { margin: 14px auto 0; text-align: center; }
-    .pc-404__btns { margin-top: 26px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .not-found { width: var(--container); min-height: calc(100svh - 78px); margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+    .not-found h1 { max-width: 1000px; margin: 22px 0 0; font-size: clamp(58px, 10vw, 140px); font-weight: 500; line-height: .88; letter-spacing: -.07em; }.not-found h1 span { color: var(--accent); }.not-found p { margin: 30px 0 0; color: var(--muted); font-size: 18px; }.not-found .button { margin-top: 28px; }
   </style>
 </PapercraftLayout>
