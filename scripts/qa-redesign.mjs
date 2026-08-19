@@ -64,7 +64,11 @@ for (const viewport of [
       h1: document.querySelector('h1')?.textContent?.replace(/\s+/g, ' ').trim(),
       h1Visible: !!document.querySelector('h1') && document.querySelector('h1').getBoundingClientRect().bottom <= innerHeight,
       ctaVisible: !!firstMainCta && firstMainCta.getBoundingClientRect().bottom <= innerHeight,
-      workCount: document.querySelectorAll('.work-panel').length,
+      flagshipCount: document.querySelectorAll('[data-case]').length,
+      registryCount: document.querySelectorAll('.registry-row').length,
+      registrySlugs: Array.from(document.querySelectorAll('.registry-row')).map((row) =>
+        Array.from(row.classList).find((name) => name.startsWith('registry-row--'))?.replace('registry-row--', ''),
+      ),
       serviceCount: document.querySelectorAll('.service-row').length,
       formCount: document.querySelectorAll('form').length,
       navText: document.querySelector('.site-header')?.textContent?.replace(/\s+/g, ' ').trim(),
@@ -80,7 +84,7 @@ for (const viewport of [
   if (!state.h1Visible || !state.ctaVisible) {
     throw new Error(`${viewport.name} hero content does not fit the initial viewport`);
   }
-  if (state.workCount !== 3 || state.serviceCount !== 3 || state.formCount !== 0) {
+  if (state.flagshipCount !== 3 || state.registryCount !== 6 || new Set(state.registrySlugs).size !== 6 || state.serviceCount !== 3 || state.formCount !== 0) {
     throw new Error(`${viewport.name} page structure is incorrect`);
   }
 
@@ -91,15 +95,15 @@ for (const viewport of [
   });
 
   if (viewport.name === 'desktop') {
-    await page.locator('.work-panel').nth(1).scrollIntoViewIfNeeded();
+    await page.locator('.flagship--goalsphere').scrollIntoViewIfNeeded();
     await page.waitForTimeout(900);
     results.motion.desktop = await page.evaluate(() => ({
-      firstPanelTransform: getComputedStyle(document.querySelector('.work-panel__surface')).transform,
-      secondPanelTop: Math.round(document.querySelectorAll('.work-panel')[1].getBoundingClientRect().top),
-      visibleProject: document.querySelectorAll('.work-panel h3')[1]?.textContent?.trim(),
+      mobileFrameTransform: getComputedStyle(document.querySelector('.goalsphere-diptych__mobile')).transform,
+      flagshipTop: Math.round(document.querySelector('.flagship--goalsphere').getBoundingClientRect().top),
+      visibleProject: document.querySelector('.goalsphere-copy h3')?.textContent?.trim(),
     }));
-    if (results.motion.desktop.firstPanelTransform === 'none') {
-      throw new Error('Desktop sticky-stack motion did not transform the previous project');
+    if (results.motion.desktop.visibleProject !== 'GoalSphere') {
+      throw new Error('Desktop flagship scene is not readable');
     }
     await page.screenshot({ path: resolve(outDir, 'home-work-desktop-1440x900.png'), fullPage: false });
   }
@@ -138,10 +142,10 @@ await reducedPage.goto(base, { waitUntil: 'load' });
 await waitForVisuals(reducedPage);
 results.motion.reduced = await reducedPage.evaluate(() => ({
   heroLineTransform: getComputedStyle(document.querySelector('.hero__line > span')).transform,
-  panelTransform: getComputedStyle(document.querySelector('.work-panel__surface')).transform,
-  panelOpacity: getComputedStyle(document.querySelector('.work-panel__surface')).opacity,
+  revealTransform: getComputedStyle(document.querySelector('[data-reveal]')).transform,
+  revealOpacity: getComputedStyle(document.querySelector('[data-reveal]')).opacity,
 }));
-if (results.motion.reduced.panelOpacity !== '1') {
+if (results.motion.reduced.revealOpacity !== '1') {
   throw new Error('Reduced-motion view did not render final content');
 }
 await reducedContext.close();

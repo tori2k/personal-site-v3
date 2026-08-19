@@ -11,8 +11,9 @@ interface Props {
 const { title, description, jsonLd, noindex, ogType } = Astro.props;
 const homePrefix = Astro.url.pathname === '/' ? '' : '/';
 const links = [
-  { href: `${homePrefix}#work`, label: 'Работы' },
-  { href: `${homePrefix}#services`, label: 'Что делаю' },
+  { href: `${homePrefix}#work`, label: 'Проекты' },
+  { href: `${homePrefix}#registry`, label: 'Реестр' },
+  { href: `${homePrefix}#services`, label: 'Направления' },
 ];
 ---
 <PapercraftBase title={title} description={description} jsonLd={jsonLd} noindex={noindex} ogType={ogType}>

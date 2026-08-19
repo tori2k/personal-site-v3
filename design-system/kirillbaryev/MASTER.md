@@ -4,18 +4,19 @@ Updated 2026-08-19 after direct user feedback.
 
 ## Design read
 
-Kinetic one-page portfolio for a personal engineering studio. It should feel like a digital poster, not a marketing funnel. Large typography and work are the interface.
+Screenshot-led editorial portfolio for a personal engineering studio. It should feel like an art-directed digital publication, not a marketing funnel. Real interfaces are the primary visual material.
 
-Design dials: variance 9/10, motion 9/10, density 2/10.
+Design dials: variance 8/10, motion 7/10, density 3/10.
 
 ## Information architecture
 
-Only four scenes:
+Only five scenes:
 
 1. Hero.
-2. Three selected works.
-3. Three areas of work.
-4. Direct Telegram contact.
+2. Large screenshot gallery.
+3. Full client-work registry.
+4. Three areas of work.
+5. Direct Telegram contact.
 
 The only secondary routes are the privacy policy and 404. No forms, article archive, method page, diagnostics, process explanation, pricing cards or SEO landing pages.
 
@@ -38,7 +39,7 @@ One dark theme and one accent. No gradients, outer glows, glass panels or card s
 
 - Display and body: Onest.
 - Small metadata: IBM Plex Mono.
-- Headings can fill most of the viewport. Tight leading and negative tracking are intentional.
+- Headings can be large, but cannot overpower or cover project screenshots. Tight leading and negative tracking are intentional.
 - Copy is short, factual and secondary to the work.
 - No decorative section numbering, poetic microcopy or long explanatory paragraphs.
 
@@ -46,16 +47,17 @@ One dark theme and one accent. No gradients, outer glows, glass panels or card s
 
 - Desktop container: `min(1460px, 100vw - 64px)`.
 - Mobile container: `100vw - 28px`.
-- Hero is a two-line kinetic type composition over one generated visual.
-- Work uses one desktop sticky stack. Mobile uses normal document flow.
+- Hero uses one primary real interface screenshot with two supporting frames in a strict editorial grid.
+- Work uses three distinct compositions: full-width sequence, desktop/mobile diptych and typography-only private-product chapter.
+- One flagship heading is sticky on desktop. Mobile uses normal document flow.
 - Services are full-width typographic rows, not cards.
 - Contact is one high-contrast full-screen scene.
 
 ## Motion
 
-- Hero sequence establishes hierarchy: type first, visual second, CTA last.
-- Hero image parallax adds depth while leaving DOM order untouched.
-- Work panels stack so each project replaces the previous one.
+- Hero sequence establishes hierarchy: type first, primary screenshot second, supporting frames third.
+- Screenshot parallax adds controlled depth while leaving DOM order untouched.
+- Real frames reveal through masks and maintain readable fallback states.
 - Service rows move slightly into alignment as they enter.
 - One contact reveal closes the story.
 - No infinite marquees and no global scroll listener.
@@ -65,6 +67,8 @@ One dark theme and one accent. No gradients, outer glows, glass panels or card s
 
 - Present Kirill as a personal engineering studio. Never imply a team.
 - Show only confirmed client facts.
+- Never use generated portfolio visuals, stock imagery, fake dashboards or reconstructed interfaces.
+- Private work remains typographic until real redacted screenshots are approved.
 - Public price statement: websites from 70,000 rubles.
 - Use the same direct CTA everywhere: discuss the project in Telegram.
 - Do not restore forms, diagnostics, method copy or generic process explanations.
