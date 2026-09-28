@@ -1,0 +1,44 @@
+---
+import PapercraftLayout from './PapercraftLayout.astro';
+interface Props { title: string; description: string; heading: string; }
+const { title, description, heading } = Astro.props;
+---
+<PapercraftLayout title={title} description={description}>
+  <section class="archive">
+    <a class="archive-back" href="/">← Кирилл Барыев</a>
+    <p class="archive-label">Scratchik Archive · From Scratch</p>
+    <h1>{heading}</h1>
+    <p class="archive-lead">{description}</p>
+    <nav class="archive-nav" aria-label="О приложении Scratchik Archive">
+      <a href="/scratchik/" aria-current={Astro.url.pathname === '/scratchik/' ? 'page' : undefined}>Приложение</a>
+      <a href="/scratchik/privacy/" aria-current={Astro.url.pathname === '/scratchik/privacy/' ? 'page' : undefined}>Конфиденциальность</a>
+      <a href="/scratchik/terms/" aria-current={Astro.url.pathname === '/scratchik/terms/' ? 'page' : undefined}>Условия использования</a>
+    </nav>
+    <article class="archive-copy"><slot /></article>
+    <aside class="archive-contact">
+      <span>Разработчик: Кирилл Барыев. Связь по вопросам приложения и данных:</span>
+      <a href="mailto:frm.scrtch.team@gmail.com">frm.scrtch.team@gmail.com</a>
+      <a href="https://t.me/tori2k">Telegram @tori2k ↗</a>
+    </aside>
+  </section>
+</PapercraftLayout>
+<style>
+  .archive { width: min(860px, calc(100% - 40px)); margin: 0 auto; padding: 132px 0 88px; }
+  .archive-back, .archive-label { font: 12px/1.6 var(--font-mono); color: var(--muted); }
+  .archive-label { margin: 56px 0 20px; color: var(--accent); }
+  h1 { margin: 0; font-size: clamp(36px, 6.5vw, 72px); line-height: 1.07; letter-spacing: -.05em; overflow-wrap: anywhere; }
+  .archive-lead { max-width: 680px; margin: 24px 0 36px; font-size: 19px; line-height: 1.6; color: var(--muted); }
+  .archive-nav { display: flex; flex-wrap: wrap; gap: 16px 24px; padding: 22px 0; border-block: 1px solid var(--line); font-size: 14px; }
+  .archive-nav a { color: var(--muted); }
+  .archive-nav a[aria-current="page"] { color: var(--accent); }
+  .archive-copy { max-width: 740px; margin-top: 44px; font-size: 16px; line-height: 1.8; color: var(--muted); }
+  .archive-copy :global(h2) { margin: 40px 0 12px; color: var(--text); font-size: 25px; line-height: 1.3; letter-spacing: -.025em; }
+  .archive-copy :global(p) { margin: 0 0 16px; }
+  .archive-copy :global(ul) { padding-left: 22px; }
+  .archive-copy :global(li) { margin-bottom: 10px; }
+  .archive-copy :global(a), .archive-contact a { text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
+  .archive-copy :global(strong) { color: var(--text); font-weight: 600; }
+  .archive-contact { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding-top: 28px; margin-top: 48px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+  a:hover { color: var(--accent); }
+  @media (max-width: 600px) { .archive { padding-top: 108px; } h1 { font-size: clamp(26px, 7.8vw, 36px); } .archive-label { margin-top: 32px; } .archive-lead { font-size: 17px; } }
+</style>
