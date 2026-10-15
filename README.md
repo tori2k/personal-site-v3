@@ -1,43 +1,29 @@
-# Astro Starter Kit: Minimal
+# kirillbaryev.ru
+
+Личное портфолио Кирилла Барыева. Astro, TypeScript и GSAP; статическая публикация на GitHub Pages.
+
+## Разработка
+
+Node.js 22.12+.
 
 ```sh
-npm create astro@latest -- --template minimal
+npm ci
+npm run dev
+npm run check
+npm run build
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Главная — `src/pages/index.astro`; превью проектов — `src/components/ProjectPreview.astro`; движения — `src/scripts/home-motion.ts`; базовые стили — `src/styles/studio.css`. Шрифты Onest хранятся локально с лицензией в `public/fonts/`.
 
-## 🚀 Project Structure
+`PRODUCT.md` фиксирует продуктовые ограничения, `DESIGN.md` — действующую визуальную систему. Старые `CREATIVE-DIRECTION.md` и `design-system/kirillbaryev/MASTER.md` сохранены как история.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Проверка
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+`npm run check` проверяет типы, `npm run build` собирает все маршруты. `QA_BASE=http://127.0.0.1:4321 npm run qa` — отдельный Playwright smoke script для запущенного preview и установленного Chrome; проверяет маршруты, адаптив, переключение цвета и reduced motion. Он не запускается автоматически при публикации.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Фактическая проверка редизайна 2026-10-16 выполнена в браузере на 1536, 1280, 768 и 390 px: структура, изображения, ссылки, клавиатурное управление и согласие на аналитику. Reduced motion проверен по CSS/JS; системная эмуляция в этом прогоне не запускалась. Скрипт QA обновлён для новой структуры, но в этом прогоне не выполнялся.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Публикация
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Push в `main` запускает `.github/workflows/deploy.yml`: сборка `dist/`, загрузка артефакта и GitHub Pages deploy. Домен — `kirillbaryev.ru`, указан в `public/CNAME`. Сохранены privacy, 404 и отдельные информационные страницы Scratchik.

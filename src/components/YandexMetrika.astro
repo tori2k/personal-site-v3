@@ -18,27 +18,13 @@ const YM_ID = 109657352;
 </div>
 
 <style>
-  .cc {
-    position: fixed; right: 16px; bottom: 16px; z-index: 700;
-    width: min(520px, calc(100vw - 32px)); padding: 14px;
-    display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center;
-    color: #f3f1ec; background: rgba(17, 17, 17, .97);
-    border: 1px solid rgba(243, 241, 236, .18); border-radius: 0;
-    font-family: 'Onest', Inter, system-ui, sans-serif;
-    animation: cc-in .35s cubic-bezier(.22,1,.36,1);
-  }
-  @keyframes cc-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-  .cc[hidden] { display: none; }
-  .cc__text { margin: 0; color: #a7a49e; font-size: 11px; line-height: 1.45; }
-  .cc__text a { color: #f3f1ec; border-bottom: 1px solid rgba(243, 241, 236, .18); }
-  .cc__actions { display: flex; gap: 6px; }
-  .cc__btn { min-height: 36px; padding: 0 12px; border: 1px solid rgba(243, 241, 236, .18); border-radius: 0; font-size: 11px; font-weight: 600; cursor: pointer; transition: border-color .2s, color .2s, background .2s; }
-  .cc__btn--accept { color: #160a05; background: #ff6534; border-color: #ff6534; }
-  .cc__btn--accept:hover { background: #ff7b50; }
-  .cc__btn--decline { color: #a7a49e; background: transparent; }
-  .cc__btn--decline:hover { color: #f3f1ec; border-color: #f3f1ec; }
-  @media (max-width: 620px) { .cc { left: 10px; right: 10px; bottom: 10px; width: auto; grid-template-columns: 1fr; }.cc__actions { width: 100%; }.cc__btn { flex: 1; } }
-  @media (prefers-reduced-motion: reduce) { .cc { animation: none; } }
+  .cc { position:fixed; right:20px; bottom:20px; z-index:700; width:min(430px,calc(100vw - 40px)); padding:20px; display:grid; gap:16px; color:var(--text); background:#fafaff; border-radius:20px; box-shadow:0 12px 60px #22224c26; font-family:var(--font-display); animation:cc-in .5s var(--ease); }
+  @supports(backdrop-filter:blur(20px)) { .cc { background:#fafaffed; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); } }
+  @keyframes cc-in { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+  .cc[hidden] { display:none; }.cc__text { margin:0; color:var(--muted); font-size:12px; line-height:1.55; }.cc__text a { color:var(--text); text-decoration:underline; text-underline-offset:3px; }
+  .cc__actions { display:flex; gap:10px; }.cc__btn { min-height:42px; flex:1; padding:0 18px; border:0; border-radius:12px; font-size:12px; font-weight:500; cursor:pointer; transition:background .2s; }.cc__btn--accept { color:#fff; background:var(--text); }.cc__btn--accept:hover { background:var(--accent); }.cc__btn--decline { color:var(--text); background:#e9e9f3; }.cc__btn--decline:hover { background:#dcdcf2; }
+  @media(max-width:620px) { .cc { right:12px; bottom:12px; width:calc(100% - 24px); padding:16px; gap:12px; } }
+  @media(prefers-reduced-motion:reduce) { .cc { animation:none; } }
 </style>
 
 <script is:inline define:vars={{ YM_ID }}>

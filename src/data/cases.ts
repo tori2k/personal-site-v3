@@ -49,7 +49,7 @@ export const cases: StudioCase[] = [
     slug: 'goalsphere',
     title: 'GoalSphere',
     type: 'Сайт футбольного агентства',
-    publicUrl: 'https://goalsphere-agency.vercel.app/',
+    publicUrl: 'https://goalsphere.agency/',
     status: 'live',
     statusLabel: 'Публичный проект',
     confirmedFacts: [
@@ -105,8 +105,8 @@ export const cases: StudioCase[] = [
     title: 'Ценцова',
     type: 'Сайт арбитражного управляющего',
     publicUrl: 'https://tsentsova.ru/',
-    status: 'unavailable',
-    statusLabel: 'Домен сейчас не отвечает',
+    status: 'live',
+    statusLabel: 'Сайт работает',
     confirmedFacts: ['Разработка сайта', 'Настройка Битрикс24', 'Заявки с сайта поступают в CRM'],
     contribution: ['Сайт', 'Интеграция с Битрикс24'],
     screenshots: [
@@ -120,7 +120,7 @@ export const cases: StudioCase[] = [
     title: 'Aesoqua',
     type: 'Бартерный сайт для блогера',
     status: 'permission-pending',
-    statusLabel: 'Статус публикации уточняется',
+    statusLabel: 'Без публичной ссылки',
     confirmedFacts: ['Бартерный проект сайта', 'Рабочая версия собрана локально'],
     contribution: ['Концепция', 'Дизайн', 'Разработка'],
     screenshots: [],

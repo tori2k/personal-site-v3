@@ -12,7 +12,6 @@ const { title, description, jsonLd, noindex, ogType } = Astro.props;
 const homePrefix = Astro.url.pathname === '/' ? '' : '/';
 const links = [
   { href: `${homePrefix}#work`, label: 'Проекты' },
-  { href: `${homePrefix}#registry`, label: 'Реестр' },
   { href: `${homePrefix}#services`, label: 'Направления' },
 ];
 ---
@@ -20,13 +19,12 @@ const links = [
   <header class="site-header" data-header>
     <div class="site-header__inner">
       <a class="site-brand" href="/" aria-label="Кирилл Барыев, на главную">
-        <span aria-hidden="true">КБ</span>
         <b>Кирилл Барыев</b>
       </a>
       <nav class="site-nav" id="site-nav" aria-label="Основная навигация">
         {links.map((link) => <a href={link.href}>{link.label}</a>)}
       </nav>
-      <a class="header-cta" href="https://t.me/tori2k" target="_blank" rel="noopener" data-track="click_telegram">Обсудить проект</a>
+      <a class="header-cta" href="https://t.me/tori2k" target="_blank" rel="noopener" data-track="click_telegram">Обсудить проект <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.6" /></svg></a>
     </div>
   </header>
   <main id="content"><slot /></main>
@@ -34,7 +32,7 @@ const links = [
     <div class="site-footer__inner">
       <span>© {new Date().getFullYear()} Кирилл Барыев</span>
       <a href="/privacy">Персональные данные</a>
-      <a href="https://t.me/tori2k" target="_blank" rel="noopener" data-track="click_telegram">Telegram ↗</a>
+      <a href="https://t.me/tori2k" target="_blank" rel="noopener" data-track="click_telegram">Telegram</a>
     </div>
   </footer>
 </PapercraftBase>

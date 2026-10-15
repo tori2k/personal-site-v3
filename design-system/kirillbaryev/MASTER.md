@@ -1,3 +1,5 @@
+> Исторический документ. С 2026-10-16 актуальны `PRODUCT.md`, `DESIGN.md` и `.impeccable/surfaces/src-pages-index-astro.md`. Этот файл не задаёт текущие дизайн, цены или структуру.
+
 # Kirill Baryev Studio Design System
 
 Updated 2026-08-19 after direct user feedback.

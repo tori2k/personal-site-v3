@@ -27,3 +27,7 @@ pnpm-debug.log*
 
 # local design and QA evidence
 artifacts/
+
+# Generated design evidence (local deliverables)
+.impeccable/mocks/
+.impeccable/review/

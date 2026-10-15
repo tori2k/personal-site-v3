@@ -14,7 +14,7 @@ interface Props {
 
 const {
   title = 'Кирилл Барыев: сайты, системы и AI',
-  description = 'Проектирую и запускаю сайты, Telegram- и AI-системы для бизнеса. Сайты от 70 000 ₽.',
+  description = 'Проектирую и запускаю сайты, Telegram- и AI-системы для бизнеса. ',
   ogImage,
   ogType = 'website',
   noindex = false,
@@ -36,9 +36,9 @@ const baseJsonLd = [
   },
   {
     '@context': 'https://schema.org', '@type': 'ProfessionalService',
-    name: 'Личная инженерная студия: Кирилл Барыев', url: SITE, image: ogImageUrl,
+    name: 'Кирилл Барыев', url: SITE, image: ogImageUrl,
     description: 'Сайты, Telegram- и AI-системы для бизнеса.',
-    priceRange: 'от 70 000 ₽', areaServed: 'RU',
+    areaServed: 'RU',
     founder: { '@type': 'Person', name: 'Кирилл Барыев' },
     sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
   },
@@ -53,7 +53,7 @@ const allJsonLd = [...baseJsonLd, ...pageJsonLd];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0b0c0d" />
+    <meta name="theme-color" content="#f1f2f7" />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <meta property="og:type" content={ogType} />
@@ -68,13 +68,17 @@ const allJsonLd = [...baseJsonLd, ...pageJsonLd];
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     {allJsonLd.map((node) => <script is:inline type="application/ld+json" set:html={JSON.stringify(node)} />)}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Onest:wght@400;500;600;700&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Onest:wght@400;500;600;700&display=swap" />
+    <link rel="preload" href="/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/onest-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class={bodyClass}>
+    <!-- THESIS: Personal digital products shown through real projects on one lavender stage.
+    OWN-WORLD: Ice-gray ground, indigo crest, bold Onest, overlapping tinted screenshots, black rounded actions.
+    STORY: See real work, understand personal contribution, discuss a project directly in Telegram.
+    FIRST VIEWPORT: At 1536px, a 128px two-line heading fills the left; description and CTA sit right. A lavender field begins at 366px with GoalSphere right and Znamya Truda overlapping left. Previews regain color on interaction.
+    FORM: User-pinned Only foundation plus Realweb expression; chosen composition 2; seed b9b9ab2e, assigned 4 overridden by explicit brief.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance -->
     <a class="skip-link" href="#content">К содержанию</a>
     <slot />
     <YandexMetrika />
