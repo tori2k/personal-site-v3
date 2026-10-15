@@ -211,7 +211,16 @@
         "name": "large-stage-min",
         "value": "1700px"
       }
-    ]
+    ],
+    "motionRefinement": {
+      "date": "2026-10-16",
+      "source": "src/scripts/home-motion.ts",
+      "opening": "letter assembly 1s / 18ms stagger; preview perspective unfold 1.45s",
+      "pointer": "rotationX ±4.5deg, rotationY ±5.5deg, lift -10px, pointer-origin color reveal and bounded highlight",
+      "scroll": "native scrolling; desktop layers separate; masks reveal headings; contact contours scale with scroll",
+      "reducedMotion": "spatial effects disabled; color toggle remains functional",
+      "visibility": "loop pauses offscreen and while document is hidden"
+    }
   },
   "components": [
     {

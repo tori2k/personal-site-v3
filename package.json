@@ -11,7 +11,8 @@
     "check": "astro check",
     "preview": "astro preview",
     "qa": "node scripts/qa-redesign.mjs",
-    "astro": "astro"
+    "astro": "astro",
+    "check:schema": "node scripts/validate-schema.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.6",

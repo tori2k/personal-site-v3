@@ -38,3 +38,13 @@ h1,h2,h3,p { margin:0; } h1,h2,h3 { text-wrap:balance; } button { cursor:pointer
   .button { min-height:58px; font-size:17px; padding:0 24px; }.site-footer__inner { min-height:130px; flex-wrap:wrap; align-content:center; gap:14px 20px; font-size:12px; }.site-footer__inner span { width:100%; }.site-footer__inner a:nth-child(2) { margin-left:0; }
 }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation:none!important; transition:none!important; } }
+
+/* Clip entering layers at the viewport edge without intercepting vertical scroll. */
+main#content { overflow-x:clip; }
+/* Motion layers keep the resting composition and accessible text intact. */
+.motion-char { display:inline-block; backface-visibility:hidden; }
+.header-cta,.button { overflow:hidden; isolation:isolate; }
+.header-cta::before,.button::before { content:''; position:absolute; inset:0; background:var(--accent); clip-path:circle(0% at 50% 100%); transition:clip-path .65s var(--ease); z-index:-1; }
+.header-cta:hover::before,.button:hover::before { clip-path:circle(150% at 50% 100%); }
+.header-cta:hover,.button:hover { background:var(--text); }
+@media(prefers-reduced-motion:reduce) { .motion-char { transform:none!important; } }

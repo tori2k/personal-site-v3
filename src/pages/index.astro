@@ -3,6 +3,7 @@ import PapercraftLayout from '../layouts/PapercraftLayout.astro';
 import ProjectPreview from '../components/ProjectPreview.astro';
 import Arrow from '../components/Arrow.astro';
 import { cases } from '../data/cases';
+import { personId, siteUrl } from '../lib/structured-data';
 const goal=cases.find(p=>p.slug==='goalsphere')!;
 const znamya=cases.find(p=>p.slug==='znamya-truda')!;
 const secondary=cases.filter(p=>['manifik','tsentsova'].includes(p.slug));
@@ -11,12 +12,41 @@ const descriptions:Record<string,string> = {
   tsentsova:'Сайт арбитражного управляющего и интеграция с Битрикс24: заявки с сайта поступают в CRM.',
 };
 const services=[
-  { title:'Сайты', text:'От структуры и дизайна до работающего сайта. Адаптив, анимации, CMS и запуск.', topic:'Для вашего бизнеса', tags:['Дизайн','Разработка','Запуск'] },
-  { title:'Telegram + CRM', text:'Боты, заявки и интеграции. Соединяю сайт, переписку и рабочие процессы.', topic:'Для ежедневных задач', tags:['Боты','Битрикс24','Интеграции'] },
-  { title:'AI-системы', text:'Ассистенты, саммари встреч, работа с контекстом и автоматизация рутины.', topic:'Для вашей команды', tags:['AI-ассистенты','Автоматизация'] },
+  { slug:'websites', title:'Сайты', text:'От структуры и дизайна до работающего сайта. Адаптив, анимации, CMS и запуск.', topic:'Для вашего бизнеса', tags:['Дизайн','Разработка','Запуск'] },
+  { slug:'telegram-crm', title:'Telegram + CRM', text:'Боты, заявки и интеграции. Соединяю сайт, переписку и рабочие процессы.', topic:'Для ежедневных задач', tags:['Боты','Битрикс24','Интеграции'] },
+  { slug:'ai-systems', title:'AI-системы', text:'Ассистенты, саммари встреч, работа с контекстом и автоматизация рутины.', topic:'Для вашей команды', tags:['AI-ассистенты','Автоматизация'] },
+];
+const portfolioOrder = [goal, znamya, ...secondary, cases.find(p=>p.slug==='ai-project-manager')!, cases.find(p=>p.slug==='aesoqua')!];
+const caseDescriptions:Record<string,string> = {
+  ...descriptions,
+  goalsphere:'Интерактивный сайт агентства. Концепция и разработка.',
+  'znamya-truda':'Сайт клуба и CMS. Дизайн и разработка.',
+  'ai-project-manager':'Из созвонов и переписки — в саммари, договорённости и задачи. С памятью о контексте проекта.',
+  aesoqua:'Бартерный проект: концепция, дизайн и разработка сайта.',
+};
+const homeJsonLd = [
+  ...services.map(service => ({
+    '@type':'Service', '@id':`${siteUrl}#service-${service.slug}`,
+    name:service.title, description:service.text,
+    url:`${siteUrl}#service-${service.slug}`, provider:{'@id':personId},
+  })),
+  {
+    '@type':'ItemList', '@id':`${siteUrl}#portfolio`, name:'Проекты Кирилла Барыева',
+    numberOfItems:portfolioOrder.length, itemListOrder:'https://schema.org/ItemListOrderAscending',
+    itemListElement:portfolioOrder.map((project,index)=>({
+      '@type':'ListItem', position:index+1,
+      item:{
+        '@type':'CreativeWork', '@id':`${siteUrl}#case-${project.slug}`,
+        name:project.title, description:caseDescriptions[project.slug],
+        url:project.publicUrl ?? `${siteUrl}#case-${project.slug}`,
+        contributor:{'@id':personId},
+        ...(project.screenshots[0] ? {image:new URL(project.screenshots[0].src,siteUrl).href} : {}),
+      },
+    })),
+  },
 ];
 ---
-<PapercraftLayout title="Кирилл Барыев — сайты, системы и AI" description="Проектирую и запускаю сайты, Telegram-ботов, CRM-интеграции и AI-системы для бизнеса. Реальные проекты и прямой контакт.">
+<PapercraftLayout jsonLd={homeJsonLd} title="Кирилл Барыев — сайты, системы и AI" description="Проектирую и запускаю сайты, Telegram-ботов, CRM-интеграции и AI-системы для бизнеса. Реальные проекты и прямой контакт.">
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero__intro">
       <h1 id="hero-title"><span class="title-line"><span>Сайты.</span></span><span class="title-line"><span>Системы + <em>AI.</em></span></span></h1>
@@ -26,14 +56,14 @@ const services=[
       </div>
     </div>
     <div class="project-stage" id="work">
-      <div class="stage-crest" aria-hidden="true"></div>
+      <div class="stage-crest" aria-hidden="true"><span></span></div>
       <div class="stage-surface" aria-hidden="true"></div>
       <div class="stage-note">Разные проекты.<br /> Один подход к деталям.</div>
-      <article class="stage-project stage-project--goal" data-case="goalsphere">
+      <article class="stage-project stage-project--goal" id="case-goalsphere" data-case="goalsphere">
         <ProjectPreview project={goal} eager />
         <div class="stage-caption"><a href={goal.publicUrl} target="_blank" rel="noopener" data-track="click_case_goalsphere"><span><h2>GoalSphere</h2><p>Интерактивный сайт агентства · Концепция и разработка</p></span><Arrow /></a></div>
       </article>
-      <article class="stage-project stage-project--znamya" data-case="znamya-truda">
+      <article class="stage-project stage-project--znamya" id="case-znamya-truda" data-case="znamya-truda">
         <ProjectPreview project={znamya} eager cropBottom={40} />
         <div class="stage-caption"><a href={znamya.publicUrl} target="_blank" rel="noopener" data-track="click_case_znamya"><span><h2>Знамя Труда</h2><p>Сайт клуба и CMS · Дизайн и разработка</p></span><Arrow /></a></div>
       </article>
@@ -44,7 +74,7 @@ const services=[
     <div class="section-heading"><h2 id="projects-title" data-reveal>Другие проекты</h2><p>Сайты, интеграции и системы,<br />которыми пользуются в работе.</p></div>
     <div class="project-pair">
       {secondary.map((project)=>(
-        <article class={`work-project work-project--${project.slug}`} data-case={project.slug}>
+        <article class={`work-project work-project--${project.slug}`} id={`case-${project.slug}`} data-case={project.slug}>
           <div class="work-project__visual" data-image-reveal><ProjectPreview project={project} /></div>
           <a class="work-project__title" href={project.publicUrl} target="_blank" rel="noopener" data-track={`click_case_${project.slug}`}><h3>{project.title}</h3><Arrow size={28}/></a>
           <p>{descriptions[project.slug]}</p>
@@ -52,12 +82,12 @@ const services=[
       ))}
     </div>
     <div class="text-projects">
-      <article class="text-project" data-case="ai-project-manager">
+      <article class="text-project" id="case-ai-project-manager" data-case="ai-project-manager">
         <div><h3>AI Project<br /> Manager</h3><span class="project-status">Закрытая рабочая система</span></div>
         <div class="text-project__copy"><p>Из созвонов и переписки — в саммари, договорённости и задачи. С памятью о контексте проекта.</p><span>Продуктовая логика, автоматизация, AI-интеграция</span></div>
         <svg class="flow-mark" viewBox="0 0 120 90" fill="none" aria-hidden="true"><path d="M10 20H30C68 20 50 70 88 70H110M10 70H30C68 70 50 20 88 20H110" stroke="currentColor" stroke-width="2"/><circle class="flow-dot" cx="10" cy="20" r="5" fill="currentColor"/><circle cx="110" cy="70" r="5" fill="currentColor"/></svg>
       </article>
-      <article class="text-project text-project--compact" data-case="aesoqua">
+      <article class="text-project text-project--compact" id="case-aesoqua" data-case="aesoqua">
         <div><h3>Aesoqua</h3><span class="project-status">Сайт для автора</span></div>
         <div class="text-project__copy"><p>Бартерный проект: концепция, дизайн и разработка сайта.</p><span>Без публичной ссылки</span></div>
       </article>
@@ -67,7 +97,7 @@ const services=[
   <section class="services" id="services" aria-labelledby="services-title">
     <div class="services__intro"><h2 id="services-title" data-reveal>Что могу<br /><span>сделать для вас</span></h2><p>Работаю лично — от первой идеи<br />до запуска и настройки.</p></div>
     <div class="service-list">
-      {services.map(service=>(<a class="service" href="https://t.me/tori2k" target="_blank" rel="noopener" data-track="click_telegram">
+      {services.map(service=>(<a class="service" id={`service-${service.slug}`} href="https://t.me/tori2k" target="_blank" rel="noopener" data-track="click_telegram">
         <div class="service__name"><h3>{service.title}</h3><span>{service.topic}</span></div>
         <div class="service__body"><p>{service.text}</p><div class="service__tags">{service.tags.map(tag=><span>{tag}</span>)}</div></div>
         <Arrow size={38}/>
@@ -77,6 +107,7 @@ const services=[
 
   <section class="contact" aria-labelledby="contact-title">
     <div class="contact__sheet" aria-hidden="true"></div>
+    <div class="contact__orbit" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="contact__inner"><div><h2 id="contact-title">Есть задача?<br />Давайте <em>обсудим.</em></h2><p>Напишите в Telegram. Разберём, что нужно вашему проекту.</p></div><a class="contact__link" href="https://t.me/tori2k" target="_blank" rel="noopener" data-track="click_telegram"><span>Обсудить проект</span><Arrow size={54}/><span class="contact__handle">@tori2k</span></a></div>
   </section>
 </PapercraftLayout>
@@ -84,6 +115,13 @@ const services=[
   import '../scripts/home-motion';
 </script>
 <style>
+  .hero__intro { perspective:1400px; }
+  .stage-crest { overflow:hidden; }.stage-crest span { position:absolute; width:80%; height:80%; border:1px solid #ffffff60; border-radius:inherit; left:18%; top:18%; }
+  .contact__orbit { position:absolute; width:640px; height:640px; right:-230px; top:-140px; z-index:-1; pointer-events:none; }
+  .contact__orbit i { position:absolute; inset:0; border:1px solid #ffffff24; border-radius:50%; }
+  .contact__orbit i:nth-child(2) { inset:65px; }.contact__orbit i:nth-child(3) { inset:130px; }
+  @media(max-width:700px) { .contact__orbit { width:440px; height:440px; right:-260px; top:-20px; } }
+
   .contact__link:focus-visible { outline-color:#fff; }
   .hero { overflow:clip; }.hero__intro { position:relative; z-index:2; width:var(--container); height:280px; margin:auto; display:grid; grid-template-columns:minmax(0,2.35fr) minmax(0,1fr); align-items:center; gap:64px; padding-bottom:20px; }
   h1 { font-size:clamp(72px,8.33vw,148px); font-weight:750; line-height:.86; letter-spacing:-.04em; margin-left:-8px; }.title-line { display:block; white-space:nowrap; overflow:clip; padding-bottom:.08em; margin-bottom:-.08em; }.title-line>span { display:block; }h1 em { font-style:normal; color:var(--accent); }

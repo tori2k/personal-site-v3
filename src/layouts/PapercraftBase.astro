@@ -1,6 +1,7 @@
 ---
 import YandexMetrika from '../components/YandexMetrika.astro';
 import '../styles/studio.css';
+import { pageStructuredData, serializeJsonLd } from '../lib/structured-data';
 
 interface Props {
   title?: string;
@@ -26,25 +27,9 @@ const SITE = 'https://kirillbaryev.ru';
 const canonical = new URL(Astro.url.pathname, SITE).href;
 const ogImageUrl = ogImage ?? `${SITE}/og-image.jpg`;
 
-const baseJsonLd = [
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Кирилл Барыев', url: SITE, inLanguage: 'ru' },
-  {
-    '@context': 'https://schema.org', '@type': 'Person', name: 'Кирилл Барыев', url: SITE,
-    image: `${SITE}/kirill.jpg`, sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
-    jobTitle: 'Инженер цифровых продуктов',
-    knowsAbout: ['разработка сайтов', 'маршруты заявок', 'Telegram-боты', 'CRM-интеграции', 'AI-ассистенты', 'автоматизация процессов'],
-  },
-  {
-    '@context': 'https://schema.org', '@type': 'ProfessionalService',
-    name: 'Кирилл Барыев', url: SITE, image: ogImageUrl,
-    description: 'Сайты, Telegram- и AI-системы для бизнеса.',
-    areaServed: 'RU',
-    founder: { '@type': 'Person', name: 'Кирилл Барыев' },
-    sameAs: ['https://t.me/tori2k', 'https://github.com/tori2k'],
-  },
-];
 const pageJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
-const allJsonLd = [...baseJsonLd, ...pageJsonLd];
+const structuredData = pageStructuredData({ title, description, canonical, image: ogImageUrl, isHome: Astro.url.pathname === '/', extra: pageJsonLd });
+const isNotFound = ['/404', '/404/', '/404.html'].includes(Astro.url.pathname);
 ---
 <!doctype html>
 <html lang="ru">
@@ -63,11 +48,12 @@ const allJsonLd = [...baseJsonLd, ...pageJsonLd];
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="Кирилл Барыев" />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content="Кирилл Барыев — сайты, системы и AI. Портфолио проектов." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
-    {allJsonLd.map((node) => <script is:inline type="application/ld+json" set:html={JSON.stringify(node)} />)}
+    {!isNotFound && <script is:inline type="application/ld+json" set:html={serializeJsonLd(structuredData)} />}
     <link rel="preload" href="/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/onest-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
