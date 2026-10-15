@@ -30,7 +30,7 @@ Approved comp: `.impeccable/mocks/02-project-stage.png`, 1536 × 1024, user sele
 Onest sans, solid black text, indigo emphasis. Filled pill controls. Screenshots 12–16px corner, diffused offset shadow; no decorative bordered cards. Captions outside images, no fake browser chrome. Spacious transitions, uneven image scale, short content.
 
 ## Motion
-Opening title line reveal, staged arrival of projects; scroll-driven separation of stage layers; lavender-to-color reveal; subtle pointer tilt on large previews; clip reveal of lower work; service focus/hover sweep; footer sheet reveal and arrow. Native scrolling, static visible content if JS unavailable, all decorative movement disabled by prefers-reduced-motion.
+Opening letter assembly, perspective unfolding of projects; scroll-driven separation of stage layers; lavender-to-color reveal; pointer tilt, lift and bounded highlight on previews; clip reveal of lower work; service focus/hover sweep; magnetic CTA feedback, footer sheet reveal, scroll-driven contours and arrow. Native scrolling, static visible content if JS unavailable, all decorative movement disabled by prefers-reduced-motion.
 
 ## Boundaries
 Six cases, no invented metrics, no private images, no prices. Existing /scratchik routes added remotely are retained. Mobile rearranges the overlap into a legible sequential stage; color toggle is independent of navigation. No unresolved user decisions.
