@@ -1,5 +1,6 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initAIDemo } from './ai-demo-motion';
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 const scrollTo = (element: HTMLElement) => element.scrollIntoView({ behavior: reduced.matches ? 'instant' : 'smooth', block: 'start' });
@@ -48,85 +49,7 @@ document.querySelectorAll<HTMLElement>('[data-story-gallery]').forEach(gallery =
   }));
 });
 
-// A deliberately authored simulation, using only the two labelled sample texts.
-const demo = document.querySelector<HTMLElement>('[data-ai-demo]');
-if (demo) {
-  const scenes = [...demo.querySelectorAll<HTMLElement>('[data-demo-scene]')];
-  const run = demo.querySelector<HTMLButtonElement>('[data-demo-run]')!;
-  const status = demo.querySelector<HTMLElement>('[data-demo-status]')!;
-  const choices = [...demo.querySelectorAll<HTMLButtonElement>('[data-demo-choice]')];
-  let selected = 0;
-  let sequence: gsap.core.Timeline | null = null;
-  let visible = true;
-  const removeFlights = () => demo.querySelectorAll('[data-demo-flight]').forEach(flight => { gsap.killTweensOf(flight); flight.remove(); });
-  const reset = () => {
-    sequence?.kill(); sequence = null; removeFlights();
-    demo.classList.remove('is-running', 'is-complete');
-    demo.querySelectorAll('[data-source]').forEach(mark => mark.classList.remove('is-found'));
-    demo.querySelectorAll('.demo-output').forEach(output => output.removeAttribute('aria-busy'));
-    gsap.set(demo.querySelectorAll('[data-result],.demo-route__signal'), { clearProps: 'all' });
-    run.setAttribute('aria-disabled', 'false'); run.querySelector('span')!.textContent = 'Показать разбор';
-    status.textContent = 'Выберите пример и посмотрите, как реплика становится задачей.';
-  };
-  const finish = () => {
-    removeFlights(); demo.classList.remove('is-running'); demo.classList.add('is-complete');
-    scenes[selected].querySelector('.demo-output')!.removeAttribute('aria-busy');
-    gsap.set(scenes[selected].querySelectorAll('[data-result]'), { clearProps: 'all' });
-    run.setAttribute('aria-disabled', 'false'); run.querySelector('span')!.textContent = 'Повторить разбор';
-    status.textContent = 'Договорённость стала черновиком задачи. Остаётся проверить детали.';
-  };
-  demo.classList.add('is-ready'); run.hidden = false;
-  demo.querySelector<HTMLElement>('[data-demo-controls]')!.hidden = false;
-  choices.forEach((choice,index) => choice.addEventListener('click', () => {
-    reset(); selected = index;
-    scenes.forEach((scene,i) => { gsap.killTweensOf(scene); scene.hidden = i !== index; });
-    choices.forEach((button,i) => button.setAttribute('aria-pressed', String(i === index)));
-    if (!reduced.matches) gsap.fromTo(scenes[index], { opacity: .4, y: 10 }, { opacity: 1, y: 0, duration: .4, ease: 'expo.out', clearProps: 'all' });
-  }));
-  run.addEventListener('click', () => {
-    if (demo.classList.contains('is-running')) return;
-    reset(); run.setAttribute('aria-disabled', 'true');
-    demo.classList.add('is-running');
-    const scene = scenes[selected];
-    scene.querySelector('.demo-output')!.setAttribute('aria-busy', 'true');
-    const rows = [...scene.querySelectorAll<HTMLElement>('[data-result]')];
-    const marks = [...scene.querySelectorAll<HTMLElement>('[data-source]')];
-    status.textContent = 'Выделяем задачу, ответственного и срок.';
-    if (reduced.matches) { marks.forEach(mark => mark.classList.add('is-found')); finish(); return; }
-    gsap.set(rows, { opacity: 0, y: 12 });
-    const route = scene.querySelector<SVGPathElement>('.demo-route__signal')!;
-    gsap.set(route, { strokeDasharray: route.getTotalLength(), strokeDashoffset: route.getTotalLength(), opacity: 1 });
-    sequence = gsap.timeline({ onComplete: finish });
-    sequence.to(route, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0);
-    marks.forEach((mark,index) => {
-      const row = rows[index];
-      const at = .15 + index * .5;
-      sequence!.call(() => {
-        mark.classList.add('is-found');
-        const from = mark.getBoundingClientRect();
-        const to = row.querySelector('dd')!.getBoundingClientRect();
-        const root = demo.getBoundingClientRect();
-        const token = document.createElement('span');
-        token.dataset.demoFlight = ''; token.setAttribute('aria-hidden', 'true'); token.textContent = mark.textContent;
-        Object.assign(token.style, { position: 'absolute', top: '0', left: '0', zIndex: '3', pointerEvents: 'none', padding: '7px 12px', borderRadius: '8px', background: 'var(--accent)', color: '#fff', fontSize: '12px', maxWidth: '250px', boxShadow: '0 12px 24px -14px #2c287060' });
-        demo.append(token);
-        gsap.set(token, { x: from.left - root.left, y: from.top - root.top, scale: .92, opacity: 0 });
-        sequence!.to(token, { opacity: 1, scale: 1, duration: .15 }, at);
-        // These tweens belong to the same timeline, so pause/reset cancels every layer.
-        sequence!.to(token, { x: to.left - root.left, y: to.top - root.top, duration: .65, ease: 'power3.inOut' }, at + .1)
-          .to(token, { opacity: 0, scale: .96, duration: .15, onComplete: () => token.remove() }, at + .65);
-      }, [], at);
-      sequence!.to(row, { opacity: 1, y: 0, duration: .4, ease: 'expo.out' }, at + .7);
-    });
-    sequence.call(() => { status.textContent = 'Собираем понятный черновик для проверки.'; }, [], 1.1);
-  });
-  const updatePlayback = () => { sequence?.paused(!visible || document.hidden); };
-  new IntersectionObserver(entries => { visible = entries[0].isIntersecting; updatePlayback(); }, { threshold: .05 }).observe(demo);
-  document.addEventListener('visibilitychange', updatePlayback);
-  reduced.addEventListener('change', () => {
-    if (reduced.matches && demo.classList.contains('is-running')) { sequence?.kill(); scenes[selected].querySelectorAll('[data-source]').forEach(mark => mark.classList.add('is-found')); finish(); }
-  });
-}
+initAIDemo();
 
 const journey = document.querySelector<HTMLElement>('[data-journey]');
 if (journey) {
