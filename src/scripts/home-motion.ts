@@ -68,21 +68,6 @@ motion.add('(prefers-reduced-motion: no-preference)', () => {
   gsap.from('.contact h2', { clipPath: 'inset(0 0 100% 0)', y: 55, duration: 1.25, ease: 'expo.out', scrollTrigger: { trigger: '.contact', start: 'top 88%', once: true } });
   gsap.fromTo('.contact__orbit', { scale: .55, rotation: -30 }, { scale: 1.25, rotation: 45, ease: 'none', scrollTrigger: { trigger: '.contact', start: 'top bottom', end: 'bottom bottom', scrub: .8 } });
 
-  // The signal travels along its actual curved route, only while visible.
-  const dot = document.querySelector<SVGCircleElement>('.flow-dot');
-  const path = document.querySelector<SVGPathElement>('.flow-mark path');
-  const flowState = { progress: 0 };
-  const flow = gsap.to(flowState, { progress: 1, duration: 2.5, repeat: -1, repeatDelay: 1, ease: 'none', paused: true, onUpdate: () => {
-    if (!dot || !path) return;
-    // The first subpath is the forward route (half of this symmetric SVG path).
-    const point = path.getPointAtLength(flowState.progress * path.getTotalLength() / 2);
-    dot.setAttribute('cx', String(point.x)); dot.setAttribute('cy', String(point.y));
-  } });
-  let flowVisible = false;
-  const updateFlow = () => flowVisible && !document.hidden ? flow.play() : flow.pause();
-  ScrollTrigger.create({ trigger: '.text-projects', start: 'top bottom', end: 'bottom top', onToggle: self => { flowVisible = self.isActive; updateFlow(); } });
-  document.addEventListener('visibilitychange', updateFlow);
-
   const precise = gsap.matchMedia();
   precise.add('(hover: hover) and (pointer: fine)', () => {
     const cleanups: (() => void)[] = [];
@@ -113,5 +98,5 @@ motion.add('(prefers-reduced-motion: no-preference)', () => {
     });
     return () => cleanups.forEach(fn => fn());
   });
-  return () => { desktop.revert(); precise.revert(); document.removeEventListener('visibilitychange', updateFlow); };
+  return () => { desktop.revert(); precise.revert();  };
 });

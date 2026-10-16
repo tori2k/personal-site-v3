@@ -1,6 +1,9 @@
 ---
 import PapercraftLayout from '../layouts/PapercraftLayout.astro';
 import ProjectPreview from '../components/ProjectPreview.astro';
+import CaseStories from '../components/CaseStories.astro';
+import AIProcessDemo from '../components/AIProcessDemo.astro';
+import WorkingJourney from '../components/WorkingJourney.astro';
 import Arrow from '../components/Arrow.astro';
 import { cases } from '../data/cases';
 import { personId, siteUrl } from '../lib/structured-data';
@@ -61,15 +64,16 @@ const homeJsonLd = [
       <div class="stage-note">Разные проекты.<br /> Один подход к деталям.</div>
       <article class="stage-project stage-project--goal" id="case-goalsphere" data-case="goalsphere">
         <ProjectPreview project={goal} eager />
-        <div class="stage-caption"><a href={goal.publicUrl} target="_blank" rel="noopener" data-track="click_case_goalsphere"><span><h2>GoalSphere</h2><p>Интерактивный сайт агентства · Концепция и разработка</p></span><Arrow /></a></div>
+        <div class="stage-caption"><a href={goal.publicUrl} target="_blank" rel="noopener" data-case-open="story-goalsphere" aria-controls="story-goalsphere"><span><h2>GoalSphere</h2><p>Интерактивный сайт агентства · Концепция и разработка</p><span class="stage-caption__action">Смотреть кейс</span></span><Arrow /></a></div>
       </article>
       <article class="stage-project stage-project--znamya" id="case-znamya-truda" data-case="znamya-truda">
         <ProjectPreview project={znamya} eager cropBottom={40} />
-        <div class="stage-caption"><a href={znamya.publicUrl} target="_blank" rel="noopener" data-track="click_case_znamya"><span><h2>Знамя Труда</h2><p>Сайт клуба и CMS · Дизайн и разработка</p></span><Arrow /></a></div>
+        <div class="stage-caption"><a href={znamya.publicUrl} target="_blank" rel="noopener" data-case-open="story-znamya-truda" aria-controls="story-znamya-truda"><span><h2>Знамя Труда</h2><p>Сайт клуба и CMS · Дизайн и разработка</p><span class="stage-caption__action">Смотреть кейс</span></span><Arrow /></a></div>
       </article>
       <a class="stage-next" href="#projects"><span>Ещё проекты</span><span class="stage-next__line"></span><span>Смотреть все проекты</span><Arrow size={18} /></a>
     </div>
   </section>
+  <CaseStories />
   <section class="more-work" id="projects" aria-labelledby="projects-title">
     <div class="section-heading"><h2 id="projects-title" data-reveal>Другие проекты</h2><p>Сайты, интеграции и системы,<br />которыми пользуются в работе.</p></div>
     <div class="project-pair">
@@ -82,11 +86,7 @@ const homeJsonLd = [
       ))}
     </div>
     <div class="text-projects">
-      <article class="text-project" id="case-ai-project-manager" data-case="ai-project-manager">
-        <div><h3>AI Project<br /> Manager</h3><span class="project-status">Закрытая рабочая система</span></div>
-        <div class="text-project__copy"><p>Из созвонов и переписки — в саммари, договорённости и задачи. С памятью о контексте проекта.</p><span>Продуктовая логика, автоматизация, AI-интеграция</span></div>
-        <svg class="flow-mark" viewBox="0 0 120 90" fill="none" aria-hidden="true"><path d="M10 20H30C68 20 50 70 88 70H110M10 70H30C68 70 50 20 88 20H110" stroke="currentColor" stroke-width="2"/><circle class="flow-dot" cx="10" cy="20" r="5" fill="currentColor"/><circle cx="110" cy="70" r="5" fill="currentColor"/></svg>
-      </article>
+      <AIProcessDemo />
       <article class="text-project text-project--compact" id="case-aesoqua" data-case="aesoqua">
         <div><h3>Aesoqua</h3><span class="project-status">Сайт для автора</span></div>
         <div class="text-project__copy"><p>Бартерный проект: концепция, дизайн и разработка сайта.</p><span>Без публичной ссылки</span></div>
@@ -105,6 +105,7 @@ const homeJsonLd = [
     </div>
   </section>
 
+  <WorkingJourney />
   <section class="contact" aria-labelledby="contact-title">
     <div class="contact__sheet" aria-hidden="true"></div>
     <div class="contact__orbit" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -113,8 +114,10 @@ const homeJsonLd = [
 </PapercraftLayout>
 <script>
   import '../scripts/home-motion';
+  import '../scripts/home-interactions';
 </script>
 <style>
+  .stage-caption__action { display:inline-block; font-size:12px; margin-top:9px; border-bottom:1px solid currentColor; padding-bottom:2px; color:#34345f; }
   .hero__intro { perspective:1400px; }
   .stage-crest { overflow:hidden; }.stage-crest span { position:absolute; width:80%; height:80%; border:1px solid #ffffff60; border-radius:inherit; left:18%; top:18%; }
   .contact__orbit { position:absolute; width:640px; height:640px; right:-230px; top:-140px; z-index:-1; pointer-events:none; }
@@ -138,14 +141,14 @@ const homeJsonLd = [
   .more-work,.services { width:var(--container); margin:auto; }
   .more-work { padding:112px 0 0; }.section-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:52px; }.section-heading h2,.services__intro h2 { font-size:clamp(42px,4.3vw,70px); line-height:1.06; letter-spacing:-.04em; font-weight:600; }.section-heading>p { color:var(--muted); font-size:16px; }
   .project-pair { display:grid; grid-template-columns:1.15fr 1fr; gap:9%; align-items:start; }.work-project--tsentsova { padding-top:104px; }.work-project__visual { border-radius:14px; }.work-project__title { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-top:24px; }.work-project__title h3 { font-size:30px; font-weight:550; letter-spacing:-.035em; }.work-project__title svg { transition:transform .5s var(--ease); }.work-project__title:hover { color:var(--accent); }.work-project__title:hover svg { transform:translate(4px,-4px); }.work-project>p { max-width:500px; margin-top:12px; font-size:15px; line-height:1.55; color:var(--muted); }
-  .text-projects { margin-top:76px; }.text-project { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:9%; padding:42px 10% 42px 0; border-top:1px solid var(--line); }.text-project h3 { font-size:clamp(28px,3vw,46px); line-height:1.08; font-weight:550; letter-spacing:-.04em; }.project-status { display:block; margin-top:16px; color:var(--muted); font-size:13px; }.text-project__copy { padding-top:2px; }.text-project__copy p { font-size:19px; line-height:1.5; }.text-project__copy>span { display:block; margin-top:18px; font-size:13px; color:var(--muted); }.text-project--compact { padding-block:32px; }.text-project--compact h3 { font-size:32px; }.text-project--compact p { font-size:16px; }.flow-mark { position:absolute; right:0; top:54px; width:85px; color:var(--accent); }
-  .services { padding:105px 0 110px; }.services__intro { display:flex; align-items:flex-end; justify-content:space-between; gap:48px; margin-bottom:50px; }.services__intro h2>span { color:var(--accent); }.services__intro>p { color:var(--muted); font-size:16px; padding-bottom:5px; }
+  .text-projects { margin-top:76px; }.text-project { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:9%; padding:42px 10% 42px 0; border-top:1px solid var(--line); }.text-project h3 { font-size:clamp(28px,3vw,46px); line-height:1.08; font-weight:550; letter-spacing:-.04em; }.project-status { display:block; margin-top:16px; color:var(--muted); font-size:13px; }.text-project__copy { padding-top:2px; }.text-project__copy p { font-size:19px; line-height:1.5; }.text-project__copy>span { display:block; margin-top:18px; font-size:13px; color:var(--muted); }.text-project--compact { padding-block:32px; }.text-project--compact h3 { font-size:32px; }.text-project--compact p { font-size:16px; }
+  .services { padding:85px 0 75px; }.services__intro { display:flex; align-items:flex-end; justify-content:space-between; gap:48px; margin-bottom:50px; }.services__intro h2>span { color:var(--accent); }.services__intro>p { color:var(--muted); font-size:16px; padding-bottom:5px; }
   .service { position:relative; isolation:isolate; display:grid; grid-template-columns:1fr 1fr 44px; align-items:center; gap:54px; padding:34px 0; border-top:1px solid var(--line); }.service:last-child { border-bottom:1px solid var(--line); }.service::before { content:''; position:absolute; z-index:-1; inset:0 -26px; background:var(--surface); border-radius:16px; transform:scaleY(0); transform-origin:bottom; transition:transform .6s var(--ease); }.service:hover::before,.service:focus-visible::before { transform:scaleY(1); }.service__name h3 { font-size:clamp(28px,3.4vw,52px); line-height:1.1; letter-spacing:-.04em; font-weight:500; transition:transform .6s var(--ease); }.service:hover h3 { transform:translateX(12px); }.service__name>span { display:block; font-size:12px; margin-top:13px; color:var(--muted); }.service__body p { font-size:15px; color:var(--muted); line-height:1.55; max-width:440px; }.service__tags { display:flex; flex-wrap:wrap; gap:14px; margin-top:15px; font-size:11px; color:#5b5b70; }.service>svg { transition:transform .6s var(--ease),color .3s; }.service:hover>svg { transform:rotate(45deg); color:var(--accent); }
   .contact { position:relative; isolation:isolate; overflow:clip; background:#dfdffd; }.contact__sheet { position:absolute; inset:0; border-radius:120px 0 0 0; background:var(--accent); z-index:-1; }.contact__inner { width:var(--container); margin:auto; padding:80px 0 78px; color:#fff; display:flex; align-items:flex-end; justify-content:space-between; gap:56px; }.contact h2 { font-size:clamp(52px,5.5vw,88px); line-height:1.02; font-weight:550; letter-spacing:-.04em; }.contact h2 em { font-style:normal; color:#dddfff; }.contact p { margin-top:25px; color:#e6e7ff; font-size:15px; }.contact__link { display:grid; grid-template-columns:1fr auto; align-items:center; gap:18px 28px; padding:18px 0; border-bottom:1px solid #ffffff70; min-width:280px; font-size:24px; }.contact__handle { grid-column:1/-1; font-size:14px; color:#e6e7ff; }.contact__link>svg { transition:transform .6s var(--ease); }.contact__link:hover>svg { transform:translate(8px,-8px); }
-  @media(max-width:1000px) { .service { gap:28px; grid-template-columns:1fr 1.15fr 38px; }.contact__inner { gap:36px; }.contact__link { min-width:230px; font-size:20px; }.flow-mark { width:64px; }.text-project__copy p { font-size:17px; } }
+  @media(max-width:1000px) { .service { gap:28px; grid-template-columns:1fr 1.15fr 38px; }.contact__inner { gap:36px; }.contact__link { min-width:230px; font-size:20px; }.text-project__copy p { font-size:17px; } }
   @media(max-width:700px) {
-    .more-work { padding-top:64px; }.section-heading { display:block; margin-bottom:34px; }.section-heading>p { margin-top:18px; font-size:14px; }.section-heading h2,.services__intro h2 { font-size:40px; }.project-pair { grid-template-columns:1fr; gap:38px; }.work-project--tsentsova { padding:0; width:90%; margin-left:auto; }.work-project__title { margin-top:18px; }.work-project__title h3 { font-size:26px; }.work-project>p { font-size:14px; }.text-projects { margin-top:48px; }.text-project { grid-template-columns:1fr; padding:30px 0; gap:24px; }.text-project h3 { font-size:32px; }.text-project h3 br { display:none; }.project-status { font-size:12px; margin-top:9px; }.text-project__copy p { font-size:16px; }.text-project__copy>span { font-size:12px; margin-top:12px; }.flow-mark { display:none; }
-    .services { padding:60px 0 70px; }.services__intro { display:block; margin-bottom:30px; }.services__intro>p { margin-top:22px; font-size:15px; }.service { grid-template-columns:1fr 30px; gap:20px; padding:28px 0; }.service__name h3 { font-size:30px; }.service__name>span { display:none; }.service__body { grid-column:1/-1; grid-row:2; }.service>svg { grid-column:2; grid-row:1; width:28px; height:28px; }.service__tags { margin-top:12px; }.service::before { inset:0 -12px; }.service:hover h3 { transform:none; }
+    .more-work { padding-top:64px; }.section-heading { display:block; margin-bottom:34px; }.section-heading>p { margin-top:18px; font-size:14px; }.section-heading h2,.services__intro h2 { font-size:40px; }.project-pair { grid-template-columns:1fr; gap:38px; }.work-project--tsentsova { padding:0; width:90%; margin-left:auto; }.work-project__title { margin-top:18px; }.work-project__title h3 { font-size:26px; }.work-project>p { font-size:14px; }.text-projects { margin-top:48px; }.text-project { grid-template-columns:1fr; padding:30px 0; gap:24px; }.text-project h3 { font-size:32px; }.text-project h3 br { display:none; }.project-status { font-size:12px; margin-top:9px; }.text-project__copy p { font-size:16px; }.text-project__copy>span { font-size:12px; margin-top:12px; }
+    .services { padding:55px 0 55px; }.services__intro { display:block; margin-bottom:30px; }.services__intro>p { margin-top:22px; font-size:15px; }.service { grid-template-columns:1fr 30px; gap:20px; padding:28px 0; }.service__name h3 { font-size:30px; }.service__name>span { display:none; }.service__body { grid-column:1/-1; grid-row:2; }.service>svg { grid-column:2; grid-row:1; width:28px; height:28px; }.service__tags { margin-top:12px; }.service::before { inset:0 -12px; }.service:hover h3 { transform:none; }
     .contact__sheet { border-radius:64px 0 0 0; }.contact__inner { display:block; padding:64px 0 40px; }.contact h2 { font-size:clamp(44px,10.5vw,64px); }.contact p { max-width:300px; font-size:14px; margin-top:22px; }.contact__link { margin-top:25px; font-size:20px; gap:10px; }.contact__link svg { width:38px; height:38px; }
   }
 </style>

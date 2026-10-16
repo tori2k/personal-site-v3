@@ -1,0 +1,57 @@
+---
+import { cases } from '../data/cases';
+import Arrow from './Arrow.astro';
+const stories = [
+  {
+    slug: 'goalsphere', title: 'Агентство, которое можно исследовать.',
+    task: 'Показать футбольное агентство через интерактивную среду и дать понятный доступ к игрокам и географии работы.',
+    solution: 'Спроектировал концепцию и переходы: от кабинета — к рабочему столу с разделами. Для телефона собрал отдельный сценарий.',
+    outcome: 'Живая сцена ведёт к содержанию: каталогу игроков и географии агентства.',
+    frames: [{ index: 0, label: 'Кабинет' }, { index: 2, label: 'Игроки' }, { index: 3, label: 'География' }],
+  },
+  {
+    slug: 'znamya-truda', title: 'Клуб живёт. Сайт успевает за ним.',
+    task: 'Обновить сайт клуба и собрать в одном месте матчи, новости, команду и путь к заказу игровой футболки.',
+    solution: 'Собрал структуру, дизайн и разработку. Подключил CMS для публикации новостей и вывел матч-центр в отдельный раздел.',
+    outcome: 'Болельщик находит нужное, а клуб публикует новости через CMS.',
+    frames: [{ index: 1, label: 'Матч-центр' }, { index: 3, label: 'Новости' }, { index: 2, label: 'Футболка' }],
+  },
+];
+---
+<div class="case-stories" data-case-stories>
+  {stories.map(story => {
+    const project = cases.find(project => project.slug === story.slug)!;
+    return <section class="case-story" id={`story-${story.slug}`} aria-labelledby={`story-title-${story.slug}`} hidden>
+      <div class="case-story__top"><span>{project.title} / подробнее о проекте</span><button type="button" class="story-close" data-case-close>Свернуть <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+      <div class="case-story__grid">
+        <div class="case-story__copy">
+          <h2 id={`story-title-${story.slug}`}>{story.title}</h2>
+          <dl><div><dt>Задача</dt><dd>{story.task}</dd></div><div><dt>Моя работа</dt><dd>{story.solution}</dd></div><div><dt>Что получилось</dt><dd>{story.outcome}</dd></div></dl>
+          <a class="story-site" href={project.publicUrl} target="_blank" rel="noopener" data-track={`click_case_${story.slug}`}>Открыть сайт <Arrow size={20}/></a>
+        </div>
+        <div class="case-story__gallery" data-story-gallery>
+          <div class="story-frames">
+            {story.frames.map((frame, index) => { const shot = project.screenshots[frame.index]; return <figure id={`${story.slug}-frame-${index}`} data-story-frame hidden={index > 0}><img src={shot.src} width={shot.width} height={shot.height} alt={shot.alt} loading="lazy" decoding="async"/><figcaption>{shot.alt}</figcaption></figure>; })}
+          </div>
+          <div class="story-choices" role="group" aria-label={`Экраны проекта ${project.title}`}>
+            {story.frames.map((frame, index) => <button type="button" data-story-choice={index} aria-controls={`${story.slug}-frame-${index}`} aria-pressed={index === 0 ? 'true' : 'false'}>{frame.label}</button>)}
+          </div>
+        </div>
+      </div>
+    </section>;
+  })}
+</div>
+<style>
+  .case-stories { background:var(--surface); }
+  .case-story { width:var(--container); margin:auto; padding:24px 0 60px; scroll-margin-top:24px; }
+  .case-story__top { display:flex; align-items:center; justify-content:space-between; gap:20px; padding-bottom:26px; border-top:1px solid #b9b9dc; padding-top:22px; font-size:13px; color:#51516b; }
+  .story-close { display:flex; align-items:center; gap:10px; min-height:44px; padding:0 12px; background:transparent; border:0; border-radius:12px; }
+  .story-close:hover { background:#c8c8f5; }.story-close svg { transition:transform .3s var(--ease); }.story-close:hover svg { transform:rotate(90deg); }
+  .case-story__grid { display:grid; grid-template-columns:1fr 1.4fr; gap:7%; align-items:center; }
+  h2 { font-size:clamp(30px,3vw,48px); font-weight:550; letter-spacing:-.035em; line-height:1.12; max-width:540px; }
+  dl { margin:26px 0; }dl>div+div { margin-top:20px; }dt { font-size:12px; color:#51516b; margin-bottom:5px; }dd { font-size:15px; line-height:1.5; margin:0; max-width:490px; }
+  .story-site { display:inline-flex; align-items:center; gap:20px; font-size:15px; min-height:44px; border-bottom:1px solid currentColor; }.story-site:hover { color:var(--accent); }
+  .case-story__gallery { min-width:0; }.story-frames { position:relative; }figure { margin:0; }figure img { aspect-ratio:16/10; width:100%; height:auto; object-fit:contain; background:#c9c9ef; border-radius:14px; box-shadow:var(--preview-shadow); }figcaption { margin-top:15px; font-size:12px; color:#51516b; min-height:36px; }
+  .story-choices { display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }.story-choices button { border:1px solid #b2b2d8; background:transparent; border-radius:24px; min-height:44px; padding:0 18px; font-size:13px; transition:background .25s,color .25s; }.story-choices button[aria-pressed=true] { background:var(--text); border-color:var(--text); color:#fff; }.story-choices button:hover { border-color:var(--text); }
+  @media(max-width:760px) { .case-story { padding-bottom:38px; }.case-story__grid { grid-template-columns:1fr; gap:30px; }h2 { font-size:34px; }dd { font-size:14px; }.case-story__top { gap:10px; font-size:11px; }.story-close { font-size:12px; padding:0 4px; }.story-choices { gap:6px; }.story-choices button { padding:0 14px; font-size:12px; } }
+</style>
