@@ -22,15 +22,6 @@ if (headline) {
   });
 }
 
-document.querySelectorAll<HTMLElement>('[data-preview]').forEach(preview => {
-  const button = preview.querySelector<HTMLButtonElement>('[data-color-toggle]');
-  button?.addEventListener('click', () => {
-    const enabled = preview.classList.toggle('is-color');
-    button.setAttribute('aria-pressed', String(enabled));
-    const label = button.querySelector('span');
-    if (label) label.textContent = enabled ? 'Тонировать' : 'В цвете';
-  });
-});
 
 const motion = gsap.matchMedia();
 motion.add('(prefers-reduced-motion: no-preference)', () => {
@@ -71,23 +62,6 @@ motion.add('(prefers-reduced-motion: no-preference)', () => {
   const precise = gsap.matchMedia();
   precise.add('(hover: hover) and (pointer: fine)', () => {
     const cleanups: (() => void)[] = [];
-    document.querySelectorAll<HTMLElement>('[data-preview]').forEach(element => {
-      const rx = gsap.quickTo(element, 'rotationX', { duration: .5, ease: 'power3.out' });
-      const ry = gsap.quickTo(element, 'rotationY', { duration: .5, ease: 'power3.out' });
-      const lift = gsap.quickTo(element, 'y', { duration: .5, ease: 'power3.out' });
-      gsap.set(element, { transformPerspective: 1000 });
-      const move = (event: PointerEvent) => {
-        const rect = element.getBoundingClientRect();
-        const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-        const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
-        rx(-(y - .5) * 9); ry((x - .5) * 11); lift(-10);
-        element.style.setProperty('--pointer-x', `${x * 100}%`);
-        element.style.setProperty('--pointer-y', `${y * 100}%`);
-      };
-      const leave = () => { rx(0); ry(0); lift(0); };
-      element.addEventListener('pointermove', move); element.addEventListener('pointerenter', move); element.addEventListener('pointerleave', leave);
-      cleanups.push(() => { element.removeEventListener('pointermove', move); element.removeEventListener('pointerenter', move); element.removeEventListener('pointerleave', leave); element.style.removeProperty('--pointer-x'); element.style.removeProperty('--pointer-y'); });
-    });
     document.querySelectorAll<HTMLElement>('.hero .button,.header-cta,.contact__link').forEach(element => {
       const x = gsap.quickTo(element, 'x', { duration: .4, ease: 'power3.out' });
       const y = gsap.quickTo(element, 'y', { duration: .4, ease: 'power3.out' });

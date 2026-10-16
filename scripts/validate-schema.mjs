@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const pages = [];
@@ -43,6 +43,13 @@ for (const file of pages) {
       assert(publicText.includes(item.name));
       assert(html.includes(`id="case-${domCases[index]}"`));
       if (index >= 4) assert(!item.image, 'Private projects must not gain invented screenshots');
+      if (item.image) {
+        const image = new URL(item.image);
+        assert.equal(image.origin, 'https://kirillbaryev.ru');
+        assert(existsSync(join('dist', image.pathname)), 'Case image must exist in the published build');
+        assert(html.includes(`src="${image.pathname}"`), 'Case image must be available in the visible/revealable content');
+        assert(!image.pathname.includes('/covers/'), 'Editorial cover illustrations must not replace actual case screenshots in schema');
+      }
     });
     assert(!/"(?:price|priceRange|aggregateRating|review|address)"/.test(scripts[0][1]));
   } else {

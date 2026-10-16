@@ -65,3 +65,7 @@ The extension adds bounded inline-story and gallery reveals, a cancellable four-
 
 ## Boundaries
 Six cases, no invented metrics, no private images, no prices. The AI demo's fictional samples are visibly qualified and are not additional portfolio entries or structured-data claims. Existing /scratchik routes added remotely are retained. Mobile rearranges the overlap into a legible sequential stage; color toggle is independent of navigation. No unresolved user decisions. The bounded interactive finish review is recorded in `.impeccable/review/interactive-finish-review.md` with disposition `ship`; its two clarity fixes are resolved.
+
+## Approved cover amendment — 2026-10-16
+
+User approved the separate object-cover concept and production implementation. This supersedes the duotone preview rows above. Four public projects use pale-lavender object covers with editable text; original screenshot pixels remain beneath. GoalSphere and Znamya sit adjacent at staggered heights, with content-driven stacking on mobile. Hover opens on fine-pointer desktop; tap/Enter/Space toggles and Escape closes. No whole-preview tilt remains. CSS mask/perspective transitions reveal the original screenshot; reduced motion uses opacity only. `project-preview.ts` waits for image decode and cancels superseded reveals. Native case links remain outside the button. Schema retains real project screenshot images; generated cover illustrations are not new cases or screenshots. Asset provenance and production prompts are in `docs/project-covers.md`.

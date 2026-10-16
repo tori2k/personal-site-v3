@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initAIDemo } from './ai-demo-motion';
+import { initProjectPreviews } from './project-preview';
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 const scrollTo = (element: HTMLElement) => element.scrollIntoView({ behavior: reduced.matches ? 'instant' : 'smooth', block: 'start' });
@@ -49,6 +50,7 @@ document.querySelectorAll<HTMLElement>('[data-story-gallery]').forEach(gallery =
   }));
 });
 
+initProjectPreviews();
 initAIDemo();
 
 const journey = document.querySelector<HTMLElement>('[data-journey]');

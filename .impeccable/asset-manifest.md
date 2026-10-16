@@ -41,3 +41,7 @@ Verification: all four images opened, actual dimensions checked, provenance read
 ## Finish adjustment
 
 The Znamya preview uses a CSS viewport crop of the bottom 40 source pixels (1440 × 860 visible region) to exclude a historical development toolbar. The source raster stays unchanged; both toned and original-color layers use the same crop.
+
+## Approved project-cover replacement — 2026-10-16 (current)
+
+The user approved the object-cover concept, superseding the earlier empty produce bucket and duotone requirement. `football.webp`, `microphone.webp`, `documents.webp` are transparent editorial assets generated with built-in ImageGen; `znamya-crest.webp` is the exact public club logo with procedural lighting at render time. All are in `public/cases/covers/`, approximately 373 KB combined. Original project screenshots are unchanged and revealed through interaction; JSON-LD continues to reference them. See `docs/project-covers.md` for exact prompts and sources.
